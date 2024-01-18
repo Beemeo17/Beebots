@@ -221,7 +221,7 @@ async def load():
 
 async def main():
   await load()
-  await bot.start('MTExMTE0MDA4Nzc3MDY2NDk2MA.G6t9eE.d8HiXrORHSFVNxUJvhpR5naYxQvcXXFo9d0GQI')
+  await bot.start(os.getenv("TOKEN"))
 
 
 asyncio.run(main())
