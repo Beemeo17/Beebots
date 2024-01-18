@@ -31,7 +31,7 @@ async def on_ready():
     elif current_time.hour == 7 and current_time.minute == 0:
       await channel.send(
         "chúc mọi người một ngày mới vui vẻ 🧩**Good Morning**🧩")
-    elif current_time.hour == 12 and current_time.minute == 15 :
+    elif current_time.hour == 23 and current_time.minute == 7 :
       await dailys()
     await asyncio.sleep(60)
 
