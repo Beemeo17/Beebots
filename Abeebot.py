@@ -149,7 +149,7 @@ tz = pytz.timezone('Asia/Ho_Chi_Minh')
 
 
 async def main():
-  await bot.start('MTA4OTg5Mzg1ODMyNzkyMDc1Mg.GphysM.p6ymq2B_lbc9YN_Q_rBcihEBMfQmJjwrgJ6UYk')
+  await bot.start(os)
 
 
 asyncio.run(main())
