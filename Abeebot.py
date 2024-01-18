@@ -141,6 +141,8 @@ async def run_data():
   await bot.change_presence(activity=game)
 #===================================
 
+import keep_alive
+keep_alive.keep_alive()
 
 import pytz
 from datetime import datetime, time
