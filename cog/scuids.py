@@ -408,6 +408,7 @@ class scuids(commands.Cog):
   async def scuid(self, Interaction, uid: int):
     try:
         uid = uid
+        print(uid)
         data = await self.client.fetch_user(uid)
         global_data["data"] = data
         global_data["uid"] = uid
