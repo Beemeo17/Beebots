@@ -7,3 +7,4 @@ flask
 SQLite3-0611
 Pillow
 urllib3
+requests
