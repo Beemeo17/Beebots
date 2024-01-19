@@ -12,7 +12,7 @@ import aiohttp
 
 global_data = {
     "data": None,
-    "uid": None 
+    "uid": None
 }
 inset_message = {'message' :None, "channelt": None}
 emoji_list = []
