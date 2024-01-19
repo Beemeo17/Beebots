@@ -4,3 +4,5 @@ cachetools
 ffmpeg
 discord
 flask
+sqlite3
+Pillow
