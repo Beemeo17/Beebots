@@ -9,5 +9,4 @@ Pillow
 urllib3
 requests
 genshin
-enkanetwork.py
 pytz
