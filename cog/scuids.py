@@ -405,7 +405,7 @@ class scuids(commands.Cog):
     print('='* 50)
   
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
-  async def scuid(self, Interaction, uid: int):
+  async def scuid(self, Interaction, uid: Tuple[int]:
     try:
         uid = uid
         await Interaction.channel.send(uid)
