@@ -396,7 +396,7 @@ class SelectView(discord.ui.View):
 class scuids(commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
-    self.client = EnkaNetworkAPI(lang="vi")
+    self.Client = EnkaNetworkAPI(lang="vi")
     self.session = aiohttp.ClientSession()
   @commands.Cog.listener()
   async def on_ready(self):
@@ -408,7 +408,7 @@ class scuids(commands.Cog):
   async def scuid(self, Interaction, uid: int):
     try:
         uid = uid
-        data = await self.client.fetch_user(uid)
+        data = await self.Client.fetch_user(uid)
         global_data["data"] = data
         global_data["uid"] = uid
       
