@@ -801,4 +801,4 @@ class scuids(commands.Cog):
         return s
 
 async def setup(bot):
-  await bot.add_cog(scuids(bot))
+  await bot.add_cog(scuids(bot)) 
