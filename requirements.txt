@@ -10,3 +10,4 @@ urllib3
 requests
 genshin
 pytz
+enkanetwork.py-1.4.5
