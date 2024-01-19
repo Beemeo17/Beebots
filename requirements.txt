@@ -4,5 +4,5 @@ cachetools
 ffmpeg
 discord
 flask
-sqlite3
+SQLite3-0611
 Pillow
