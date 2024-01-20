@@ -1,4 +1,4 @@
-pydantic
+
 aiohttp
 cachetools
 ffmpeg
