@@ -10,4 +10,4 @@ urllib3
 requests
 genshin
 pytz
-enkanetwork.py
+
