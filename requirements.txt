@@ -8,3 +8,4 @@ urllib3
 requests
 genshin
 pytz
+rsa
