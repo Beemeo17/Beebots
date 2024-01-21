@@ -5,6 +5,7 @@ import genshin
 import requests
 import os
 from datetime import datetime, time
+import json
 
 files = "test.json"
 def load_data():
