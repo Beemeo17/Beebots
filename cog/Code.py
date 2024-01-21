@@ -6,19 +6,32 @@ import requests
 import os
 from datetime import datetime, time
 
-tokens = {"ltuid" : 139734936 
-,"ltoken" : '5qs4vLtAHhNAZ2cvH38alyRVHjRs6Uy9XzgHkjcB'
-,"cookie_token_v2": 'v2_CAQSDGNlMXRidXdiMDB6axokNDdhZDYyZWUtZmJlYi00MjQzLTkwZDEtMTA0ODMxZjJlOTRlIJLM2KoGKOHg-mEwmN_QQjgBQgtoazRlX2dsb2JhbA'
-,"account_mid_v2": '1kvjdm9qmp_hy'
-,"account_id_v2": 139734936}
+files = "test.json"
+def load_data():
+  try:
+      with open(files, 'r') as file:
+          data = json.load(file)
+  except (FileNotFoundError, json.JSONDecodeError):
+      data = {}
+  return data
+
+def save_data(data):
+  with open(files, 'w') as file:
+      json.dump(data, file, indent=4)
 
 class Redeem(discord.ui.Modal, title="Redeem code Genshin Impact"):
   code_Gi = discord.ui.TextInput(label="Hãy điền code Genshin vào bên dưới", style=discord.TextStyle.paragraph, required=False)
   code_Hsr = discord.ui.TextInput(label="Hãy điền code Star Rail vào bên dưới", style=discord.TextStyle.paragraph, required=False)
   async def on_submit(self, Interaction):
-      author = Interaction.user.id
-      if author == 480986687712002058:
-        cookies = await genshin.complete_cookies(tokens)
+     
+       user_id = str(Interaction.user.id)
+       data = load_data()
+       if user_id in data:
+         cookie = data[user_id]
+       else:
+         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
+      
+        cookies = await genshin.complete_cookies(cookie)
         client = genshin.Client(cookies)
         if self.code_Gi.value != "":
           try:
@@ -53,9 +66,7 @@ class Redeem(discord.ui.Modal, title="Redeem code Genshin Impact"):
             except genshin.AccountNotFound:
               embed=discord.Embed(title="Không có tài khoản.", colour=0xf5003d)
               await Interaction.message.edit(embed=embed)
-      else:
-        embed=discord.Embed(title="sai lệch thông tin", colour=0xf5003d)
-        await Interaction.message.edit(embed=embed)
+      
       
 
 class Select(discord.ui.Select):
@@ -64,7 +75,13 @@ class Select(discord.ui.Select):
     options.append(discord.SelectOption(label="Daily", value="Daily_all", emoji="<a:Cat_Daiza:1065889446697914368>"))
     super().__init__(placeholder="Các Cộng Cụ", options=options)
   async def callback(self, Interaction):
-    cookies = await genshin.complete_cookies(tokens)
+    user_id = str(Interaction.user.id)
+    data = load_data()
+    if user_id in data:
+         cookie = data[user_id]
+    else:
+         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
+    cookies = await genshin.complete_cookies(cookie)
     client = genshin.Client(cookies)
     
     if self.values[0] == "Daily_all":
