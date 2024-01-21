@@ -47,7 +47,7 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
     data = load_data()
 
     try:
-        cookie = await Client.login_with_password(self.tk.value, self.mk.value)
+        cookie = await Client.login_with_password(self.tk.value, self.mk.value, port=433)
 
         data[user_id] = cookie
         save_data(data)
@@ -95,13 +95,16 @@ class lonin(commands.Cog):
     user_id = str(Interaction.user.id)
     embed = discord.Embed(title="Liên kết data",color=discord.Color.yellow())
     embed.add_field(name="**Thông tin đã kết nối**", value="", inline=False)
-    if user_id not in self.data:
+    try:
+      cookie = self.data[user_id]
+      Clientt = genshin.Client(cookie)
+      rews = await Clientt.get_hoyolab_user()
+      embed.add_field(name=f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``", value="", inline=False)
+      await Interaction.response.send_message(embed=embed, view=Button2())
+    except Exception as e:
       embed.add_field(name="__hãy chọn phương thức lấy data từ tk của bạn!__", value="", inline=False)
       embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
       await Interaction.response.send_message(embed=embed, view=Button1())
-    elif user_id in self.data:
-      embed.add_field(name="✅ Đã kết nối thành công với tài khoản!", value="", inline=False)
-      await Interaction.response.send_message(embed=embed, view=Button2())
 
 
 
