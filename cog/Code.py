@@ -78,11 +78,10 @@ class Select(discord.ui.Select):
    user_id = str(Interaction.user.id)
    data = load_data()
    if user_id in data:
-         cookie = data[user_id]
+    cookie = data[user_id]
     
-         cookies = await genshin.complete_cookies(cookie)
-         client = genshin.Client(cookies)
-    
+    cookies = await genshin.complete_cookies(cookie)
+    client = genshin.Client(cookies)
     
     if self.values[0] == "Daily_all":
       games= [genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL, genshin.types.Game.HONKAI]
