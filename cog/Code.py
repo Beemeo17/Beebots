@@ -24,13 +24,11 @@ class Redeem(discord.ui.Modal, title="Redeem code Genshin Impact"):
   code_Hsr = discord.ui.TextInput(label="Hãy điền code Star Rail vào bên dưới", style=discord.TextStyle.paragraph, required=False)
   async def on_submit(self, Interaction):
      
-       user_id = str(Interaction.user.id)
-       data = load_data()
-       if user_id in data:
-         cookie = data[user_id]
-       else:
-         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
-      
+      user_id = str(Interaction.user.id)
+      data = load_data()
+      if user_id in data:
+        cookie = data[user_id]
+       
         cookies = await genshin.complete_cookies(cookie)
         client = genshin.Client(cookies)
         if self.code_Gi.value != "":
@@ -66,6 +64,8 @@ class Redeem(discord.ui.Modal, title="Redeem code Genshin Impact"):
             except genshin.AccountNotFound:
               embed=discord.Embed(title="Không có tài khoản.", colour=0xf5003d)
               await Interaction.message.edit(embed=embed)
+      else:
+         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
       
       
 
@@ -75,14 +75,14 @@ class Select(discord.ui.Select):
     options.append(discord.SelectOption(label="Daily", value="Daily_all", emoji="<a:Cat_Daiza:1065889446697914368>"))
     super().__init__(placeholder="Các Cộng Cụ", options=options)
   async def callback(self, Interaction):
-    user_id = str(Interaction.user.id)
-    data = load_data()
-    if user_id in data:
+   user_id = str(Interaction.user.id)
+   data = load_data()
+   if user_id in data:
          cookie = data[user_id]
-    else:
-         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
-    cookies = await genshin.complete_cookies(cookie)
-    client = genshin.Client(cookies)
+    
+         cookies = await genshin.complete_cookies(cookie)
+         client = genshin.Client(cookies)
+    
     
     if self.values[0] == "Daily_all":
       games= [genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL, genshin.types.Game.HONKAI]
@@ -108,7 +108,9 @@ class Select(discord.ui.Select):
         except Exception as e:
             embed.add_field(name=f"lỗi điểm danh **__{result}__**: {e}", value="", inline=False)
       await Interaction.channel.send(embed=embed)
-
+   else:
+         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
+      
 
 class SelectView(discord.ui.View):
   def __init__ (self, timeout=300):
