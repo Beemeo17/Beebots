@@ -18,7 +18,7 @@ def home():
     return render_template('index.html', uptime=hours)
 
 def run():
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=433)
 
 def keep_alive():
     t = Thread(target=run)
