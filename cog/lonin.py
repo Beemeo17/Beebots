@@ -34,9 +34,9 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
         data[user_id] = cookie
         save_data(data)
 
-        await Interaction.response.send_message("Lưu dữ liệu thành công!")
+        await Interaction.channel.send("Lưu dữ liệu thành công!")
     except Exception as e:
-        await Interaction.response.send_message(f"Lỗi: {e}")
+        await Interaction.channel.send(f"Lỗi: {e}")
 
 
 class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài khoản"):
@@ -52,9 +52,9 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
         data[user_id] = cookie
         save_data(data)
 
-        await Interaction.response.send_message("Lưu dữ liệu thành công!")
+        await Interaction.channel.send("Lưu dữ liệu thành công!")
     except Exception as e:
-        await Interaction.response.send_message(f"Lỗi: {e}")
+        await Interaction.channel.send(f"Lỗi: {e}")
 
 
 class Button1(discord.ui.View):
@@ -97,11 +97,11 @@ class lonin(commands.Cog):
     embed.add_field(name="**Thông tin đã kết nối**", value="", inline=False)
     if user_id in self.data:
       embed.add_field(name=f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``", value="", inline=False)
-      await Interaction.response.send_message(embed=embed, view=Button2())
+      await Interaction.channel.send(embed=embed, view=Button2())
     else:
       embed.add_field(name="__hãy chọn phương thức lấy data từ tk của bạn!__", value="", inline=False)
       embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
-      await Interaction.response.send_message(embed=embed, view=Button1())
+      await Interaction.channel.send(embed=embed, view=Button1())
 
 
 
