@@ -4,6 +4,7 @@ from discord.ext import commands
 import genshin
 import json
 import os
+import asyncio
 
 files = "test.json"
 def load_data():
@@ -34,9 +35,9 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
         data[user_id] = cookie
         save_data(data)
 
-        await Interaction.response.send_message("Lưu dữ liệu thành công!")
+        await Interaction.response.send_message("Lưu dữ liệu thành công!", ephemeral=True)
     except Exception as e:
-        await Interaction.response.send_message(f"Lỗi: {e}")
+        await Interaction.response.send_message(f"Lỗi: {e}", ephemeral=True)
 
 
 class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài khoản"):
@@ -52,9 +53,9 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
         data[user_id] = cookie
         save_data(data)
 
-        await Interaction.response.send_message("Lưu dữ liệu thành công!")
+        await Interaction.response.send_message("Lưu dữ liệu thành công!", ephemeral=True)
     except Exception as e:
-        await Interaction.response.send_message(f"Lỗi: {e}")
+     await Interaction.response.send_message(f"Lỗi: {e}", ephemeral=True)
 
 
 class Button1(discord.ui.View):
@@ -77,12 +78,26 @@ class Button2(discord.ui.View):
   async def cookiel(self, Interaction, button: discord.ui.Button,):
     await Interaction.response.send_message("ss")
 
+  @discord.ui.button(label="change data", style= discord.ButtonStyle.gray, emoji="🔁")
+  async def channges(self, Interaction, button: discord.ui.Button,):
+   data = load_data()
+   user_id = str(Interaction.user.id)
+   del data[user_id]
+   embed=discord.Embed()
+   embed.add_field(name="__Hãy chọn phương thức lấy dữ liệu từ tài khoản của bạn!__", value="", inline=False)
+   await Interaction.message.edit(embed=embed, view=Button1())
+   await Interaction.response.send_message('.', ephemeral=True)
+
+class Button3(discord.ui.View):
+  def __init__(self):
+    super().__init__()
+  @discord.ui.button(label="TIMEOUT", style= discord.ButtonStyle.green, emoji="✖️", disabled=True)
+  async def timeoutst(self, Interaction, button: discord.ui.Button,):
+    await Interaction.channel.send('...')
 
 class lonin(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
-    self.data = load_data()
-
 
   @commands.Cog.listener()
   async def on_ready(self):
@@ -92,20 +107,29 @@ class lonin(commands.Cog):
 
   @app_commands.command(name="login", description="nhập thông tin liên kết data")
   async def login(self, Interaction:discord.Interaction):
+    data = load_data()
     user_id = str(Interaction.user.id)
+    timeout = 10
+    await Interaction.response.send_message('•')
+    embeds= discord.Embed(title='Timeout!', description='Timeout bạn có thể sửa dụng lại ``/login`` để tiếp tục login hoặc đổi data',color=discord.Color.red())
     embed = discord.Embed(title="Liên kết data",color=discord.Color.yellow())
     embed.add_field(name="**Thông tin đã kết nối**", value="", inline=False)
     try:
-      cookie = self.data[user_id]
-      Clientt = genshin.Client(cookie)
-      rews = await Clientt.get_hoyolab_user()
-      embed.add_field(name=f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``", value="", inline=False)
-      await Interaction.response.send_message(embed=embed, view=Button2())
+            cookie = data[user_id]
+            Clientt = genshin.Client(cookie)
+            rews = await Clientt.get_hoyolab_user()
+            embed.add_field(name=f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``", value="", inline=False)
+            message1 = await Interaction.channel.send(embed=embed, view=Button2())
+            await asyncio.sleep(timeout)
+            await message1.edit(embed=embeds, view=Button3())
     except Exception as e:
-      embed.add_field(name="__hãy chọn phương thức lấy data từ tk của bạn!__", value="", inline=False)
-      embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
-      await Interaction.response.send_message(embed=embed, view=Button1())
-
+        embed.add_field(name="__Hãy chọn phương thức lấy dữ liệu từ tài khoản của bạn!__", value="", inline=False)
+        embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
+        message2 = await Interaction.channel.send(embed=embed, view=Button1())
+        await asyncio.sleep(timeout)
+        await message2.edit(embed=embeds, view=Button3())
+    
+    
 
 
 
