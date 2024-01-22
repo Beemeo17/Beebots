@@ -47,7 +47,7 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
     data = load_data()
 
     try:
-        cookie = await Client.login_with_password(self.tk.value, self.mk.value)
+        cookie = await Client.login_with_password(self.tk.value, self.mk.value, port=0)
 
         data[user_id] = cookie
         save_data(data)
