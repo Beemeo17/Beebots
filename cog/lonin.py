@@ -34,7 +34,11 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
 
         data[user_id] = cookie
         save_data(data)
+        Clientt = genshin.Client(cookie)
+        rews = await Clientt.get_hoyolab_user()
 
+        embed=discord.Embed(title=f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``', color=discord.Color.yellow())
+        await Interaction.message.edit(embed=embed)
         await Interaction.response.send_message("Lưu dữ liệu thành công!", ephemeral=True)
     except Exception as e:
         await Interaction.response.send_message(f"Lỗi: {e}", ephemeral=True)
@@ -52,7 +56,11 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
 
         data[user_id] = cookie
         save_data(data)
+        Clientt = genshin.Client(cookie)
+        rews = await Clientt.get_hoyolab_user()
 
+        embed=discord.Embed(title=f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``', color=discord.Color.yellow())
+        await Interaction.message.edit(embed=embed)
         await Interaction.response.send_message("Lưu dữ liệu thành công!", ephemeral=True)
     except Exception as e:
      await Interaction.response.send_message(f"Lỗi: {e}", ephemeral=True)
@@ -110,7 +118,7 @@ class lonin(commands.Cog):
     data = load_data()
     user_id = str(Interaction.user.id)
     timeout = 300
-    await Interaction.response.send_message('•')
+    message3 = await Interaction.response.send_message('•', ephemeral=True)
     embeds= discord.Embed(title='Timeout!', description='Timeout bạn có thể sửa dụng lại ``/login`` để tiếp tục login hoặc đổi data',color=discord.Color.red())
     embed = discord.Embed(title="Liên kết data",color=discord.Color.yellow())
     embed.add_field(name="**Thông tin đã kết nối**", value="", inline=False)
@@ -128,7 +136,6 @@ class lonin(commands.Cog):
         message2 = await Interaction.channel.send(embed=embed, view=Button1())
         await asyncio.sleep(timeout)
         await message2.edit(embed=embeds, view=Button3())
-    
     
 
 
