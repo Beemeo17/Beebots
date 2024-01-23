@@ -40,7 +40,7 @@ class helps(commands.Cog):
                   value="> trả về ping của bot ",
                   inline=False)
     embed1.add_field(name='**/login**', value='> lệnh input cookie', inline=False)
-    embed1.add_field(name="**/hoyo**, value='> Các Cộng Cụ', inline=False)
+    embed1.add_field(name="**/hoyo**", value='> Các Cộng Cụ', inline=False)
     embed1.add_field(
     name="**/scuid**",
     value=
