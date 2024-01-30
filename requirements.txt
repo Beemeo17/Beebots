@@ -9,4 +9,5 @@ requests
 genshin
 pytz
 rsa
-git+https://github.com/0kq-github/EnkaNetwork.py.git@develop
+pydantic V2
+enkanetwork.py
