@@ -9,6 +9,6 @@ requests
 genshin
 pytz
 rsa
-pydantic v2
+pydantic
 enkanetwork.py
-python-3.8.8
+python 3.10
