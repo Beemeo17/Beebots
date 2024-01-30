@@ -11,4 +11,3 @@ pytz
 rsa
 pydantic
 enkanetwork.py
-python 3.10
