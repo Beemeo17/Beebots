@@ -25,7 +25,6 @@ bot = commands.Bot(command_prefix='+', intents=intents, help_command=None)
 @bot.event
 async def on_ready():
   update_data.start()
-  url.start()
   print("█▄▄ █▀█ ▀█▀   ▄▀█   █▀ ▄▀█ █▄░█   █▀ ▄▀█ █▄░█ █▀▀")
   print("█▄█ █▄█ ░█░   █▀█   ▄█ █▀█ █░▀█   ▄█ █▀█ █░▀█ █▄█")
   await update_presence()
@@ -112,15 +111,6 @@ async def update_presence():
   game = discord.Game(name="❄️HIVE Teyvat❄️")
   await bot.change_presence(activity=game)
 
-
-@tasks.loop(seconds=60)
-async def url():
-  url = ["https://e5f771e1-0455-4671-9768-7797608e554e-00-1vg3ablsvxklf.global.replit.dev/"]
-  try:
-    for TAH in url:
-      response = requests.get(TAH)
-  except requests.exceptions.RequestException as e:
-    print(f"Error accessing website: {e}")
 
 
 import pytz
