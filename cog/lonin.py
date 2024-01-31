@@ -117,7 +117,7 @@ class lonin(commands.Cog):
   async def login(self, Interaction:discord.Interaction):
     data = load_data()
     user_id = str(Interaction.user.id)
-    timeout = 10
+    timeout = 300
     message3 = await Interaction.response.send_message('•', ephemeral=True)
     embeds= discord.Embed(title='Timeout!', description='Timeout bạn có thể sửa dụng lại ``/login`` để tiếp tục login hoặc đổi data',color=discord.Color.red())
     embed = discord.Embed(title="Liên kết data",color=discord.Color.yellow())
