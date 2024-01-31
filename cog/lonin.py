@@ -117,7 +117,7 @@ class lonin(commands.Cog):
   async def login(self, Interaction:discord.Interaction):
     data = load_data()
     user_id = str(Interaction.user.id)
-    timeout = 300
+    timeout = 10
     message3 = await Interaction.response.send_message('•', ephemeral=True)
     embeds= discord.Embed(title='Timeout!', description='Timeout bạn có thể sửa dụng lại ``/login`` để tiếp tục login hoặc đổi data',color=discord.Color.red())
     embed = discord.Embed(title="Liên kết data",color=discord.Color.yellow())
@@ -127,15 +127,15 @@ class lonin(commands.Cog):
             Clientt = genshin.Client(cookie)
             rews = await Clientt.get_hoyolab_user()
             embed.add_field(name=f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``", value="", inline=False)
-            message1 = await Interaction.channel.send(embed=embed, view=Button2())
+            message = await Interaction.channel.send(embed=embed, view=Button2())
     except Exception as e:
         embed.add_field(name="__Hãy chọn phương thức lấy dữ liệu từ tài khoản của bạn!__", value="", inline=False)
         embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
-        message2 = await Interaction.channel.send(embed=embed, view=Button1())
-        
+        message = await Interaction.channel.send(embed=embed, view=Button1())
+
     await asyncio.sleep(timeout)
-    await Interaction.message.edit(embed=embeds, view=Button3())
-    
+    await message.edit(embed=embeds, view=Button3())
+
 
 
 
