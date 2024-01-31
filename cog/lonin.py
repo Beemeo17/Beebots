@@ -128,14 +128,13 @@ class lonin(commands.Cog):
             rews = await Clientt.get_hoyolab_user()
             embed.add_field(name=f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``", value="", inline=False)
             message1 = await Interaction.channel.send(embed=embed, view=Button2())
-            await asyncio.sleep(timeout)
-            await message1.edit(embed=embeds, view=Button3())
     except Exception as e:
         embed.add_field(name="__Hãy chọn phương thức lấy dữ liệu từ tài khoản của bạn!__", value="", inline=False)
         embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
         message2 = await Interaction.channel.send(embed=embed, view=Button1())
-        await asyncio.sleep(timeout)
-        await message2.edit(embed=embeds, view=Button3())
+        
+    await asyncio.sleep(timeout)
+    await Interaction.message.edit(embed=embeds, view=Button3())
     
 
 
