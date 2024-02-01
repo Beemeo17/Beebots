@@ -54,7 +54,7 @@ class Select(discord.ui.Select):
         elif self.values[0] == "char8":
             charactert = data.characters[7]  
         embed.add_field(name=f"name: {charactert.name}", value=f"độ yêu thích: {charactert.friendship_level}", inline=False)
-        embed.add_field(name=f"level: {charactert.level} / {charactert.max_level}", value="", inline=False)
+        embed.add_field(name=f"level: {charactert.level} / 90", value="", inline=False)
         embed.set_thumbnail(url=charactert.image.icon)
 
         url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1151815890334134303/Khong_Co_Tieu_e62_20230914164310.png"
@@ -74,7 +74,7 @@ class Select(discord.ui.Select):
         image_schar0 = Image.open(image_set_schar0).resize((744, 352))
         image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
         draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
-        draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
+        draw.text((34, 607), (f"Level:{charactert.level} / 90"), font=font, fill=(255, 255, 255))  #level0
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
 
         #vũ khí
