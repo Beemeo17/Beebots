@@ -196,7 +196,17 @@ class Select(discord.ui.Select):
         draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
         draw.text((534, 182), (f"     {charactert.talents[2].level}"),font=font,fill=(255, 255, 255))
 
-        lock = charactert.constellations
+        Locks = len(charactert.constellations)
+        x_lock = 532
+        y_lock = 569
+        for _ in range(locks):
+          response = requests.get('https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png')
+          image_set_skill00 = BytesIO(response.content)
+          image_skill00 = Image.open(image_set_skill00).resize((60, 60))
+          image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
+          y_lock -= 65
+
+        lock = len(charactert.constellations)
         inseta = 244
         y_ts = [65,66,63,64,65]
         for k in range(lock):
@@ -207,7 +217,6 @@ class Select(discord.ui.Select):
           image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
           tert = y_ts[k % len(y_ts)]
           inseta += tert
-
 
         buffer = BytesIO()
         image_app.save(buffer, format='png')
