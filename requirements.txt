@@ -12,4 +12,5 @@ rsa
 pydantic
 git+https://github.com/0kq-github/EnkaNetwork.py.git
 git+https://github.com/seriaati/enka-py
+traceback
 
