@@ -226,6 +226,7 @@ class Select(discord.ui.Select):
         x_cv2 = 224
         sss = 0
         for artifact in charactert.artifacts:
+            await channel.send(artifact)
             crit_rate = 0
             crit_dmg = 0
             for substate in artifact.sub_stats:
