@@ -102,7 +102,7 @@ class Select(discord.ui.Select):
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
 
         artifact_counts = {}
-        for artifact in charactert.artifact:
+        for artifact in charactert.artifacts:
             artifact_name_set = artifact.set_name
             if artifact_name_set in artifact_counts:
                 artifact_counts[artifact_name_set] += 1
@@ -149,7 +149,7 @@ class Select(discord.ui.Select):
         y_tdv_stats1 = 967 #y stats tdv
         y_tdv_stats2 = 25 
         element_count = 0 #chia bảng 
-        for artifact in charactert.artifact:
+        for artifact in charactert.artifacts:
           response = requests.get(artifact.icon)
           image_set_tdv0 = BytesIO(response.content)
           image_tdv0 = Image.open(image_set_tdv0).resize((165, 165))
@@ -163,7 +163,7 @@ class Select(discord.ui.Select):
 
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
           x_tdv_level += x_tdv
-          for substate in artifact.sub_stats:
+          for substate in artifacts.sub_stats:
             if substate.name == "Hiệu Quả Nạp Nguyên Tố":
               name_sst = substate.name.strip()[:12]
             elif substate.name == "Tinh Thông Nguyên Tố":
