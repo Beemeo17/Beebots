@@ -227,7 +227,7 @@ class Select(discord.ui.Select):
         messaget = await channel.send(file=file)
         file_url = messaget.attachments[0]
         embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.now())
-        embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{charactert.constellations} \nrate.{'⭐'*charactert.rarity}", inline=False)
+        embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)}", inline=False)
         embed.set_image(url=file_url)   
         embed.set_thumbnail(url=f"{charactert.icon}")
         embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
