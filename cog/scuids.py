@@ -80,18 +80,18 @@ class Select(discord.ui.Select):
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
 
         #vũ khí
-        weapon = charactert.equipments[-1]
-        response = requests.get(weapon.detail.icon)
+        weapon = charactert.weapons[-1]
+        response = requests.get(weapon.icon)
         image_set_vk0 = BytesIO(response.content)
         image_vk0 = Image.open(image_set_vk0).resize((144, 124))
         image_app.paste(image_vk0, (650, 33), mask=image_vk0)
 
-        draw.text((820, 36), weapon.detail.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
+        draw.text((820, 36), weapon.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
         draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
-        draw.text((677, 146), (f"{'*'*weapon.detail.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
+        draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{weapon.detail.mainstats.value}{'%' if weapon.detail.mainstats.type == DigitType.PERCENT else ''}"), font=font, fill=(255, 255, 255))#atk
-        for substate in weapon.detail.substats: #dòng chính
+        for substate in weapon.stats: #dòng chính
             if substate.name == "Hiệu Quả Nạp Nguyên Tố":
               draw.text((812, 150), (f"{substate.name.strip()[:12]}: {substate.value}{'%' if substate.type == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             else:
