@@ -177,23 +177,23 @@ class Select(discord.ui.Select):
               x_tdv_stats += x_tdv_stats1
 
         #thiên phú
-        response = requests.get(charactert.talents[0].icon)  #skill1
+        response = requests.get(charactert.talent[0].icon)  #skill1
         image_set_skill00 = BytesIO(response.content)
         image_skill00 = Image.open(image_set_skill00).resize((60, 60))
         image_app.paste(image_skill00, (532, 15), mask=image_skill00)
 
-        response = requests.get(charactert.talents[1].icon)  #skill2
+        response = requests.get(charactert.talent[1].icon)  #skill2
         image_set_skill01 = BytesIO(response.content)
         image_skill01 = Image.open(image_set_skill01).resize((60, 60))
         image_app.paste(image_skill01, (532, 84), mask=image_skill01)
 
-        response = requests.get(charactert.talents[2].icon)  #skill3
+        response = requests.get(charactert.talent[2].icon)  #skill3
         image_set_skill02 = BytesIO(response.content)
         image_skill02 = Image.open(image_set_skill02).resize((60, 60)).convert('RGBA')
         image_app.paste(image_skill02, (532, 150), mask=image_skill02)
-        draw.text((534, 47), (f"     {charactert.talents[0].level}"),font=font,fill=(255, 255, 255))
-        draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
-        draw.text((534, 182), (f"     {charactert.talents[2].level}"),font=font,fill=(255, 255, 255))
+        draw.text((534, 47), (f"     {charactert.talent[0].level}"),font=font,fill=(255, 255, 255))
+        draw.text((534, 114), (f"     {charactert.talent[1].level}"),font=font,fill=(255, 255, 255))
+        draw.text((534, 182), (f"     {charactert.talent[2].level}"),font=font,fill=(255, 255, 255))
 
         Lock = (6 - charactert.constellations)
         x_lock = 532
@@ -207,7 +207,7 @@ class Select(discord.ui.Select):
 
         if charactert.constellations > 0:
         #cung  mệnh 1
-          constellation = charactert.constellations[0]
+          constellation = charactert.constellation[0]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
@@ -215,7 +215,7 @@ class Select(discord.ui.Select):
 
         if charactert.constellations > 1:
           #cung  mệnh 2
-          constellation = charactert.constellations[1]
+          constellation = charactert.constellation[1]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
@@ -223,7 +223,7 @@ class Select(discord.ui.Select):
 
         if charactert.constellations > 2:
           #cung  mệnh 3
-          constellation = charactert.constellations[2]
+          constellation = charactert.constellation[2]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
@@ -231,7 +231,7 @@ class Select(discord.ui.Select):
 
         if charactert.constellations > 3:
           #cung  mệnh 4
-          constellation = charactert.constellations[3]
+          constellation = charactert.constellation[3]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
@@ -239,7 +239,7 @@ class Select(discord.ui.Select):
 
         if charactert.constellations > 4:
           #cung  mệnh 5
-          constellation = charactert.constellations[4]
+          constellation = charactert.constellation[4]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
@@ -248,7 +248,7 @@ class Select(discord.ui.Select):
 
         #cung  mệnh 6
         if charactert.constellations > 5:
-          constellation = charactert.constellations[5]
+          constellation = charactert.constellation[5]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
