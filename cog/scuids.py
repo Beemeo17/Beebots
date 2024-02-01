@@ -122,7 +122,6 @@ class Select(discord.ui.Select):
         x_cv2 = 224
         sss = 0
         for artifact in charactert.artifacts:
-            await channel.send(artifact)
             crit_rate = 0
             crit_dmg = 0
             for substate in artifact.sub_stats:
@@ -159,7 +158,7 @@ class Select(discord.ui.Select):
           draw.text((x_tdv_rate, 896), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
           x_tdv_rate += x_tdv
 
-          draw.text((x_tdv_stats, 932), artifact.main_stats.name, font=fonts, fill=(255, 255, 255))
+          draw.text((x_tdv_stats, 932), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))
 
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
           x_tdv_level += x_tdv
