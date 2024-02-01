@@ -91,112 +91,112 @@ class Select(discord.ui.Select):
         draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{weapon.stats[0]}"), font=font, fill=(255, 255, 255))#atk#dòng chính
-        if weapon.stats[0] == "Hiệu Quả Nạp Nguyên Tố":
-              draw.text((812, 150), (f"{weapon.stats[1].strip()[:12]}: {weapon.stats[0]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        if weapon.stats.name == "Hiệu Quả Nạp Nguyên Tố":
+              draw.text((812, 150), (f"{weapon.stats.name.strip()[:12]}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         else:
-              draw.text((812, 150), (f"{weapon.stats[1]}: {weapon.stats[0]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+              draw.text((812, 150), (f"{weapon.stats.name}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
 
         #Stats
         fontt=ImageFont.truetype("zh-cn.ttf", 25)
-        draw.text((688, 250), (f"HP: {int(charactert.stats.FIGHT_PROP_HP.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 250), (f"HP: {int(charactert.stats[2])}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
         hp = BytesIO(response.content)
         hp1 = Image.open(hp).resize((40, 40))
         image_app.paste(hp1, (644, 245), mask=hp1)
 
-        draw.text((688, 285), (f"Tân Công: {int(charactert.stats.FIGHT_PROP_ATTACK.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 285), (f"Tân Công: {int(charactert.stats[5])}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png")
         atk = BytesIO(response.content)
         atk1 = Image.open(atk).resize((40, 40))
         image_app.paste(atk1, (644, 280), mask=atk1)
 
-        draw.text((688, 325), (f"Phòng Ngự: {int(charactert.stats.FIGHT_PROP_DEFENSE.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 325), (f"Phòng Ngự: {int(charactert.stats[8])}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png")
         def2 = BytesIO(response.content)
         def1 = Image.open(def2).resize((40, 40))
         image_app.paste(def1, (644, 320), mask=def1)
 
-        draw.text((688, 365), (f"Tinh Thông Nguyên Tố: {int(charactert.stats.FIGHT_PROP_ELEMENT_MASTERY.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 365), (f"Tinh Thông Nguyên Tố: {int(charactert.stats[26])}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png")
         tt = BytesIO(response.content)
         tt1 = Image.open(tt).resize((40, 40))
         image_app.paste(tt1, (644, 360), mask=tt1)
 
-        draw.text((688, 405),(f"Tỉ Lệ Bạo: {charactert.stats.FIGHT_PROP_CRITICAL.value* 100:.0f}%"), font=font, fill=(255, 255, 255))
+        draw.text((688, 405),(f"Tỉ Lệ Bạo: {charactert.stats[20]* 100:.0f}%"), font=font, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png")
         tl = BytesIO(response.content)
         tl1 = Image.open(tl).resize((40, 40))
         image_app.paste(tl1, (644, 400), mask=tl1)
 
-        draw.text((688, 445),(f"Sát Thương Bạo: {charactert.stats.FIGHT_PROP_CRITICAL_HURT.value* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 445),(f"Sát Thương Bạo: {charactert.stats[22]* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png")
         st = BytesIO(response.content)
         st1 = Image.open(st).resize((40, 40))
         image_app.paste(st1, (644, 440), mask=st1)
 
-        draw.text((688, 485),(f"Hiệu Quả Nạp: {charactert.stats.FIGHT_PROP_CHARGE_EFFICIENCY.value* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 485),(f"Hiệu Quả Nạp: {charactert.stats[23]* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png")
         hqn = BytesIO(response.content)
         hqn1 = Image.open(hqn).resize((40, 40))
         image_app.paste(hqn1, (644, 480), mask=hqn1)
 
-        draw.text((688, 525),(f"trị liệu: {int(charactert.stats.FIGHT_PROP_HEAL_ADD.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 525),(f"trị liệu: {int(charactert.stats[26] * 100)}%"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png")
         tl = BytesIO(response.content)
         tl1 = Image.open(tl).resize((40, 40))
         image_app.paste(tl1, (644, 520), mask=tl1)
         #stnt
-        draw.text((710, 578),(f"{int(charactert.stats.FIGHT_PROP_PHYSICAL_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((710, 578),(f"{int(charactert.stats[30] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png")
         svl = BytesIO(response.content)
         svl1 = Image.open(svl).resize((50, 50))
         image_app.paste(svl1, (660, 565), mask=svl1)
 
-        draw.text((830, 578),(f"{int(charactert.stats.FIGHT_PROP_WIND_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((830, 578),(f"{int(charactert.stats[44] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless")
         stp = BytesIO(response.content)
         stp1 = Image.open(stp).resize((50, 50))
         image_app.paste(stp1, (780, 565), mask=stp1)
 
-        draw.text((940, 578),(f"{int(charactert.stats.FIGHT_PROP_ROCK_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((940, 578),(f"{int(charactert.stats[45] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless")
         stn = BytesIO(response.content)
         stn1 = Image.open(stn).resize((50, 50))
         image_app.paste(stn1, (890, 565), mask=stn1)
 
-        draw.text((1050, 578),(f"{int(charactert.stats.FIGHT_PROP_ELEC_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((1050, 578),(f"{int(charactert.stats[41] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless")
         stl = BytesIO(response.content)
         stl1 = Image.open(stl).resize((50, 50))
         image_app.paste(stl1, (1000, 565), mask=stl1)
 
-        draw.text((710, 638),(f"{int(charactert.stats.FIGHT_PROP_GRASS_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((710, 638),(f"{int(charactert.stats[43] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless")
         stt = BytesIO(response.content)
         stt1 = Image.open(stt).resize((50, 50))
         image_app.paste(stt1, (660, 625), mask=stt1)           
 
-        draw.text((830, 638),(f"{int(charactert.stats.FIGHT_PROP_WATER_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((830, 638),(f"{int(charactert.stats[42] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless")
         stt2 = BytesIO(response.content)
         stt3 = Image.open(stt2).resize((50, 50))
         image_app.paste(stt3, (780, 625), mask=stt3)          
 
-        draw.text((940, 638),(f"{int(charactert.stats.FIGHT_PROP_FIRE_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255)) 
+        draw.text((940, 638),(f"{int(charactert.stats[40] * 100)}%"), font=fontt, fill=(255, 255, 255)) 
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless")
         sth = BytesIO(response.content)
         sth1 = Image.open(sth).resize((50, 50))
         image_app.paste(sth1, (890, 625), mask=sth1)          
 
-        draw.text((1050, 638),(f"{int(charactert.stats.FIGHT_PROP_ICE_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((1050, 638),(f"{int(charactert.stats[46] * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless")
         stb = BytesIO(response.content)
@@ -230,11 +230,11 @@ class Select(discord.ui.Select):
             crit_rate = 0
             crit_dmg = 0
             for substate in artifact.sub_stats:
-                if substate[1] == "Tỷ Lệ Bạo Kích" or substate[1] == "ST Bạo Kích":
-                    if substate[1] == "Tỷ Lệ Bạo Kích":
-                        crit_rate = substate[0]
-                    elif substate[1] == "ST Bạo Kích":
-                        crit_dmg = substate[0]
+                if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
+                    if substate.name == "Tỷ Lệ Bạo Kích":
+                        crit_rate = substate.name
+                    elif substate.name == "ST Bạo Kích":
+                        crit_dmg = substate.name
             cv0 = (crit_rate * 2) + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
@@ -268,12 +268,12 @@ class Select(discord.ui.Select):
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
           x_tdv_level += x_tdv
           for substate in artifact.sub_stats:
-            if substate[1] == "Hiệu Quả Nạp Nguyên Tố":
+            if substate.name == "Hiệu Quả Nạp Nguyên Tố":
               name_sst = substate[1].strip()[:12]
-            elif substate[1] == "Tinh Thông Nguyên Tố":
-              name_sst = substate[1].strip()[:10]
+            elif substate.name == "Tinh Thông Nguyên Tố":
+              name_sst = substate.name.strip()[:10]
             else:
-              name_sst = substate[1]
+              name_sst = substate.name
             draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate[0]}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
