@@ -10,4 +10,4 @@ genshin
 pytz
 rsa
 pydantic
-enkanetwork.py
+gỉt+https://github.com/0kq-github/EnkaNetwork.py
