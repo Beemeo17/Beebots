@@ -769,7 +769,7 @@ class scuids(commands.Cog):
           value="",
           inline=False)
 
-        embed.set_thumbnail(url=f"{data.player.icon}")
+        embed.set_thumbnail(url=f"{data.player.namecard_icon}")
         embed.add_field(name=f"`name:` **{data.player.nickname}**",
                         value=f"",
                         inline=False)
