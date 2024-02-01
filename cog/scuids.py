@@ -208,8 +208,8 @@ class Select(discord.ui.Select):
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
 
         artifact_counts = {}
-        for artifact in filter(lambda x: x.type == EquipmentsType.ARTIFACT, charactert.equipments):
-            artifact_name_set = artifact.detail.artifact_name_set
+        for artifact in charactert.artifacts:
+            artifact_name_set = artifact.set_name
             if artifact_name_set in artifact_counts:
                 artifact_counts[artifact_name_set] += 1
             else:
@@ -217,7 +217,7 @@ class Select(discord.ui.Select):
         y_position = 672
         y_offset = 28
         #set tdv
-        for artifact_name_set, count in artifact_counts.items(): 
+        for set_name, count in artifact_counts.items(): 
             if count > 1 and count < 4:
               draw.text((95, y_position), f"{artifact_name_set} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
               y_position += y_offset
@@ -227,10 +227,10 @@ class Select(discord.ui.Select):
         x_cv1 = 158
         x_cv2 = 224
         sss = 0
-        for artifact in filter(lambda x: x.type == EquipmentsType.ARTIFACT, charactert.equipments):
+        for artifact in charactert.artifacts:
             crit_rate = 0
             crit_dmg = 0
-            for substate in artifact.detail.substats:
+            for substate in artifact.sub_stats:
                 if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
                     if substate.name == "Tỷ Lệ Bạo Kích":
                         crit_rate = substate.value
@@ -254,8 +254,8 @@ class Select(discord.ui.Select):
         y_tdv_stats1 = 967 #y stats tdv
         y_tdv_stats2 = 25 
         element_count = 0 #chia bảng 
-        for artifact in filter(lambda x: x.type == EquipmentsType.ARTIFACT, charactert.equipments):
-          response = requests.get(artifact.detail.icon)
+        for artifact in charactert.artifacts:
+          response = requests.get(artifact.icon)
           image_set_tdv0 = BytesIO(response.content)
           image_tdv0 = Image.open(image_set_tdv0).resize((165, 165))
           image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
@@ -264,15 +264,15 @@ class Select(discord.ui.Select):
           draw.text((x_tdv_rate, 896), (f"{'*'*artifact.detail.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
           x_tdv_rate += x_tdv
 
-          draw.text((x_tdv_stats, 932), artifact.detail.mainstats.name, font=fonts, fill=(255, 255, 255))
+          draw.text((x_tdv_stats, 932), artifact.main_stats.name, font=fonts, fill=(255, 255, 255))
 
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
           x_tdv_level += x_tdv
-          for substate in artifact.detail.substats:
+          for substate in artifact.sub_stats:
             if substate.name == "Hiệu Quả Nạp Nguyên Tố":
-              name_sst = substate.name.strip()[:12]
+              name_sst = substate.strip()[:12]
             elif substate.name == "Tinh Thông Nguyên Tố":
-              name_sst = substate.name.strip()[:10]
+              name_sst = substate.strip()[:10]
             else:
               name_sst = substate.name
             draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate.value}{'%' if substate.type == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
@@ -301,7 +301,7 @@ class Select(discord.ui.Select):
         draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
         draw.text((534, 182), (f"     {charactert.talents[2].level}"),font=font,fill=(255, 255, 255))
 
-        Lock = (6 - charactert.constellations_unlocked)
+        Lock = (6 - charactert.constellations)
         x_lock = 532
         y_lock = 569
         for _ in range(Lock):
@@ -311,7 +311,7 @@ class Select(discord.ui.Select):
           image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
           y_lock -= 65
 
-        if charactert.constellations_unlocked > 0:
+        if charactert.constellations > 0:
         #cung  mệnh 1
           constellation = charactert.constellations[0]
           response = requests.get(constellation.icon) #skill1
@@ -319,7 +319,7 @@ class Select(discord.ui.Select):
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 244), mask=image_skill00)
 
-        if charactert.constellations_unlocked > 1:
+        if charactert.constellations > 1:
           #cung  mệnh 2
           constellation = charactert.constellations[1]
           response = requests.get(constellation.icon) #skill1
@@ -327,7 +327,7 @@ class Select(discord.ui.Select):
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 309), mask=image_skill00)
 
-        if charactert.constellations_unlocked > 2:
+        if charactert.constellations > 2:
           #cung  mệnh 3
           constellation = charactert.constellations[2]
           response = requests.get(constellation.icon) #skill1
@@ -335,7 +335,7 @@ class Select(discord.ui.Select):
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 375), mask=image_skill00)
 
-        if charactert.constellations_unlocked > 3:
+        if charactert.constellations > 3:
           #cung  mệnh 4
           constellation = charactert.constellations[3]
           response = requests.get(constellation.icon) #skill1
@@ -343,7 +343,7 @@ class Select(discord.ui.Select):
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 438), mask=image_skill00)
 
-        if charactert.constellations_unlocked > 4:
+        if charactert.constellations > 4:
           #cung  mệnh 5
           constellation = charactert.constellations[4]
           response = requests.get(constellation.icon) #skill1
@@ -353,7 +353,7 @@ class Select(discord.ui.Select):
 
 
         #cung  mệnh 6
-        if charactert.constellations_unlocked > 5:
+        if charactert.constellations > 5:
           constellation = charactert.constellations[5]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
