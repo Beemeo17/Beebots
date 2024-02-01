@@ -30,8 +30,10 @@ class Select(discord.ui.Select):
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, Interaction: discord.Interaction):
      async with enka.EnkaAPI() as api:
+       try:
         uid = global_data.get("uid")
         data = await api.fetch_showcase(uid)
+        channel = inset_message.get('channelt')
       
         embed_loading = discord.Embed(color=discord.Color.yellow())
         embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>",value="", inline=False)
@@ -374,7 +376,9 @@ class Select(discord.ui.Select):
         embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
         messagea = inset_message.get("message")
         await messagea.edit(content=None, embed=embed)
-
+       except Exception as b:
+        print(b)
+        await channel.send(b)
 
 
 class SelectView(discord.ui.View):
