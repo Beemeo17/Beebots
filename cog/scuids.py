@@ -80,7 +80,7 @@ class Select(discord.ui.Select):
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
 
         #vũ khí
-        weapon = charactert.weapon[-1]
+        weapon = charactert.weapon
         response = requests.get(weapon.icon)
         image_set_vk0 = BytesIO(response.content)
         image_vk0 = Image.open(image_set_vk0).resize((144, 124))
