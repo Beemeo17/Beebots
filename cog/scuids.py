@@ -196,7 +196,7 @@ class Select(discord.ui.Select):
         draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
         draw.text((534, 182), (f"     {charactert.talents[2].level}"),font=font,fill=(255, 255, 255))
 
-        Locks = len(charactert.constellations)
+        Locks = 6 - (len(charactert.constellations))
         x_lock = 532
         y_lock = 569
         for _ in range(locks):
