@@ -90,12 +90,11 @@ class Select(discord.ui.Select):
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
         draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
-        draw.text((842, 104), (f"{weapon.stats[1]}"), font=font, fill=(255, 255, 255))#atk
-        for substate in weapon.stats: #dòng chính
-            if substate.name == "Hiệu Quả Nạp Nguyên Tố":
-              draw.text((812, 150), (f"{substate[2].strip()[:12]}: {substate[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
-            else:
-              draw.text((812, 150), (f"{substate[2]}: {substate[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        draw.text((842, 104), (f"{weapon.stats[1]}"), font=font, fill=(255, 255, 255))#atk#dòng chính
+        if weapon.stats[2] == "Hiệu Quả Nạp Nguyên Tố":
+              draw.text((812, 150), (f"{weapon.stats[2].strip()[:12]}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        else:
+              draw.text((812, 150), (f"{weapon.stats[2]}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
 
         #Stats
