@@ -9,6 +9,7 @@ from datetime import datetime, time
 import aiohttp
 import enka
 import asyncio
+import traceback
 
 global_data = {
     "data": None,
@@ -270,9 +271,9 @@ class Select(discord.ui.Select):
         embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
         messagea = inset_message.get("message")
         await messagea.edit(content=None, embed=embed)
-       except Exception as b:
-        print(b)
-        await channel.send(b)
+       except Exception as e:
+        traceback.print_exc()
+        await channel.send(f"Error: {e}\n{traceback.format_exc()}")
 
 
 class SelectView(discord.ui.View):
