@@ -375,7 +375,7 @@ class Select(discord.ui.Select):
         await messagea.edit(content=None, embed=embed)
       except Exception as b:
         print(b)
-        await Interaction.reponse.send_message(b)
+        await Interaction.channel.send(b)
         return b
 
 class SelectView(discord.ui.View):
