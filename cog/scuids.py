@@ -68,7 +68,7 @@ class Select(discord.ui.Select):
         draw.text((38, 51), (f"AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
         
         #char
-        response = requests.get(charactert.image.banner.url)
+        response = requests.get(charactert.art)
         image_set_schar0 = BytesIO(response.content)
         image_schar0 = Image.open(image_set_schar0).resize((744, 352))
         image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
