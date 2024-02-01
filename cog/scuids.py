@@ -29,9 +29,9 @@ class Select(discord.ui.Select):
           options.append(discord.SelectOption(label=char.name, value=f"char{i+1}"))
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, Interaction: discord.Interaction):
-      data = global_data.get("data")
-      uid = global_data.get("uid")
-      try: 
+        data = global_data.get("data")
+        uid = global_data.get("uid")
+      
         embed_loading = discord.Embed(color=discord.Color.yellow())
         embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>",value="", inline=False)
         await Interaction.response.edit_message(content=None, embed=embed_loading)
@@ -373,10 +373,8 @@ class Select(discord.ui.Select):
         embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
         messagea = inset_message.get("message")
         await messagea.edit(content=None, embed=embed)
-      except Exception as b:
-        print(b)
-        await Interaction.channel.send(b)
-        return b
+
+
 
 class SelectView(discord.ui.View):
     def __init__(self, *, timeout=300):
