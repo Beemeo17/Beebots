@@ -780,13 +780,13 @@ class scuids(commands.Cog):
 
         embed.add_field(
           name='',
-          value=f' {str(emoji_thanhtuu)} `Thành Tựu:` **{data.player.achievement}**',
+          value=f' {str(emoji_thanhtuu)} `Thành Tựu:` **{data.player.achievements}**',
           inline=True)
 
         embed.add_field(
           name='',
           value=
-          f' {str(emoji_lahoan)} `La Hoàn:` **{data.player.abyss_floor} - {data.player.abyss_room}**',
+          f' {str(emoji_lahoan)} `La Hoàn:` **{data.player.abyss_floor} - {data.player.abyss_level}**',
           inline=True)
 
         embed.add_field(name="✨=characters°preview=✨", value="", inline=False)
