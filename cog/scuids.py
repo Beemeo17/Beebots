@@ -80,7 +80,7 @@ class Select(discord.ui.Select):
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
 
         #vũ khí
-        weapon = charactert.weapons[-1]
+        weapon = charactert.weapon[-1]
         response = requests.get(weapon.icon)
         image_set_vk0 = BytesIO(response.content)
         image_vk0 = Image.open(image_set_vk0).resize((144, 124))
@@ -208,7 +208,7 @@ class Select(discord.ui.Select):
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
 
         artifact_counts = {}
-        for artifact in charactert.artifacts:
+        for artifact in charactert.artifact:
             artifact_name_set = artifact.set_name
             if artifact_name_set in artifact_counts:
                 artifact_counts[artifact_name_set] += 1
