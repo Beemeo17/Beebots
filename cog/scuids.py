@@ -449,7 +449,7 @@ class scuids(commands.Cog):
             draw.text((12, 122), data.characters[0].name, font=font,
                       fill=(0, 0, 0))  #name0
             draw.text((63, 80), (
-              f"level:{data.characters[0].level}     C {data.characters[0].constellations_unlocked}"
+              f"level:{data.characters[0].level}     C {data.characters[0].constellations}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level0
