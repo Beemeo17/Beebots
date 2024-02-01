@@ -450,7 +450,7 @@ class scuids(commands.Cog):
             draw.text((12, 122), data.characters[0].name, font=font,
                       fill=(0, 0, 0))  #name0
             draw.text((63, 80), (
-              f"level:{data.characters[0].level}     C {data.characters[0].constellations}"
+              f"level:{data.characters[0].level}     C {len(data.characters[0].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level0
@@ -488,7 +488,7 @@ class scuids(commands.Cog):
             draw.text((195, 122), data.characters[1].name, font=font,
                       fill=(0, 0, 0))  #name1
             draw.text((244, 80), (
-              f"level:{data.characters[1].level}     C {data.characters[1].constellations}"
+              f"level:{data.characters[1].level}     C {len(data.characters[1].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level1
@@ -526,7 +526,7 @@ class scuids(commands.Cog):
             draw.text((378, 122), data.characters[2].name, font=font,
                       fill=(0, 0, 0))  #name2
             draw.text((425, 80), (
-              f"level:{data.characters[2].level}     C {data.characters[2].constellations}"
+              f"level:{data.characters[2].level}     C {len(data.characters[2].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level2
@@ -564,7 +564,7 @@ class scuids(commands.Cog):
             draw.text((561, 122), data.characters[3].name, font=font,
                       fill=(0, 0, 0))  #name3
             draw.text((606, 80), (
-              f"level:{data.characters[3].level}     C {data.characters[3].constellations}"
+              f"level:{data.characters[3].level}     C {len(data.characters[3].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level3
@@ -602,7 +602,7 @@ class scuids(commands.Cog):
             draw.text((12, 273), data.characters[4].name, font=font,
                       fill=(0, 0, 0))  #name4
             draw.text((63, 230), (
-              f"level:{data.characters[4].level}     C {data.characters[4].constellations}"
+              f"level:{data.characters[4].level}     C {len(data.characters[4].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level4
@@ -640,7 +640,7 @@ class scuids(commands.Cog):
             draw.text((195, 273), data.characters[5].name, font=font,
                       fill=(0, 0, 0))  #name5
             draw.text((244, 230), (
-              f"level:{data.characters[5].level}     C {data.characters[5].constellations}"
+              f"level:{data.characters[5].level}     C {len(data.characters[5].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level5
@@ -678,7 +678,7 @@ class scuids(commands.Cog):
             draw.text((378, 273), data.characters[6].name, font=font,
                       fill=(0, 0, 0))  #name6
             draw.text((425, 230), (
-              f"level:{data.characters[6].level}     C {data.characters[6].constellations}"
+              f"level:{data.characters[6].level}     C {len(data.characters[6].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level6
@@ -716,7 +716,7 @@ class scuids(commands.Cog):
             draw.text((561, 273), data.characters[7].name, font=font,
                       fill=(0, 0, 0))  #name7
             draw.text((606, 230), (
-              f"level:{data.characters[7].level}     C {data.characters[7].constellations}"
+              f"level:{data.characters[7].level}     C {len(data.characters[7].constellations)}"
             ),
                       font=font,
                       fill=(0, 0, 0))  #level7
