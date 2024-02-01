@@ -60,13 +60,13 @@ class Select(discord.ui.Select):
         response = requests.get(url_goc)
         ime_app = BytesIO(response.content)
         image_app = Image.open(ime_app).convert("RGBA").resize((1141, 1134))
-        
+
         font = ImageFont.truetype("zh-cn.ttf", 27)
         draw = ImageDraw.Draw(image_app)
-        
+
         draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
         draw.text((38, 51), (f"AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
-        
+
         #char
         response = requests.get(charactert.art)
         image_set_schar0 = BytesIO(response.content)
@@ -75,14 +75,14 @@ class Select(discord.ui.Select):
         draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
         draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
-        
+
         #vũ khí
         weapon = charactert.equipments[-1]
         response = requests.get(weapon.detail.icon.url)
         image_set_vk0 = BytesIO(response.content)
         image_vk0 = Image.open(image_set_vk0).resize((144, 124))
         image_app.paste(image_vk0, (650, 33), mask=image_vk0)
-      
+
         draw.text((820, 36), weapon.detail.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
         draw.text((970, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
@@ -93,8 +93,8 @@ class Select(discord.ui.Select):
               draw.text((812, 150), (f"{substate.name.strip()[:12]}: {substate.value}{'%' if substate.type == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             else:
               draw.text((812, 150), (f"{substate.name}: {substate.value}{'%' if substate.type == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
-      
-        
+
+
         #Stats
         fontt=ImageFont.truetype("zh-cn.ttf", 25)
         draw.text((688, 250), (f"HP: {int(charactert.stats.FIGHT_PROP_MAX_HP.value)}"), font=fontt, fill=(255, 255, 255))
@@ -158,52 +158,52 @@ class Select(discord.ui.Select):
         stp = BytesIO(response.content)
         stp1 = Image.open(stp).resize((50, 50))
         image_app.paste(stp1, (780, 565), mask=stp1)
-        
+
         draw.text((940, 578),(f"{int(charactert.stats.FIGHT_PROP_ROCK_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless")
         stn = BytesIO(response.content)
         stn1 = Image.open(stn).resize((50, 50))
         image_app.paste(stn1, (890, 565), mask=stn1)
-       
+
         draw.text((1050, 578),(f"{int(charactert.stats.FIGHT_PROP_ELEC_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless")
         stl = BytesIO(response.content)
         stl1 = Image.open(stl).resize((50, 50))
         image_app.paste(stl1, (1000, 565), mask=stl1)
-       
+
         draw.text((710, 638),(f"{int(charactert.stats.FIGHT_PROP_GRASS_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless")
         stt = BytesIO(response.content)
         stt1 = Image.open(stt).resize((50, 50))
         image_app.paste(stt1, (660, 625), mask=stt1)           
-      
+
         draw.text((830, 638),(f"{int(charactert.stats.FIGHT_PROP_WATER_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless")
         stt2 = BytesIO(response.content)
         stt3 = Image.open(stt2).resize((50, 50))
         image_app.paste(stt3, (780, 625), mask=stt3)          
-       
+
         draw.text((940, 638),(f"{int(charactert.stats.FIGHT_PROP_FIRE_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255)) 
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless")
         sth = BytesIO(response.content)
         sth1 = Image.open(sth).resize((50, 50))
         image_app.paste(sth1, (890, 625), mask=sth1)          
-       
+
         draw.text((1050, 638),(f"{int(charactert.stats.FIGHT_PROP_ICE_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless")
         stb = BytesIO(response.content)
         stb1 = Image.open(stb).resize((50, 50))
         image_app.paste(stb1, (1000, 625), mask=stb1)
-      
+
         #tdv
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
-        
+
         artifact_counts = {}
         for artifact in filter(lambda x: x.type == EquipmentsType.ARTIFACT, charactert.equipments):
             artifact_name_set = artifact.detail.artifact_name_set
@@ -260,7 +260,7 @@ class Select(discord.ui.Select):
 
           draw.text((x_tdv_rate, 896), (f"{'*'*artifact.detail.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
           x_tdv_rate += x_tdv
-          
+
           draw.text((x_tdv_stats, 932), artifact.detail.mainstats.name, font=fonts, fill=(255, 255, 255))
 
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
@@ -278,25 +278,25 @@ class Select(discord.ui.Select):
             if element_count % 4 == 0:
               y_tdv_stats1 = 973
               x_tdv_stats += x_tdv_stats1
-            
+
         #thiên phú
-        response = requests.get(charactert.skills[0].icon.url)  #skill1
+        response = requests.get(charactert.talent[0].icon.url)  #skill1
         image_set_skill00 = BytesIO(response.content)
         image_skill00 = Image.open(image_set_skill00).resize((60, 60))
         image_app.paste(image_skill00, (532, 15), mask=image_skill00)
-      
-        response = requests.get(charactert.skills[1].icon.url)  #skill2
+
+        response = requests.get(charactert.talent[1].icon.url)  #skill2
         image_set_skill01 = BytesIO(response.content)
         image_skill01 = Image.open(image_set_skill01).resize((60, 60))
         image_app.paste(image_skill01, (532, 84), mask=image_skill01)
-      
-        response = requests.get(charactert.skills[2].icon.url)  #skill3
+
+        response = requests.get(charactert.talent[2].icon.url)  #skill3
         image_set_skill02 = BytesIO(response.content)
         image_skill02 = Image.open(image_set_skill02).resize((60, 60)).convert('RGBA')
         image_app.paste(image_skill02, (532, 150), mask=image_skill02)
-        draw.text((534, 47), (f"     {charactert.skills[0].level}"),font=font,fill=(255, 255, 255))
-        draw.text((534, 114), (f"     {charactert.skills[1].level}"),font=font,fill=(255, 255, 255))
-        draw.text((534, 182), (f"     {charactert.skills[2].level}"),font=font,fill=(255, 255, 255))
+        draw.text((534, 47), (f"     {charactert.talent[0].level}"),font=font,fill=(255, 255, 255))
+        draw.text((534, 114), (f"     {charactert.talent[1].level}"),font=font,fill=(255, 255, 255))
+        draw.text((534, 182), (f"     {charactert.talent[2].level}"),font=font,fill=(255, 255, 255))
 
         Lock = (6 - charactert.constellations_unlocked)
         x_lock = 532
@@ -307,7 +307,7 @@ class Select(discord.ui.Select):
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
           y_lock -= 65
-        
+
         if charactert.constellations_unlocked > 0:
         #cung  mệnh 1
           constellation = charactert.constellations[0]
@@ -315,7 +315,7 @@ class Select(discord.ui.Select):
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 244), mask=image_skill00)
-      
+
         if charactert.constellations_unlocked > 1:
           #cung  mệnh 2
           constellation = charactert.constellations[1]
@@ -323,7 +323,7 @@ class Select(discord.ui.Select):
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 309), mask=image_skill00)
-      
+
         if charactert.constellations_unlocked > 2:
           #cung  mệnh 3
           constellation = charactert.constellations[2]
@@ -331,7 +331,7 @@ class Select(discord.ui.Select):
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 375), mask=image_skill00)
-      
+
         if charactert.constellations_unlocked > 3:
           #cung  mệnh 4
           constellation = charactert.constellations[3]
@@ -339,7 +339,7 @@ class Select(discord.ui.Select):
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 438), mask=image_skill00)
-      
+
         if charactert.constellations_unlocked > 4:
           #cung  mệnh 5
           constellation = charactert.constellations[4]
@@ -347,8 +347,8 @@ class Select(discord.ui.Select):
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 502), mask=image_skill00)
-      
-        
+
+
         #cung  mệnh 6
         if charactert.constellations_unlocked > 5:
           constellation = charactert.constellations[5]
@@ -357,7 +357,7 @@ class Select(discord.ui.Select):
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
           image_app.paste(image_skill00, (532, 567), mask=image_skill00) 
 
-        
+
         buffer = BytesIO()
         image_app.save(buffer, format='png')
         buffer.seek(0)
@@ -414,7 +414,7 @@ class scuids(commands.Cog):
     filename = os.path.basename(__file__)
     print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
     print('='* 50)
-  
+
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
   async def scuid(self, Interaction, uid: int):
     async with enka.EnkaAPI() as api:
@@ -423,12 +423,12 @@ class scuids(commands.Cog):
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
-      
+
         url_goc = 'https://cdn.discordapp.com/attachments/1093887180096671824/1100077580008312922/Khong_Co_Tieu_e36_20230424221522.png'
         response = requests.get(url_goc)
         ime_app = BytesIO(response.content)
         image_app = Image.open(ime_app).convert("RGBA")
-      
+
         font = ImageFont.truetype("zh-cn.ttf", 14)
         draw = ImageDraw.Draw(image_app)
         emoji_thanhtuu = discord.utils.get(self.bot.emojis, name="thanhtuu_beebot")
@@ -454,28 +454,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level0
             #skill_char0
-            response = requests.get(data.characters[0].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[0].talent[0].icon.url)  #skill1
             image_set_skill00 = BytesIO(response.content)
             image_skill00 = Image.open(image_set_skill00).resize((20, 20))
             image_app.paste(image_skill00, (61, 97), mask=image_skill00)
-      
-            response = requests.get(data.characters[0].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[0].talent[1].icon.url)  #skill2
             image_set_skill01 = BytesIO(response.content)
             image_skill01 = Image.open(image_set_skill01).resize((20, 20))
             image_app.paste(image_skill01, (101, 97), mask=image_skill01)
-      
-            response = requests.get(data.characters[0].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[0].talent[2].icon.url)  #skill3
             image_set_skill02 = BytesIO(response.content)
             image_skill02 = Image.open(image_set_skill02).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill02, (137, 97), mask=image_skill02)
-            draw.text((61, 98), (f"     {data.characters[0].skills[0].level}"),
+            draw.text((61, 98), (f"     {data.characters[0].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((101, 98), (f"     {data.characters[0].skills[1].level}"),
+            draw.text((101, 98), (f"     {data.characters[0].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((137, 98), (f"     {data.characters[0].skills[2].level}"),
+            draw.text((137, 98), (f"     {data.characters[0].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 1:
@@ -492,28 +492,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level1
             #skill_char1
-            response = requests.get(data.characters[1].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[1].talent[0].icon.url)  #skill1
             image_set_skill10 = BytesIO(response.content)
             image_skill10 = Image.open(image_set_skill10).resize((20, 20))
             image_app.paste(image_skill10, (241, 97), mask=image_skill10)
-      
-            response = requests.get(data.characters[1].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[1].talent[1].icon.url)  #skill2
             image_set_skill11 = BytesIO(response.content)
             image_skill11 = Image.open(image_set_skill11).resize((20, 20))
             image_app.paste(image_skill11, (282, 97), mask=image_skill11)
-      
-            response = requests.get(data.characters[1].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[1].talent[2].icon.url)  #skill3
             image_set_skill12 = BytesIO(response.content)
             image_skill12 = Image.open(image_set_skill12).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill12, (320, 97), mask=image_skill12)
-            draw.text((241, 98), (f"     {data.characters[1].skills[0].level}"),
+            draw.text((241, 98), (f"     {data.characters[1].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((282, 98), (f"     {data.characters[1].skills[1].level}"),
+            draw.text((282, 98), (f"     {data.characters[1].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((320, 98), (f"     {data.characters[1].skills[2].level}"),
+            draw.text((320, 98), (f"     {data.characters[1].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 2:
@@ -530,28 +530,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level2
             #skill_char2
-            response = requests.get(data.characters[2].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[2].talent[0].icon.url)  #skill1
             image_set_skill20 = BytesIO(response.content)
             image_skill20 = Image.open(image_set_skill20).resize((20, 20))
             image_app.paste(image_skill20, (423, 97), mask=image_skill20)
-      
-            response = requests.get(data.characters[2].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[2].talent[1].icon.url)  #skill2
             image_set_skill21 = BytesIO(response.content)
             image_skill21 = Image.open(image_set_skill21).resize((20, 20))
             image_app.paste(image_skill21, (463, 97), mask=image_skill21)
-      
-            response = requests.get(data.characters[2].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[2].talent[2].icon.url)  #skill3
             image_set_skill22 = BytesIO(response.content)
             image_skill22 = Image.open(image_set_skill22).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill22, (503, 97), mask=image_skill22)
-            draw.text((423, 98), (f"     {data.characters[2].skills[0].level}"),
+            draw.text((423, 98), (f"     {data.characters[2].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((463, 98), (f"     {data.characters[2].skills[1].level}"),
+            draw.text((463, 98), (f"     {data.characters[2].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((502, 98), (f"     {data.characters[2].skills[2].level}"),
+            draw.text((502, 98), (f"     {data.characters[2].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 3:
@@ -568,28 +568,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level3
             #skill_char3
-            response = requests.get(data.characters[3].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[3].talent[0].icon.url)  #skill1
             image_set_skill30 = BytesIO(response.content)
             image_skill30 = Image.open(image_set_skill30).resize((20, 20))
             image_app.paste(image_skill30, (605, 97), mask=image_skill30)
-      
-            response = requests.get(data.characters[3].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[3].talent[1].icon.url)  #skill2
             image_set_skill31 = BytesIO(response.content)
             image_skill31 = Image.open(image_set_skill31).resize((20, 20))
             image_app.paste(image_skill31, (645, 97), mask=image_skill31)
-      
-            response = requests.get(data.characters[3].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[3].talent[2].icon.url)  #skill3
             image_set_skill32 = BytesIO(response.content)
             image_skill32 = Image.open(image_set_skill32).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill32, (684, 97), mask=image_skill32)
-            draw.text((605, 98), (f"     {data.characters[3].skills[0].level}"),
+            draw.text((605, 98), (f"     {data.characters[3].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((645, 98), (f"     {data.characters[3].skills[1].level}"),
+            draw.text((645, 98), (f"     {data.characters[3].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((684, 98), (f"     {data.characters[3].skills[2].level}"),
+            draw.text((684, 98), (f"     {data.characters[3].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 4:
@@ -606,28 +606,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level4
             #skill_char4
-            response = requests.get(data.characters[4].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[4].talent[0].icon.url)  #skill1
             image_set_skill40 = BytesIO(response.content)
             image_skill40 = Image.open(image_set_skill40).resize((20, 20))
             image_app.paste(image_skill40, (61, 247), mask=image_skill40)
-      
-            response = requests.get(data.characters[4].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[4].talent[1].icon.url)  #skill2
             image_set_skill41 = BytesIO(response.content)
             image_skill41 = Image.open(image_set_skill41).resize((20, 20))
             image_app.paste(image_skill41, (102, 247), mask=image_skill41)
-      
-            response = requests.get(data.characters[4].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[4].talent[2].icon.url)  #skill3
             image_set_skill42 = BytesIO(response.content)
             image_skill42 = Image.open(image_set_skill42).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill42, (140, 247), mask=image_skill42)
-            draw.text((61, 248), (f"     {data.characters[4].skills[0].level}"),
+            draw.text((61, 248), (f"     {data.characters[4].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((102, 248), (f"     {data.characters[4].skills[1].level}"),
+            draw.text((102, 248), (f"     {data.characters[4].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((140, 248), (f"     {data.characters[4].skills[2].level}"),
+            draw.text((140, 248), (f"     {data.characters[4].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 5:
@@ -644,28 +644,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level5
             #skill_char5
-            response = requests.get(data.characters[5].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[5].talent[0].icon.url)  #skill1
             image_set_skill50 = BytesIO(response.content)
             image_skill50 = Image.open(image_set_skill50).resize((20, 20))
             image_app.paste(image_skill50, (243, 247), mask=image_skill50)
-      
-            response = requests.get(data.characters[5].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[5].talent[1].icon.url)  #skill2
             image_set_skill51 = BytesIO(response.content)
             image_skill51 = Image.open(image_set_skill51).resize((20, 20))
             image_app.paste(image_skill51, (285, 247), mask=image_skill51)
-      
-            response = requests.get(data.characters[5].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[5].talent[2].icon.url)  #skill3
             image_set_skill52 = BytesIO(response.content)
             image_skill52 = Image.open(image_set_skill52).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill52, (323, 247), mask=image_skill52)
-            draw.text((243, 248), (f"     {data.characters[5].skills[0].level}"),
+            draw.text((243, 248), (f"     {data.characters[5].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((285, 248), (f"     {data.characters[5].skills[1].level}"),
+            draw.text((285, 248), (f"     {data.characters[5].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((323, 248), (f"     {data.characters[5].skills[2].level}"),
+            draw.text((323, 248), (f"     {data.characters[5].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 6:
@@ -682,28 +682,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level6
             #skill_char6
-            response = requests.get(data.characters[6].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[6].talent[0].icon.url)  #skill1
             image_set_skill60 = BytesIO(response.content)
             image_skill60 = Image.open(image_set_skill60).resize((20, 20))
             image_app.paste(image_skill60, (426, 247), mask=image_skill60)
-      
-            response = requests.get(data.characters[6].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[6].talent[1].icon.url)  #skill2
             image_set_skill61 = BytesIO(response.content)
             image_skill61 = Image.open(image_set_skill61).resize((20, 20))
             image_app.paste(image_skill61, (467, 247), mask=image_skill61)
-      
-            response = requests.get(data.characters[6].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[6].talent[2].icon.url)  #skill3
             image_set_skill62 = BytesIO(response.content)
             image_skill62 = Image.open(image_set_skill62).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill62, (506, 247), mask=image_skill62)
-            draw.text((426, 248), (f"     {data.characters[6].skills[0].level}"),
+            draw.text((426, 248), (f"     {data.characters[6].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((467, 248), (f"     {data.characters[6].skills[1].level}"),
+            draw.text((467, 248), (f"     {data.characters[6].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((506, 248), (f"     {data.characters[6].skills[2].level}"),
+            draw.text((506, 248), (f"     {data.characters[6].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
           if len(data.characters) > 7:
@@ -720,28 +720,28 @@ class scuids(commands.Cog):
                       font=font,
                       fill=(0, 0, 0))  #level7
             #skill_char7
-            response = requests.get(data.characters[7].skills[0].icon.url)  #skill1
+            response = requests.get(data.characters[7].talent[0].icon.url)  #skill1
             image_set_skill70 = BytesIO(response.content)
             image_skill70 = Image.open(image_set_skill70).resize((20, 20))
             image_app.paste(image_skill70, (608, 247), mask=image_skill70)
-      
-            response = requests.get(data.characters[7].skills[1].icon.url)  #skill2
+
+            response = requests.get(data.characters[7].talent[1].icon.url)  #skill2
             image_set_skill71 = BytesIO(response.content)
             image_skill71 = Image.open(image_set_skill71).resize((20, 20))
             image_app.paste(image_skill71, (648, 247), mask=image_skill71)
-      
-            response = requests.get(data.characters[7].skills[2].icon.url)  #skill3
+
+            response = requests.get(data.characters[7].talent[2].icon.url)  #skill3
             image_set_skill72 = BytesIO(response.content)
             image_skill72 = Image.open(image_set_skill72).resize(
               (20, 20)).convert('RGBA')
             image_app.paste(image_skill72, (687, 247), mask=image_skill72)
-            draw.text((608, 248), (f"     {data.characters[7].skills[0].level}"),
+            draw.text((608, 248), (f"     {data.characters[7].talent[0].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((648, 248), (f"     {data.characters[7].skills[1].level}"),
+            draw.text((648, 248), (f"     {data.characters[7].talent[1].level}"),
                       font=font,
                       fill=(255, 255, 255))
-            draw.text((687, 248), (f"     {data.characters[7].skills[2].level}"),
+            draw.text((687, 248), (f"     {data.characters[7].talent[2].level}"),
                       font=font,
                       fill=(255, 255, 255))
         else:
@@ -759,7 +759,7 @@ class scuids(commands.Cog):
             "https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
           )
           await Interaction.followup.send(embed=embed1, ephemeral=True)
-      
+
         embed = discord.Embed(color=0x0ad2f5)
         author_name = f"{Interaction.user.name}#{Interaction.user.discriminator}"
         embed.set_author(name=author_name, icon_url=Interaction.user.avatar)
@@ -768,35 +768,35 @@ class scuids(commands.Cog):
           name=f"`UID:`||{uid}||  {str(emoji_owo)}  `AR` {data.player.level}",
           value="",
           inline=False)
-      
+
         embed.set_thumbnail(url=f"{data.player.avatar.icon.url}")
         embed.add_field(name=f"`name:` **{data.player.nickname}**",
                         value=f"",
                         inline=False)
-      
+
         embed.add_field(name=f"`chữ ký:` {data.player.signature}",
                         value='',
                         inline=False)
-      
+
         embed.add_field(
           name='',
           value=f' {str(emoji_thanhtuu)} `Thành Tựu:` **{data.player.achievement}**',
           inline=True)
-      
+
         embed.add_field(
           name='',
           value=
           f' {str(emoji_lahoan)} `La Hoàn:` **{data.player.abyss_floor} - {data.player.abyss_room}**',
           inline=True)
-      
+
         embed.add_field(name="✨=characters°preview=✨", value="", inline=False)
-      
+
         embed.add_field(
           name="",
           value=
           f" {str(emoji_enka)}[chi tiết char](https://enka.network/u/{uid}/) • {str(emoji_aspirine)}[tính dame char](https://genshin.aspirine.su/#uid{uid})",
           inline=False)
-      
+
         buffer = BytesIO()
         image_app.save(buffer, format='png')
         buffer.seek(0)
