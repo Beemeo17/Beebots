@@ -99,19 +99,19 @@ class Select(discord.ui.Select):
 
         #Stats
         fontt=ImageFont.truetype("zh-cn.ttf", 25)
-        draw.text((688, 250), (f"HP: {int(charactert.stats.FIGHT_PROP_MAX_HP.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 250), (f"HP: {int(charactert.stats.FIGHT_PROP_HP.value)}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
         hp = BytesIO(response.content)
         hp1 = Image.open(hp).resize((40, 40))
         image_app.paste(hp1, (644, 245), mask=hp1)
 
-        draw.text((688, 285), (f"Tân Công: {int(charactert.stats.FIGHT_PROP_CUR_ATTACK.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 285), (f"Tân Công: {int(charactert.stats.FIGHT_PROP_ATTACK.value)}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png")
         atk = BytesIO(response.content)
         atk1 = Image.open(atk).resize((40, 40))
         image_app.paste(atk1, (644, 280), mask=atk1)
 
-        draw.text((688, 325), (f"Phòng Ngự: {int(charactert.stats.FIGHT_PROP_CUR_DEFENSE.value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 325), (f"Phòng Ngự: {int(charactert.stats.FIGHT_PROP_DEFENSE.value)}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png")
         def2 = BytesIO(response.content)
         def1 = Image.open(def2).resize((40, 40))
