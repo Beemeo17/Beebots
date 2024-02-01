@@ -95,7 +95,7 @@ class Select(discord.ui.Select):
               draw.text((812, 150), (f"{weapon.stats[1].strip()[:12]}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         else:
               draw.text((812, 150), (f"{weapon.stats[1]}: {weapon.stats[0]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
-        for te in weapon.stats
+        for te in weapon.stats:
             await channelt.send(te)
 
         #Stats
