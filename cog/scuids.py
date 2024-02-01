@@ -199,7 +199,7 @@ class Select(discord.ui.Select):
         lock = charactert.constellations
         inseta = 244
         y_ts = [65,66,63,64,65]
-        for k in range(lock)
+        for k in range(lock):
           constellation = charactert.constellations[k]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
