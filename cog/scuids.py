@@ -9,6 +9,8 @@ from enkanetwork import EnkaNetworkAPI
 from enkanetwork import EquipmentsType, DigitType
 from datetime import datetime, time
 import aiohttp
+import enka
+import asyncio
 
 global_data = {
     "data": None,
@@ -393,6 +395,18 @@ class SelectView(discord.ui.View):
       views.add_item(select)
       await message.edit(embed=embed, view=views)
 
+
+class buttons(discord.ui.View):
+  def __init__ (self, *, timeout=180):
+    super().__init__(timeout=timeout) 
+
+  @discord.ui.button(label="showcare", style=discord.ButtonStyle.gray)
+  async def my_button(self, Interaction: discord.Interaction, button: discord.ui.button):
+    embed=discord.Embed()
+    embed.add_field(name="hãy chọn 1 options",value="__nếu tương tác không thành công vui lòng đợi 1 đến 2 giây \n**và ko cần chọn lại**__")
+    await Interaction.response.edit_message(embed=embed, view=SelectView())
+
+
 class scuids(commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
@@ -406,9 +420,10 @@ class scuids(commands.Cog):
   
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
   async def scuid(self, Interaction, uid: int):
-    try:
+    async with enka.EnkaAPI() as api:
+     try:
         uid = uid
-        data = await self.client.fetch_user(uid)
+        data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
       
@@ -794,9 +809,9 @@ class scuids(commands.Cog):
         saved_file = await channel.send(file=filet)
         files_url = saved_file.attachments[0].url
         embed.set_image(url=files_url)
-        message = await Interaction.channel.send(embed=embed, view=SelectView())
+        message = await Interaction.channel.send(embed=embed, view=buttons())
         inset_message["message"] = message
-    except Exception as s:
+     except Exception as s:
         await Interaction.channel.send(s)
         return s
 
