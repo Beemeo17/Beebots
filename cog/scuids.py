@@ -88,7 +88,7 @@ class Select(discord.ui.Select):
 
         draw.text((820, 36), weapon.detail.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
-        draw.text((970, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
+        draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.detail.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{weapon.detail.mainstats.value}{'%' if weapon.detail.mainstats.type == DigitType.PERCENT else ''}"), font=font, fill=(255, 255, 255))#atk
         for substate in weapon.detail.substats: #dòng chính
