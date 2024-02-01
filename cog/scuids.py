@@ -199,7 +199,7 @@ class Select(discord.ui.Select):
         Locks = 6 - (len(charactert.constellations))
         x_lock = 532
         y_lock = 569
-        for _ in range(locks):
+        for _ in range(Locks):
           response = requests.get('https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png')
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
