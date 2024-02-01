@@ -5,8 +5,6 @@ import requests
 import os
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-from enkanetwork import EnkaNetworkAPI
-from enkanetwork import EquipmentsType, DigitType
 from datetime import datetime, time
 import aiohttp
 import enka
@@ -410,7 +408,6 @@ class buttons(discord.ui.View):
 class scuids(commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
-    self.client = EnkaNetworkAPI(lang="vi")
     self.session = aiohttp.ClientSession()
   @commands.Cog.listener()
   async def on_ready(self):
