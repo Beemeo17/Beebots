@@ -162,7 +162,7 @@ class Select(discord.ui.Select):
 
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
           x_tdv_level += x_tdv
-          for substate in artifacts.sub_stats:
+          for substate in artifact.sub_stats:
             if substate.name == "Hiệu Quả Nạp Nguyên Tố":
               name_sst = substate.name.strip()[:12]
             elif substate.name == "Tinh Thông Nguyên Tố":
