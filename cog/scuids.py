@@ -29,8 +29,9 @@ class Select(discord.ui.Select):
           options.append(discord.SelectOption(label=char.name, value=f"char{i+1}"))
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, Interaction: discord.Interaction):
-        data = global_data.get("data")
+     async with enka.EnkaAPI() as api:
         uid = global_data.get("uid")
+        data = await api.fetch_showcase(uid)
       
         embed_loading = discord.Embed(color=discord.Color.yellow())
         embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>",value="", inline=False)
