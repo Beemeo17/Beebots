@@ -90,8 +90,8 @@ class Select(discord.ui.Select):
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
         draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
-        draw.text((842, 104), (f"{weapon.detail.mainstats.value}{'%' if weapon.detail.mainstats.type == DigitType.PERCENT else ''}"), font=font, fill=(255, 255, 255))#atk
-        for substate in weapon.stats: #dòng chính
+        draw.text((842, 104), (f"{weapon.main_stats.value}{'%' if weapon.main_stats.type == DigitType.PERCENT else ''}"), font=font, fill=(255, 255, 255))#atk
+        for substate in weapon.sub_stats: #dòng chính
             if substate.name == "Hiệu Quả Nạp Nguyên Tố":
               draw.text((812, 150), (f"{substate.name.strip()[:12]}: {substate.value}{'%' if substate.type == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             else:
@@ -254,14 +254,14 @@ class Select(discord.ui.Select):
         y_tdv_stats1 = 967 #y stats tdv
         y_tdv_stats2 = 25 
         element_count = 0 #chia bảng 
-        for artifact in charactert.artifacts:
+        for artifact in charactert.artifact:
           response = requests.get(artifact.icon)
           image_set_tdv0 = BytesIO(response.content)
           image_tdv0 = Image.open(image_set_tdv0).resize((165, 165))
           image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
           x_tdv_icon += x_tdv
 
-          draw.text((x_tdv_rate, 896), (f"{'*'*artifact.detail.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
+          draw.text((x_tdv_rate, 896), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
           x_tdv_rate += x_tdv
 
           draw.text((x_tdv_stats, 932), artifact.main_stats.name, font=fonts, fill=(255, 255, 255))
