@@ -196,55 +196,17 @@ class Select(discord.ui.Select):
         draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
         draw.text((534, 182), (f"     {charactert.talents[2].level}"),font=font,fill=(255, 255, 255))
 
-
-        if charactert.constellations > 0:
-        #cung  mệnh 1
-          constellation = charactert.constellations[0]
+        lock = charactert.constellations
+        inseta = 244
+        y_ts = [65,66,63,64,65]
+        for k in range(lock)
+          constellation = charactert.constellations[k]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
           image_skill00 = Image.open(image_set_skill00).resize((60, 60))
-          image_app.paste(image_skill00, (532, 244), mask=image_skill00)
-
-        if charactert.constellations > 1:
-          #cung  mệnh 2
-          constellation = charactert.constellations[1]
-          response = requests.get(constellation.icon) #skill1
-          image_set_skill00 = BytesIO(response.content)
-          image_skill00 = Image.open(image_set_skill00).resize((60, 60))
-          image_app.paste(image_skill00, (532, 309), mask=image_skill00)
-
-        if charactert.constellations > 2:
-          #cung  mệnh 3
-          constellation = charactert.constellations[2]
-          response = requests.get(constellation.icon) #skill1
-          image_set_skill00 = BytesIO(response.content)
-          image_skill00 = Image.open(image_set_skill00).resize((60, 60))
-          image_app.paste(image_skill00, (532, 375), mask=image_skill00)
-
-        if charactert.constellations > 3:
-          #cung  mệnh 4
-          constellation = charactert.constellations[3]
-          response = requests.get(constellation.icon) #skill1
-          image_set_skill00 = BytesIO(response.content)
-          image_skill00 = Image.open(image_set_skill00).resize((60, 60))
-          image_app.paste(image_skill00, (532, 438), mask=image_skill00)
-
-        if charactert.constellations > 4:
-          #cung  mệnh 5
-          constellation = charactert.constellations[4]
-          response = requests.get(constellation.icon) #skill1
-          image_set_skill00 = BytesIO(response.content)
-          image_skill00 = Image.open(image_set_skill00).resize((60, 60))
-          image_app.paste(image_skill00, (532, 502), mask=image_skill00)
-
-
-        #cung  mệnh 6
-        if charactert.constellations > 5:
-          constellation = charactert.constellations[5]
-          response = requests.get(constellation.icon) #skill1
-          image_set_skill00 = BytesIO(response.content)
-          image_skill00 = Image.open(image_set_skill00).resize((60, 60))
-          image_app.paste(image_skill00, (532, 567), mask=image_skill00) 
+          image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
+          tert = y_ts[k % len(y_ts)]
+          inseta += tert
 
 
         buffer = BytesIO()
