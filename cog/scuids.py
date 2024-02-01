@@ -90,11 +90,11 @@ class Select(discord.ui.Select):
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
         draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
-        draw.text((842, 104), (f"{weapon.stats[1]}"), font=font, fill=(255, 255, 255))#atk#dòng chính
-        if weapon.stats[2] == "Hiệu Quả Nạp Nguyên Tố":
-              draw.text((812, 150), (f"{weapon.stats[2].strip()[:12]}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        draw.text((842, 104), (f"{weapon.stat.value}"), font=font, fill=(255, 255, 255))#atk#dòng chính
+        if weapon.stat.name == "Hiệu Quả Nạp Nguyên Tố":
+              draw.text((812, 150), (f"{weapon.stat.name.strip()[:12]}: {weapon.stat.value}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         else:
-              draw.text((812, 150), (f"{weapon.stats[2]}: {weapon.stats[1]}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+              draw.text((812, 150), (f"{weapon.stat.name}: {weapon.stat.value}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
 
         #Stats
@@ -230,10 +230,10 @@ class Select(discord.ui.Select):
             crit_rate = 0
             crit_dmg = 0
             for substate in artifact.sub_stats:
-                if substate[2] == "Tỷ Lệ Bạo Kích" or substate[2] == "ST Bạo Kích":
-                    if substate[2] == "Tỷ Lệ Bạo Kích":
+                if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
+                    if substate.name == "Tỷ Lệ Bạo Kích":
                         crit_rate = substate.value
-                    elif substate[2] == "ST Bạo Kích":
+                    elif substate.name == "ST Bạo Kích":
                         crit_dmg = substate.value
             cv0 = (crit_rate * 2) + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
@@ -268,13 +268,13 @@ class Select(discord.ui.Select):
           draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
           x_tdv_level += x_tdv
           for substate in artifact.sub_stats:
-            if substate[2] == "Hiệu Quả Nạp Nguyên Tố":
+            if substate.name == "Hiệu Quả Nạp Nguyên Tố":
               name_sst = substate.strip()[:12]
-            elif substate[2] == "Tinh Thông Nguyên Tố":
+            elif substate.name == "Tinh Thông Nguyên Tố":
               name_sst = substate.strip()[:10]
             else:
-              name_sst = substate[2]
-            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate[1]}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
+              name_sst = substate.name
+            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate.value}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
             if element_count % 4 == 0:
