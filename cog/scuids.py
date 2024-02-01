@@ -57,7 +57,7 @@ class Select(discord.ui.Select):
             charactert = data.characters[7]  
         embed.add_field(name=f"name: {charactert.name}", value=f"độ yêu thích: {charactert.friendship_level}", inline=False)
         embed.add_field(name=f"level: {charactert.level} / 90", value="", inline=False)
-        embed.set_thumbnail(url=charactert.image.icon)
+        embed.set_thumbnail(url=charactert.icon)
 
         url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1151815890334134303/Khong_Co_Tieu_e62_20230914164310.png"
         response = requests.get(url_goc)
