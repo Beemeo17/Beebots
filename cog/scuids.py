@@ -93,7 +93,7 @@ class Select(discord.ui.Select):
         draw.text((842, 104), (f"{weapon.stats[1]}{'%' if weapon.stats[0] == DigitType.PERCENT else ''}"), font=font, fill=(255, 255, 255))#atk
         for substate in weapon.stats: #dòng chính
             if substate.name == "Hiệu Quả Nạp Nguyên Tố":
-              draw.text((812, 150), (f"{substate.name.strip()[:12]}: {substate.value}{'%' if substate.type == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+              draw.text((812, 150), (f"{substate[2].strip()[:12]}: {substate[1]}{'%' if substate[0] == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             else:
               draw.text((812, 150), (f"{substate[2]}: {substate[1]}{'%' if substate[0] == DigitType.PERCENT else ''}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
