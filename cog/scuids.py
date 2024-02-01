@@ -271,7 +271,7 @@ class Select(discord.ui.Select):
           for substate in artifact.sub_stats:
             if substate[1] == "Hiệu Quả Nạp Nguyên Tố":
               name_sst = substate[1].strip()[:12]
-            elif substate.[1] == "Tinh Thông Nguyên Tố":
+            elif substate[1] == "Tinh Thông Nguyên Tố":
               name_sst = substate[1].strip()[:10]
             else:
               name_sst = substate[1]
