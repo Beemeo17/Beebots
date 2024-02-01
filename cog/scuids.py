@@ -442,7 +442,7 @@ class scuids(commands.Cog):
         if data.characters is not None and len(data.characters) > 0:
           if len(data.characters) > 0:
             #char0
-            response = requests.get(data.characters[0].image.icon.url)
+            response = requests.get(data.characters[0].icon)
             image_set_char0 = BytesIO(response.content)
             image_char0 = Image.open(image_set_char0).resize((50, 50))
             image_app.paste(image_char0, (10, 60), mask=image_char0)
@@ -480,7 +480,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 1:
             #char1
-            response = requests.get(data.characters[1].image.icon.url)
+            response = requests.get(data.characters[1].icon)
             image_set_char1 = BytesIO(response.content)
             image_char1 = Image.open(image_set_char1).resize((50, 50))
             image_app.paste(image_char1, (191, 60), mask=image_char1)
@@ -518,7 +518,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 2:
             #char2
-            response = requests.get(data.characters[2].image.icon.url)
+            response = requests.get(data.characters[2].icon)
             image_set_char2 = BytesIO(response.content)
             image_char2 = Image.open(image_set_char2).resize((50, 50))
             image_app.paste(image_char2, (372, 60), mask=image_char2)
@@ -556,7 +556,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 3:
             #char3
-            response = requests.get(data.characters[3].image.icon.url)
+            response = requests.get(data.characters[3].icon)
             image_set_char3 = BytesIO(response.content)
             image_char3 = Image.open(image_set_char3).resize((50, 50))
             image_app.paste(image_char3, (553, 60), mask=image_char3)
@@ -594,7 +594,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 4:
             #char4
-            response = requests.get(data.characters[4].image.icon.url)
+            response = requests.get(data.characters[4].icon)
             image_set_char4 = BytesIO(response.content)
             image_char4 = Image.open(image_set_char4).resize((50, 50))
             image_app.paste(image_char4, (10, 214), mask=image_char4)
@@ -632,7 +632,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 5:
             #char5
-            response = requests.get(data.characters[5].image.icon.url)
+            response = requests.get(data.characters[5].icon)
             image_set_char5 = BytesIO(response.content)
             image_char5 = Image.open(image_set_char5).resize((50, 50))
             image_app.paste(image_char5, (193, 214), mask=image_char5)
@@ -670,7 +670,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 6:
             #char6
-            response = requests.get(data.characters[6].image.icon.url)
+            response = requests.get(data.characters[6].icon)
             image_set_char6 = BytesIO(response.content)
             image_char6 = Image.open(image_set_char6).resize((50, 50))
             image_app.paste(image_char6, (374, 214), mask=image_char6)
@@ -708,7 +708,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 7:
             #char7
-            response = requests.get(data.characters[7].image.icon.url)
+            response = requests.get(data.characters[7].icon)
             image_set_char7 = BytesIO(response.content)
             image_char7 = Image.open(image_set_char7).resize((50, 50))
             image_app.paste(image_char7, (558, 214), mask=image_char7)
