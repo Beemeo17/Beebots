@@ -104,7 +104,7 @@ class Select(discord.ui.Select):
         characterp = charactert.stats
         FightProp = FightPropType
         fontt=ImageFont.truetype("zh-cn.ttf", 25)
-        draw.text((688, 250), (f"HP: {(characterp.FIGHT_PROP_CUR_HP.formatted_value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 250), (f"HP: {(characterp[FightProp.FIGHT_PROP_CUR_HP].formatted_value)}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
         hp = BytesIO(response.content)
         hp1 = Image.open(hp).resize((40, 40))
