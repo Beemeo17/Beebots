@@ -279,12 +279,10 @@ class Select(discord.ui.Select):
             else:
               name_sst = substate.name
             if substate.value % 1 == 0:
-                return
+                draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst}• {textsubvalue}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
             else:
-             substatsvalue = substate.value / 100
-             textsubvalue = "{:.1f}".format(substatsvalue)
-
-            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst}• {textsubvalue}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
+                substatsvalue = substate.value / 100
+                draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst}• {textsubvalue:.1f}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
             if element_count % 4 == 0:
