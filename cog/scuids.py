@@ -98,7 +98,7 @@ class Select(discord.ui.Select):
               draw.text((812, 150), (f"{weapon.stats[1].name}: {weapon.stats[1].value}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
         #Stats
-        for charactert in character.stats:
+        for charactert in charactert.stats:
          fontt=ImageFont.truetype("zh-cn.ttf", 25)
          draw.text((688, 250), (f"HP: {int(charactert.stats.FIGHT_PROP_HP.value)}"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
