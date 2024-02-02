@@ -58,7 +58,7 @@ class Select(discord.ui.Select):
             charactert = data.characters[7]  
         embed.add_field(name=f"name: {charactert.name}", value=f"độ yêu thích: {charactert.friendship_level}", inline=False)
         embed.add_field(name=f"level: {charactert.level} / 90", value="", inline=False)
-        embed.set_thumbnail(url=charactert.icon)
+        embed.set_thumbnail(url=charactert.icon.front)
 
         url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1151815890334134303/Khong_Co_Tieu_e62_20230914164310.png"
         response = requests.get(url_goc)
@@ -72,7 +72,7 @@ class Select(discord.ui.Select):
         draw.text((38, 51), (f"AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
 
         #char
-        response = requests.get(charactert.art)
+        response = requests.get(charactert.icon.gacha)
         image_set_schar0 = BytesIO(response.content)
         image_schar0 = Image.open(image_set_schar0).resize((744, 352))
         image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
@@ -101,104 +101,104 @@ class Select(discord.ui.Select):
         for charactert in charactert.stats:
          await channel.send(charactert)
          fontt=ImageFont.truetype("zh-cn.ttf", 25)
-         draw.text((688, 250), (f"HP: {int(charactert.FIGHT_PROP_HP.value)}"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 250), (f"HP: {int(charactert.stats[FightProp.FIGHT_PROP_CUR_HP].value)}"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
          hp = BytesIO(response.content)
          hp1 = Image.open(hp).resize((40, 40))
          image_app.paste(hp1, (644, 245), mask=hp1)
 
-         draw.text((688, 285), (f"Tân Công: {int(charactert.FIGHT_PROP_ATTACK.value)}"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 285), (f"Tân Công: {int(charactert.stats[FightProp.FIGHT_PROP_CUR_ATTACK].value)}"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png")
          atk = BytesIO(response.content)
          atk1 = Image.open(atk).resize((40, 40))
          image_app.paste(atk1, (644, 280), mask=atk1)
 
-         draw.text((688, 325), (f"Phòng Ngự: {int(charactert.FIGHT_PROP_DEFENSE.value)}"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 325), (f"Phòng Ngự: {int(charactert.stats[FightProp.FIGHT_PROP_CUR_DEFENSE].value)}"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png")
          def2 = BytesIO(response.content)
          def1 = Image.open(def2).resize((40, 40))
          image_app.paste(def1, (644, 320), mask=def1)
 
-         draw.text((688, 365), (f"Tinh Thông Nguyên Tố: {int(charactert.FIGHT_PROP_ELEMENT_MASTERY.value)}"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 365), (f"Tinh Thông Nguyên Tố: {int(charactert.stats[FightProp.FIGHT_PROP_ELEMENT_MASTERY].value)}"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png")
          tt = BytesIO(response.content)
          tt1 = Image.open(tt).resize((40, 40))
          image_app.paste(tt1, (644, 360), mask=tt1)
 
-         draw.text((688, 405),(f"Tỉ Lệ Bạo: {charactert.FIGHT_PROP_CRITICAL.value* 100:.0f}%"), font=font, fill=(255, 255, 255))
+         draw.text((688, 405),(f"Tỉ Lệ Bạo: {charactert.stats[FightProp.FIGHT_PROP_CRITICAL].value* 100:.0f}%"), font=font, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png")
          tl = BytesIO(response.content)
          tl1 = Image.open(tl).resize((40, 40))
          image_app.paste(tl1, (644, 400), mask=tl1)
 
-         draw.text((688, 445),(f"Sát Thương Bạo: {charactert.FIGHT_PROP_CRITICAL_HURT.value* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 445),(f"Sát Thương Bạo: {charactert.stats[FightProp.FIGHT_PROP_CRITICAL_HURT].value* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png")
          st = BytesIO(response.content)
          st1 = Image.open(st).resize((40, 40))
          image_app.paste(st1, (644, 440), mask=st1)
 
-         draw.text((688, 485),(f"Hiệu Quả Nạp: {charactert.FIGHT_PROP_CHARGE_EFFICIENCY.value* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 485),(f"Hiệu Quả Nạp: {charactert.stats[FightProp.FIGHT_PROP_CHARGE_EFFICIENCY].value* 100:.0f}%"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png")
          hqn = BytesIO(response.content)
          hqn1 = Image.open(hqn).resize((40, 40))
          image_app.paste(hqn1, (644, 480), mask=hqn1)
 
-         draw.text((688, 525),(f"trị liệu: {int(charactert.FIGHT_PROP_HEAL_ADD.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((688, 525),(f"trị liệu: {int(charactert.stats[FightProp.FIGHT_PROP_HEAL_ADD].value * 100)}%"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png")
          tl = BytesIO(response.content)
          tl1 = Image.open(tl).resize((40, 40))
          image_app.paste(tl1, (644, 520), mask=tl1)
         #stnt
-         draw.text((710, 578),(f"{int(charactert.FIGHT_PROP_PHYSICAL_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((710, 578),(f"{int(charactert.stats[FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png")
          svl = BytesIO(response.content)
          svl1 = Image.open(svl).resize((50, 50))
          image_app.paste(svl1, (660, 565), mask=svl1)
 
-         draw.text((830, 578),(f"{int(charactert.FIGHT_PROP_WIND_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((830, 578),(f"{int(charactert.stats[FightProp.FIGHT_PROP_WIND_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless")
          stp = BytesIO(response.content)
          stp1 = Image.open(stp).resize((50, 50))
          image_app.paste(stp1, (780, 565), mask=stp1)
 
-         draw.text((940, 578),(f"{int(charactert.FIGHT_PROP_ROCK_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((940, 578),(f"{int(charactert.stats[FightProp.FIGHT_PROP_ROCK_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless")
          stn = BytesIO(response.content)
          stn1 = Image.open(stn).resize((50, 50))
          image_app.paste(stn1, (890, 565), mask=stn1)
 
-         draw.text((1050, 578),(f"{int(charactert.FIGHT_PROP_ELEC_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((1050, 578),(f"{int(charactert.stats[FightProp.FIGHT_PROP_ELEC_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless")
          stl = BytesIO(response.content)
          stl1 = Image.open(stl).resize((50, 50))
          image_app.paste(stl1, (1000, 565), mask=stl1)
 
-         draw.text((710, 638),(f"{int(charactert.FIGHT_PROP_GRASS_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((710, 638),(f"{int(charactert.stats[FightProp.FIGHT_PROP_GRASS_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless")
          stt = BytesIO(response.content)
          stt1 = Image.open(stt).resize((50, 50))
          image_app.paste(stt1, (660, 625), mask=stt1)           
 
-         draw.text((830, 638),(f"{int(charactert.FIGHT_PROP_WATER_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((830, 638),(f"{int(charactert.stats[FightProp.FIGHT_PROP_WATER_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless")
          stt2 = BytesIO(response.content)
          stt3 = Image.open(stt2).resize((50, 50))
          image_app.paste(stt3, (780, 625), mask=stt3)          
 
-         draw.text((940, 638),(f"{int(charactert.FIGHT_PROP_FIRE_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255)) 
+         draw.text((940, 638),(f"{int(charactert.stats[FightProp.FIGHT_PROP_FIRE_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255)) 
 
          response = requests.get("https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless")
          sth = BytesIO(response.content)
          sth1 = Image.open(sth).resize((50, 50))
          image_app.paste(sth1, (890, 625), mask=sth1)          
 
-         draw.text((1050, 638),(f"{int(charactert.FIGHT_PROP_ICE_ADD_HURT.value * 100)}%"), font=fontt, fill=(255, 255, 255))
+         draw.text((1050, 638),(f"{int(charactert.stats[FightProp.FIGHT_PROP_ICE_ADD_HURT].value * 100)}%"), font=fontt, fill=(255, 255, 255))
 
          response = requests.get("https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless")
          stb = BytesIO(response.content)
@@ -335,7 +335,7 @@ class Select(discord.ui.Select):
         embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.now())
         embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)}", inline=False)
         embed.set_image(url=file_url)   
-        embed.set_thumbnail(url=f"{charactert.icon}")
+        embed.set_thumbnail(url=f"{charactert.icon.front}")
         embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
         messagea = inset_message.get("message")
         await messagea.edit(content=None, embed=embed)
@@ -409,7 +409,7 @@ class scuids(commands.Cog):
         if data.characters is not None and len(data.characters) > 0:
           if len(data.characters) > 0:
             #char0
-            response = requests.get(data.characters[0].icon)
+            response = requests.get(data.characters[0].icon.circle)
             image_set_char0 = BytesIO(response.content)
             image_char0 = Image.open(image_set_char0).resize((50, 50))
             image_app.paste(image_char0, (10, 60), mask=image_char0)
@@ -447,7 +447,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 1:
             #char1
-            response = requests.get(data.characters[1].icon)
+            response = requests.get(data.characters[1].icon.circle)
             image_set_char1 = BytesIO(response.content)
             image_char1 = Image.open(image_set_char1).resize((50, 50))
             image_app.paste(image_char1, (191, 60), mask=image_char1)
@@ -485,7 +485,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 2:
             #char2
-            response = requests.get(data.characters[2].icon)
+            response = requests.get(data.characters[2].icon.circle)
             image_set_char2 = BytesIO(response.content)
             image_char2 = Image.open(image_set_char2).resize((50, 50))
             image_app.paste(image_char2, (372, 60), mask=image_char2)
@@ -523,7 +523,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 3:
             #char3
-            response = requests.get(data.characters[3].icon)
+            response = requests.get(data.characters[3].icon.circle)
             image_set_char3 = BytesIO(response.content)
             image_char3 = Image.open(image_set_char3).resize((50, 50))
             image_app.paste(image_char3, (553, 60), mask=image_char3)
@@ -561,7 +561,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 4:
             #char4
-            response = requests.get(data.characters[4].icon)
+            response = requests.get(data.characters[4].icon.circle)
             image_set_char4 = BytesIO(response.content)
             image_char4 = Image.open(image_set_char4).resize((50, 50))
             image_app.paste(image_char4, (10, 214), mask=image_char4)
@@ -599,7 +599,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 5:
             #char5
-            response = requests.get(data.characters[5].icon)
+            response = requests.get(data.characters[5].icon.circle)
             image_set_char5 = BytesIO(response.content)
             image_char5 = Image.open(image_set_char5).resize((50, 50))
             image_app.paste(image_char5, (193, 214), mask=image_char5)
@@ -637,7 +637,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 6:
             #char6
-            response = requests.get(data.characters[6].icon)
+            response = requests.get(data.characters[6].icon.circle)
             image_set_char6 = BytesIO(response.content)
             image_char6 = Image.open(image_set_char6).resize((50, 50))
             image_app.paste(image_char6, (374, 214), mask=image_char6)
@@ -675,7 +675,7 @@ class scuids(commands.Cog):
                       fill=(255, 255, 255))
           if len(data.characters) > 7:
             #char7
-            response = requests.get(data.characters[7].icon)
+            response = requests.get(data.characters[7].icon.circle)
             image_set_char7 = BytesIO(response.content)
             image_char7 = Image.open(image_set_char7).resize((50, 50))
             image_app.paste(image_char7, (558, 214), mask=image_char7)
