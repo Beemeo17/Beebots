@@ -10,6 +10,7 @@ import aiohttp
 import enka
 import asyncio
 import traceback
+from enka.enums import FightProp
 
 global_data = {
     "data": None,
