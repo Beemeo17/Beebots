@@ -241,7 +241,7 @@ class Select(discord.ui.Select):
                     elif substate.name == "ST Bạo Kích":
                         crit_dmg = (substate.formatted_value)
             cv0 = (crit_rate * 2) + crit_dmg
-            draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+            draw.text((x_cv1, 900), (f"{float(cv0)}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
             if sss <= 3:
               x_cv1 += x_cv2
