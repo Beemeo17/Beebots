@@ -78,7 +78,7 @@ class Select(discord.ui.Select):
         image_schar0 = Image.open(image_set_schar0).resize((744, 352))
         image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
         draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
-        draw.text((34, 607), (f"Level:{charactert.level} / 90"), font=font, fill=(255, 255, 255))  #level0
+        draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level"), font=font, fill=(255, 255, 255))  #level0
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
 
         #vũ khí
@@ -90,7 +90,7 @@ class Select(discord.ui.Select):
 
         draw.text((820, 36), weapon.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
         draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
-        draw.text((970, 104), (f"{weapon.level}/90"), font=font, fill=(255, 255, 255)) #level
+        draw.text((970, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
         if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
@@ -743,7 +743,7 @@ class scuids(commands.Cog):
           value="",
           inline=False)
 
-        embed.set_thumbnail(url=f"{data.player.namecard.full}")
+        embed.set_thumbnail(url=f"{data.player.namecard.icon}")
         embed.add_field(name=f"`name:` **{data.player.nickname}**",
                         value=f"",
                         inline=False)
