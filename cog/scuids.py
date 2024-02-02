@@ -94,11 +94,11 @@ class Select(discord.ui.Select):
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
         if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
-              draw.text((812, 150), (f"{weapon.stats[1].name.strip()[:12]}: {round(weapon.stats[1].value)}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+              draw.text((812, 150), (f"{weapon.stats[1].name.strip()[:12]}: {round(weapon.stats[1].formatted_value)}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         elif weapon.stats[1].name == "Tinh Thông Nguyên Tố":
-             draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].value)}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+             draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].formatted_value)}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         else:
-              draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].value)/100}%"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+              draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].formatted_value)/100}%"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
         #Stats
         characterp = charactert.stats
@@ -127,13 +127,13 @@ class Select(discord.ui.Select):
         tt1 = Image.open(tt).resize((40, 40))
         image_app.paste(tt1, (644, 360), mask=tt1)
 
-        draw.text((688, 405),(f"Tỉ Lệ Bạo: {int(characterp[FightProp.FIGHT_PROP_CRITICAL].value):.0f}%"), font=font, fill=(255, 255, 255))
+        draw.text((688, 405),(f"Tỉ Lệ Bạo: {int(characterp[FightProp.FIGHT_PROP_CRITICAL].formatted_value):.0f}%"), font=font, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png")
         tl = BytesIO(response.content)
         tl1 = Image.open(tl).resize((40, 40))
         image_app.paste(tl1, (644, 400), mask=tl1)
 
-        draw.text((688, 445),(f"Sát Thương Bạo: {int(characterp[FightProp.FIGHT_PROP_CRITICAL_HURT].value):.0f}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 445),(f"Sát Thương Bạo: {int(characterp[FightProp.FIGHT_PROP_CRITICAL_HURT].formatted_value):.0f}%"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png")
         st = BytesIO(response.content)
         st1 = Image.open(st).resize((40, 40))
@@ -283,7 +283,7 @@ class Select(discord.ui.Select):
             velax = str(velex / 100).rstrip('0').rstrip('.') if '.' in str(velex / 100) else str(velex / 100)
             if len(velax) < 0:
                 velax *= 100
-            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {velax}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
+            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
             if element_count % 4 == 0:
