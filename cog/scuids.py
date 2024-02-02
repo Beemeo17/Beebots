@@ -104,7 +104,7 @@ class Select(discord.ui.Select):
         characterp = charactert.stats
         FightProp = FightPropType
         fontt=ImageFont.truetype("zh-cn.ttf", 25)
-        draw.text((688, 250), (f"HP: {round(characterp[FightProp.FIGHT_PROP_CUR_HP].value)}"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 250), (f"HP: {(characterp.FIGHT_PROP_CUR_HP.formatted_value)}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
         hp = BytesIO(response.content)
         hp1 = Image.open(hp).resize((40, 40))
@@ -237,9 +237,9 @@ class Select(discord.ui.Select):
             for substate in artifact.sub_stats:
                 if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
                     if substate.name == "Tỷ Lệ Bạo Kích":
-                        crit_rate = (substate.value) / 100
+                        crit_rate = (substate.formatted_value)
                     elif substate.name == "ST Bạo Kích":
-                        crit_dmg = (substate.value) / 100
+                        crit_dmg = (substate.formatted_value)
             cv0 = (crit_rate * 2) + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
