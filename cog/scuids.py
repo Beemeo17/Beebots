@@ -281,7 +281,7 @@ class Select(discord.ui.Select):
             
             velex = substate.value
             velax = str(velex / 100).rstrip('0').rstrip('.') if '.' in str(velex / 100) else str(velex / 100)
-            if velax < 0:
+            if len(velax) < 0:
                 velax *= 100
             draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {velax}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
