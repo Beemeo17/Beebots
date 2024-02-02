@@ -31,7 +31,7 @@ class Select(discord.ui.Select):
           options.append(discord.SelectOption(label=char.name, value=f"char{i+1}"))
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, Interaction: discord.Interaction):
-     async with enka.EnkaAPI() as api:
+     async with enka.EnkaAPI(lang=Language.vi) as api:
        try:
         uid = global_data.get("uid")
         data = await api.fetch_showcase(uid)
@@ -278,7 +278,7 @@ class Select(discord.ui.Select):
               name_sst = substate.name.strip()[:10]
             else:
               name_sst = substate.name
-            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {round(substate.value)}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
+            draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate.value}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
             if element_count % 4 == 0:
