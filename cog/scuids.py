@@ -128,13 +128,13 @@ class Select(discord.ui.Select):
         tt1 = Image.open(tt).resize((40, 40))
         image_app.paste(tt1, (644, 360), mask=tt1)
 
-        draw.text((688, 405),(f"Tỉ Lệ Bạo: {str(characterp[FightProp.FIGHT_PROP_CRITICAL].formatted_value):.0f}%"), font=font, fill=(255, 255, 255))
+        draw.text((688, 405),(f"Tỉ Lệ Bạo: {int(characterp[FightProp.FIGHT_PROP_CRITICAL].value):.0f}%"), font=font, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png")
         tl = BytesIO(response.content)
         tl1 = Image.open(tl).resize((40, 40))
         image_app.paste(tl1, (644, 400), mask=tl1)
 
-        draw.text((688, 445),(f"Sát Thương Bạo: {str(characterp[FightProp.FIGHT_PROP_CRITICAL_HURT].formatted_value):.0f}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((688, 445),(f"Sát Thương Bạo: {int(characterp[FightProp.FIGHT_PROP_CRITICAL_HURT].value):.0f}%"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png")
         st = BytesIO(response.content)
         st1 = Image.open(st).resize((40, 40))
