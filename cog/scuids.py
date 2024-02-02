@@ -10,7 +10,7 @@ import aiohttp
 import enka
 import asyncio
 import traceback
-from enka.enums import FightProp
+from enka.enums import FightProp, Language
 
 global_data = {
     "data": None,
@@ -31,7 +31,7 @@ class Select(discord.ui.Select):
           options.append(discord.SelectOption(label=char.name, value=f"char{i+1}"))
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, Interaction: discord.Interaction):
-     async with enka.EnkaAPI(lang=Language.CHT) as api:
+     async with enka.EnkaAPI(lang=Language.VI) as api:
        try:
         uid = global_data.get("uid")
         data = await api.fetch_showcase(uid)
