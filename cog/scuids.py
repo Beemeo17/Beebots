@@ -10,7 +10,7 @@ import aiohttp
 import enka
 import asyncio
 import traceback
-from enka.enums import FightProp, Language
+from enka.enums import FightPropType, Language
 
 global_data = {
     "data": None,
@@ -102,6 +102,7 @@ class Select(discord.ui.Select):
 
         #Stats
         characterp = charactert.stats
+        FightProp = FightPropType
         fontt=ImageFont.truetype("zh-cn.ttf", 25)
         draw.text((688, 250), (f"HP: {round(characterp[FightProp.FIGHT_PROP_CUR_HP].value)}"), font=fontt, fill=(255, 255, 255))
         response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
