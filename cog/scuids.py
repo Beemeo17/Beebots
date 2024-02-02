@@ -237,11 +237,11 @@ class Select(discord.ui.Select):
             for substate in artifact.sub_stats:
                 if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
                     if substate.name == "Tỷ Lệ Bạo Kích":
-                        crit_rate = (substate.formatted_value)
+                        crit_rate = (substate.value) / 100
                     elif substate.name == "ST Bạo Kích":
-                        crit_dmg = (substate.formatted_value)
+                        crit_dmg = (substate.value) / 100
             cv0 = (crit_rate * 2) + crit_dmg
-            draw.text((x_cv1, 900), (f"{float(cv0)}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+            draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
             if sss <= 3:
               x_cv1 += x_cv2
