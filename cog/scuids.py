@@ -98,7 +98,7 @@ class Select(discord.ui.Select):
         elif weapon.stats[1].name == "Tinh Thông Nguyên Tố":
              draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].value)}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         else:
-              draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].value)//100}%"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+              draw.text((812, 150), (f"{weapon.stats[1].name}: {round(weapon.stats[1].value)/100}%"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
         #Stats
         characterp = charactert.stats
@@ -236,9 +236,9 @@ class Select(discord.ui.Select):
             for substate in artifact.sub_stats:
                 if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
                     if substate.name == "Tỷ Lệ Bạo Kích":
-                        crit_rate = (substate.value) // 100
+                        crit_rate = (substate.value) / 100
                     elif substate.name == "ST Bạo Kích":
-                        crit_dmg = (substate.value) // 100
+                        crit_dmg = (substate.value) / 100
             cv0 = (crit_rate * 2) + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
@@ -278,7 +278,10 @@ class Select(discord.ui.Select):
               name_sst = substate.name.strip()[:10]
             else:
               name_sst = substate.name
-              substatsvalue = substate.value // 100
+              if len(str(substate.value)) <= 2:
+                result 
+              else:
+                substatsvalue = substate.value / 100
             draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substatsvalue:.1f}"), font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
