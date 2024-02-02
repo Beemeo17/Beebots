@@ -100,7 +100,6 @@ class Select(discord.ui.Select):
 
         #Stats
         for characters in charactert.stats:
-         await channel.send(charactert)
          fontt=ImageFont.truetype("zh-cn.ttf", 25)
          draw.text((688, 250), (f"HP: {round(characters[FightProp.FIGHT_PROP_CUR_HP].value)}"), font=fontt, fill=(255, 255, 255))
          response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
