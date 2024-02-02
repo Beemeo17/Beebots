@@ -31,7 +31,7 @@ class Select(discord.ui.Select):
           options.append(discord.SelectOption(label=char.name, value=f"char{i+1}"))
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, Interaction: discord.Interaction):
-     async with enka.EnkaAPI(lang='vi') as api:
+     async with enka.EnkaAPI() as api:
        try:
         uid = global_data.get("uid")
         data = await api.fetch_showcase(uid)
