@@ -78,7 +78,7 @@ class Select(discord.ui.Select):
         image_schar0 = Image.open(image_set_schar0).resize((744, 352))
         image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
         draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
-        draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level"), font=font, fill=(255, 255, 255))  #level0
+        draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
         draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
 
         #vũ khí
