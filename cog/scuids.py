@@ -291,7 +291,7 @@ class Select(discord.ui.Select):
               else: 
                return
         cv_a = (tl_bao * 2) + st_bao
-        draw.text((26, 1072), (f"CRcrit{tl_bao}.  DMGcrit{st_bao}.  ttnt{ttnt}.  hqn{hqn}.  atk{atk1:.1f}%.  atk{atk2}.   HP{hp1:.1f}%.   HP{hp2}.   def{def1:.1f}%.  def{def2}.  {cv_a:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        draw.text((26, 1072), (f"CRcrit{tl_bao:.1f}.  DMGcrit{st_bao:.1f}.  (ttnt{int(ttnt)}.  hqn{hqn}.  atk{atk1:.1f}%.  atk{int(atk2)}.   \nHP{hp1:.1f}%.   HP{int(hp2)}.   def{def1:.1f}%.  def{int(def2)}.  {cv_a:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
 
 
 
