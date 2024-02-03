@@ -173,12 +173,12 @@ class Select(discord.ui.Select):
         stn1 = Image.open(stn).resize((50, 50))
         image_app.paste(stn1, (879, 565), mask=stn1)
 
-        draw.text((1040, 578),(f"{(characterp[FightProp.FIGHT_PROP_ELEC_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((1043, 578),(f"{(characterp[FightProp.FIGHT_PROP_ELEC_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless")
         stl = BytesIO(response.content)
         stl1 = Image.open(stl).resize((50, 50))
-        image_app.paste(stl1, (990, 565), mask=stl1)
+        image_app.paste(stl1, (993, 565), mask=stl1)
 
         draw.text((694, 638),(f"{(characterp[FightProp.FIGHT_PROP_GRASS_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
@@ -201,12 +201,12 @@ class Select(discord.ui.Select):
         sth1 = Image.open(sth).resize((50, 50))
         image_app.paste(sth1, (879, 625), mask=sth1)          
 
-        draw.text((1040, 638),(f"{(characterp[FightProp.FIGHT_PROP_ICE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((1043, 638),(f"{(characterp[FightProp.FIGHT_PROP_ICE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless")
         stb = BytesIO(response.content)
         stb1 = Image.open(stb).resize((50, 50))
-        image_app.paste(stb1, (990, 625), mask=stb1)
+        image_app.paste(stb1, (993, 625), mask=stb1)
 
         #tdv
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
@@ -232,17 +232,17 @@ class Select(discord.ui.Select):
         x_cv2 = 224
         sss = 0
         for artifact in charactert.artifacts:
-           crit_rate = 0
-           crit_dmg = 0
-           for substate in artifact.sub_stats:
+            crit_rate = 0
+            crit_dmg = 0
+           
             if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
               if substate.name == "Tỷ Lệ Bạo Kích":
-                crit_rate += substate.value / 100
+                crit_rate += substate.value 
               elif substate.name == "ST Bạo Kích":
-                crit_dmg += substate.value / 100
+                crit_dmg += substate.value 
             await channel.send(f'{crit_rate} | {crit_dmg}')
             cv0 = (crit_rate) * 2 + crit_dmg
-            draw.text((x_cv1, 900), (f"{cv0}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+            draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
             if sss <= 3:
               x_cv1 += x_cv2
