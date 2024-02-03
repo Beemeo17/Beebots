@@ -70,7 +70,7 @@ class Select(discord.ui.Select):
         draw = ImageDraw.Draw(image_app)
 
         draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
-        draw.text((38, 51), (f"AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
+        draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
 
         #char
         response = requests.get(charactert.icon.gacha)
@@ -749,7 +749,7 @@ class scuids(commands.Cog):
           value="",
           inline=False)
 
-        embed.set_thumbnail(url=f"{data.player.namecard.icon}")
+        embed.set_thumbnail(url=f"{data.player.namecard}")
         embed.add_field(name=f"`name:` **{data.player.nickname}**",
                         value=f"",
                         inline=False)
