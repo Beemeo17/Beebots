@@ -240,7 +240,7 @@ class Select(discord.ui.Select):
                 crit_rate += substate.value / 100
               elif substate.name == "ST Bạo Kích":
                 crit_dmg += substate.value / 100
-            await chennel.send(f'{crit_rate} | {crit_dmg}')
+            await channel.send(f'{crit_rate} | {crit_dmg}')
             cv0 = (crit_rate) * 2 + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
