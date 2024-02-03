@@ -231,16 +231,17 @@ class Select(discord.ui.Select):
         x_cv1 = 158
         x_cv2 = 224
         sss = 0
+        crit_rate = 0
+        crit_dmg = 0
         for artifact in charactert.artifacts:
-            crit_rate = 0
-            crit_dmg = 0
-           
+            crit_rate -= crit_rate
+            crit_dmg -= crit_dmg
             if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
               if substate.name == "Tỷ Lệ Bạo Kích":
                 crit_rate += substate.value 
               elif substate.name == "ST Bạo Kích":
                 crit_dmg += substate.value 
-            await channel.send(f'{crit_rate} | {crit_dmg}')
+                
             cv0 = (crit_rate) * 2 + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
