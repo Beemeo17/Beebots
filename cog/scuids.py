@@ -296,6 +296,26 @@ class Select(discord.ui.Select):
               y_tdv_stats1 = 973
               x_tdv_stats += x_tdv_stats1
 
+        #sum chiso
+        st_bao = 0
+        tl_bao = 0
+        hqn = 0
+        ttnt = 0
+        for artifact in charactert.artifacts:
+          for substate in artifact.sub_stats:
+              if substate.name == "Tỷ Lệ Bạo Kích":
+                tl_bao += substate.value 
+              elif substate.name == "ST Bạo Kích":
+                st_bao += substate.value 
+              elif substate.name == "Tinh Thông Nguyên Tố":
+                ttnt += substate.value
+              elif substate.name == "Hiệu Quả Nạp Nguyên Tố":
+                hqn += substate.value
+              else: 
+               return
+              cv_a = (tl_bao * 2) + st_bao
+              draw.text((26, 1072), (f"CRcrit{tl_bao}     DMGcrit{st_bao}     ttnt{ttnt}     hqn{hqn}     {cv_a:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
+
         #thiên phú
         response = requests.get(charactert.talents[0].icon)  #skill1
         image_set_skill00 = BytesIO(response.content)
