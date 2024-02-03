@@ -221,8 +221,9 @@ class Select(discord.ui.Select):
         y_position = 672
         y_offset = 28
         #set tdv
+            await channel.send(artifact_name_set)
         for set_name, count in artifact_counts.items(): 
-            if count > 1 and count < 4:
+            if count >= 2 and count < 4:
               draw.text((95, y_position), f"{artifact_name_set} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
               y_position += y_offset
             if count > 3:
