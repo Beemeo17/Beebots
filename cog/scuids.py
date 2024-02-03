@@ -219,7 +219,7 @@ class Select(discord.ui.Select):
                 artifact_counts[artifact_name_set] += 1
             else:
                 artifact_counts[artifact_name_set] = 1
-        sorted_counts = dict(sorted(artifact_counts.item(), key=operator.itemgetter(1), reverse=True))
+        sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
         y_position = 672
         y_offset = 28
         #set tdv
