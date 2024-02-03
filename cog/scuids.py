@@ -11,6 +11,7 @@ import enka
 import asyncio
 import traceback
 from enka.enums import FightPropType, Language
+import operator
 
 global_data = {
     "data": None,
@@ -218,15 +219,15 @@ class Select(discord.ui.Select):
                 artifact_counts[artifact_name_set] += 1
             else:
                 artifact_counts[artifact_name_set] = 1
-            await channel.send(artifact_name_set)
+        sorted_counts = dict(sorted(artifact_counts.item(), key=operator.itemgetter(1), reverse=True
         y_position = 672
         y_offset = 28
         #set tdv
-        for set_name, count in artifact_counts.items(): 
+        for set_name, count in sorted_counts.items(): 
             if count >= 2 and count < 4:
               draw.text((95, y_position), f"{artifact_name_set} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
               y_position += y_offset
-            if count > 3:
+            if count >= 4:
               draw.text((95, 685), f"{artifact_name_set} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
         #cv      
         x_cv1 = 158
