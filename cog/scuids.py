@@ -159,26 +159,26 @@ class Select(discord.ui.Select):
         svl1 = Image.open(svl).resize((50, 50))
         image_app.paste(svl1, (644, 565), mask=svl1)
 
-        draw.text((817, 578),(f"{(characterp[FightProp.FIGHT_PROP_WIND_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((816, 578),(f"{(characterp[FightProp.FIGHT_PROP_WIND_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless")
         stp = BytesIO(response.content)
         stp1 = Image.open(stp).resize((50, 50))
-        image_app.paste(stp1, (767, 565), mask=stp1)
+        image_app.paste(stp1, (766, 565), mask=stp1)
 
-        draw.text((927, 578),(f"{(characterp[FightProp.FIGHT_PROP_ROCK_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((929, 578),(f"{(characterp[FightProp.FIGHT_PROP_ROCK_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
         
         response = requests.get("https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless")
         stn = BytesIO(response.content)
         stn1 = Image.open(stn).resize((50, 50))
-        image_app.paste(stn1, (877, 565), mask=stn1)
+        image_app.paste(stn1, (879, 565), mask=stn1)
 
-        draw.text((1037, 578),(f"{(characterp[FightProp.FIGHT_PROP_ELEC_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((1040, 578),(f"{(characterp[FightProp.FIGHT_PROP_ELEC_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless")
         stl = BytesIO(response.content)
         stl1 = Image.open(stl).resize((50, 50))
-        image_app.paste(stl1, (987, 565), mask=stl1)
+        image_app.paste(stl1, (990, 565), mask=stl1)
 
         draw.text((694, 638),(f"{(characterp[FightProp.FIGHT_PROP_GRASS_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
@@ -187,26 +187,26 @@ class Select(discord.ui.Select):
         stt1 = Image.open(stt).resize((50, 50))
         image_app.paste(stt1, (644, 625), mask=stt1)           
 
-        draw.text((817, 638),(f"{(characterp[FightProp.FIGHT_PROP_WATER_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((816, 638),(f"{(characterp[FightProp.FIGHT_PROP_WATER_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless")
         stt2 = BytesIO(response.content)
         stt3 = Image.open(stt2).resize((50, 50))
-        image_app.paste(stt3, (767, 625), mask=stt3)          
+        image_app.paste(stt3, (766, 625), mask=stt3)          
 
-        draw.text((927, 638),(f"{(characterp[FightProp.FIGHT_PROP_FIRE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255)) 
+        draw.text((929, 638),(f"{(characterp[FightProp.FIGHT_PROP_FIRE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255)) 
 
         response = requests.get("https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless")
         sth = BytesIO(response.content)
         sth1 = Image.open(sth).resize((50, 50))
-        image_app.paste(sth1, (877, 625), mask=sth1)          
+        image_app.paste(sth1, (879, 625), mask=sth1)          
 
-        draw.text((1037, 638),(f"{(characterp[FightProp.FIGHT_PROP_ICE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        draw.text((1040, 638),(f"{(characterp[FightProp.FIGHT_PROP_ICE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
 
         response = requests.get("https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless")
         stb = BytesIO(response.content)
         stb1 = Image.open(stb).resize((50, 50))
-        image_app.paste(stb1, (987, 625), mask=stb1)
+        image_app.paste(stb1, (990, 625), mask=stb1)
 
         #tdv
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
@@ -237,10 +237,11 @@ class Select(discord.ui.Select):
            for substate in artifact.sub_stats:
             if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
               if substate.name == "Tỷ Lệ Bạo Kích":
-                crit_rate = substate.value
+                crit_rate += substate.value / 100
               elif substate.name == "ST Bạo Kích":
-                crit_dmg = substate.value
-            cv0 = ((crit_rate) * 2) + (crit_dmg)
+                crit_dmg += substate.value / 100
+            await chennel.send(f'{crit_rate} | {crit_dmg}')
+            cv0 = (crit_rate) * 2 + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
             sss += 1
             if sss <= 3:
