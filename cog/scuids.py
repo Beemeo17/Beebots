@@ -236,11 +236,14 @@ class Select(discord.ui.Select):
         for artifact in charactert.artifacts:
             crit_rate -= crit_rate
             crit_dmg -= crit_dmg
-            if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
+            for substate in artifact.sub_stats:
+             if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
               if substate.name == "Tỷ Lệ Bạo Kích":
                 crit_rate += substate.value 
               elif substate.name == "ST Bạo Kích":
                 crit_dmg += substate.value 
+              else:
+                return
                 
             cv0 = (crit_rate) * 2 + crit_dmg
             draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
