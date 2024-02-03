@@ -61,7 +61,7 @@ class Select(discord.ui.Select):
         embed.add_field(name=f"level: {charactert.level} / 90", value="", inline=False)
         embed.set_thumbnail(url=charactert.icon.front)
 
-        url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1151815890334134303/Khong_Co_Tieu_e62_20230914164310.png"
+        url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203237852570193930/Khong_Co_Tieu_e117_20240203141707.png"
         response = requests.get(url_goc)
         ime_app = BytesIO(response.content)
         image_app = Image.open(ime_app).convert("RGBA").resize((1141, 1134))
