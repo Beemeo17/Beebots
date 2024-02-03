@@ -293,7 +293,7 @@ class Select(discord.ui.Select):
               else: 
                return
         cv_a = (tl_bao * 2) + st_bao
-        draw.text((16, 1083), (f"CRcrit:{tl_bao:.1f} | DMGcrit:{st_bao:.1f} | ttnt:{int(ttnt)} | hqn:{hqn} | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
+        draw.text((16, 1083), (f"| TLbạo:{tl_bao:.1f}% | STbạo:{st_bao:.1f}% | ttnt:{int(ttnt)} | hqn:{hqn}% | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)} |"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
 
 
 
@@ -419,7 +419,7 @@ class SelectView(discord.ui.View):
 
 
 class buttons(discord.ui.View):
-  def __init__ (self, *, timeout=180):
+  def __init__ (self, *, timeout=300):
     super().__init__(timeout=timeout) 
 
   @discord.ui.button(label="showcare", style=discord.ButtonStyle.gray)
