@@ -238,7 +238,7 @@ class Select(discord.ui.Select):
         tl_bao = 0
         hqn = 0
         ttnt = 0
-        atk1 =
+        atk1 = 0
         atk2 = 0
         hp1 = 0
         hp2 = 0
