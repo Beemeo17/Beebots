@@ -238,6 +238,12 @@ class Select(discord.ui.Select):
         tl_bao = 0
         hqn = 0
         ttnt = 0
+        atk1 =
+        atk2 = 0
+        hp1 = 0
+        hp2 = 0
+        def1=0
+        def2=0
         for artifact in charactert.artifacts:
             crit_rate -= crit_rate
             crit_dmg -= crit_dmg
@@ -267,10 +273,25 @@ class Select(discord.ui.Select):
                 ttnt += substate.value
               elif substate.name == "Hiệu Quả Nạp Nguyên Tố":
                 hqn += substate.value
+              elif substate.name == "HP":
+                if substate.is_percentage:
+                    hp1 += substate.value
+                else:
+                  hp2  += substate.value
+              elif substate.name == "Phòng Ngự":
+                if substate.is_percentage:
+                    def1 += substate.value
+                else:
+                   def2 += substate.value
+              elif substate.name == "Tấn Công":
+                if substate.is_percentage:
+                    atk1 += substate.value
+                else:
+                   atk2 += substate.value
               else: 
                return
-             cv_a = (tl_bao * 2) + st_bao
-             draw.text((26, 1072), (f"CRcrit{tl_bao}     DMGcrit{st_bao}     ttnt{ttnt}     hqn{hqn}     {cv_a:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
+        cv_a = (tl_bao * 2) + st_bao
+        draw.text((26, 1072), (f"CRcrit{tl_bao}.  DMGcrit{st_bao}.  ttnt{ttnt}.  hqn{hqn}.  atk{atk1:.1f}%.  atk{atk2}.   HP{hp1:.1f}%.   HP{hp2}.   def{def1:.1f}%.  def{def2}.  {cv_a:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
 
 
 
