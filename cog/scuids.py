@@ -173,7 +173,14 @@ class Select(discord.ui.Select):
                     if count >= 4:
                       draw.text((95, 685), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
                 #cv      
-                x_cv1, x_cv2, sss, crit_rate, crit_dmg, st_bao, hqn, ttnt, atk1, atk2, hp1, hp2, def1, def2, x_tdv_levels = 158, 224, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 166
+                x_cv1, x_cv2, sss = 158, 224, 0
+                crit_rate, crit_dmg = 0, 0
+                st_bao, tl_bao = 0, 0
+                hqn, ttnt = 0, 0
+                atk1, atk2 = 0, 0
+                hp1, hp2 = 0, 0
+                def1, def2 = 0, 0
+                x_tdv_levels = 166
                 for artifact in charactert.artifacts:
                     crit_rate -= crit_rate
                     crit_dmg -= crit_dmg
@@ -249,7 +256,11 @@ class Select(discord.ui.Select):
                 cv_a = (tl_bao * 2) + st_bao
                 draw.text((16, 1083), (f"TLbạo:{tl_bao:.1f}% | STbạo:{st_bao:.1f}% | ttnt:{int(ttnt)} | hqn:{hqn}% | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
         
-                x_tdv, x_tdv_stats1, x_tdv_icon, x_tdv_level, x_tdv_rate, x_tdv_stats, y_tdv_stats1, y_tdv_stats2, element_count = 227, 244, 43, 166, 30, 26, 967, 25, 0
+                x_tdv, x_tdv_stats1 = 277, 244
+                x_tdv_icon, x_tdv_level = 43, 166
+                x_tdv_rate, x_tdv_stats = 30, 26
+                y_tdv_stats1, y_tdv_stats2 = 967, 25
+                element_count = 0
                 for artifact in charactert.artifacts:
                   response = requests.get(artifact.icon)
                   image_set_tdv0 = BytesIO(response.content)
