@@ -262,21 +262,21 @@ class Select(discord.ui.Select):
                   x = x_tdv_level
                   y = 877
 
-                  if cv0 >= 50:
+                  if int(cv0) >= 50:
                       draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(208, 59, 84))
                       draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255))
-                  elif cv0 >= 42 and cv0 < 50:
+                  elif int(cv0) >= 42 and int(cv0) < 50:
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(203, 208, 59))
                     draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255))
-                  elif cv0 >= 32 and cv0 < 42:
+                  elif int(cv0) >= 32 and int(cv0) < 42:
                       draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(208, 59, 208))
                       draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255))
-                  elif cv0 >= 18 and cv0 < 32:
+                  elif int(cv0) >= 18 and int(cv0) < 32:
                       draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(59, 123, 208))
                       draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255))
-                  elif cv0 >= 0 and cv0 < 18:
+                  elif int(cv0) >= 0 and int(cv0) < 18:
                       draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(210, 221, 236))  
-                      draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255))
+                      draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(0, 0, 0))
 
                   x_tdv_level += x_tdv
                   for substate in artifact.sub_stats:
