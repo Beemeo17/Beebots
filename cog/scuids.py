@@ -394,325 +394,38 @@ class scuids(commands.Cog):
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
         if data.characters is not None and len(data.characters) > 0:
-          if len(data.characters) > 0:
-            #char0
-            response = requests.get(data.characters[0].icon.circle)
-            image_set_char0 = BytesIO(response.content)
-            image_char0 = Image.open(image_set_char0).resize((50, 50))
-            image_app.paste(image_char0, (10, 60), mask=image_char0)
-            draw.text((12, 122), data.characters[0].name, font=font,
-                      fill=(0, 0, 0))  #name0
-            draw.text((63, 80), (
-              f"level:{data.characters[0].level}     C {len(data.characters[0].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level0
-            #skill_char0
-            response = requests.get(data.characters[0].talents[0].icon)  #skill1
-            image_set_skill00 = BytesIO(response.content)
-            image_skill00 = Image.open(image_set_skill00).resize((20, 20))
-            image_app.paste(image_skill00, (61, 97), mask=image_skill00)
-
-            response = requests.get(data.characters[0].talents[1].icon)  #skill2
-            image_set_skill01 = BytesIO(response.content)
-            image_skill01 = Image.open(image_set_skill01).resize((20, 20))
-            image_app.paste(image_skill01, (101, 97), mask=image_skill01)
-
-            response = requests.get(data.characters[0].talents[2].icon)  #skill3
-            image_set_skill02 = BytesIO(response.content)
-            image_skill02 = Image.open(image_set_skill02).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill02, (137, 97), mask=image_skill02)
-            draw.text((61, 98), (f"     {data.characters[0].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((101, 98), (f"     {data.characters[0].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((137, 98), (f"     {data.characters[0].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 1:
-            #char1
-            response = requests.get(data.characters[1].icon.circle)
-            image_set_char1 = BytesIO(response.content)
-            image_char1 = Image.open(image_set_char1).resize((50, 50))
-            image_app.paste(image_char1, (191, 60), mask=image_char1)
-            draw.text((195, 122), data.characters[1].name, font=font,
-                      fill=(0, 0, 0))  #name1
-            draw.text((244, 80), (
-              f"level:{data.characters[1].level}     C {len(data.characters[1].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level1
-            #skill_char1
-            response = requests.get(data.characters[1].talents[0].icon)  #skill1
-            image_set_skill10 = BytesIO(response.content)
-            image_skill10 = Image.open(image_set_skill10).resize((20, 20))
-            image_app.paste(image_skill10, (241, 97), mask=image_skill10)
-
-            response = requests.get(data.characters[1].talents[1].icon)  #skill2
-            image_set_skill11 = BytesIO(response.content)
-            image_skill11 = Image.open(image_set_skill11).resize((20, 20))
-            image_app.paste(image_skill11, (282, 97), mask=image_skill11)
-
-            response = requests.get(data.characters[1].talents[2].icon)  #skill3
-            image_set_skill12 = BytesIO(response.content)
-            image_skill12 = Image.open(image_set_skill12).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill12, (320, 97), mask=image_skill12)
-            draw.text((241, 98), (f"     {data.characters[1].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((282, 98), (f"     {data.characters[1].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((320, 98), (f"     {data.characters[1].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 2:
-            #char2
-            response = requests.get(data.characters[2].icon.circle)
-            image_set_char2 = BytesIO(response.content)
-            image_char2 = Image.open(image_set_char2).resize((50, 50))
-            image_app.paste(image_char2, (372, 60), mask=image_char2)
-            draw.text((378, 122), data.characters[2].name, font=font,
-                      fill=(0, 0, 0))  #name2
-            draw.text((425, 80), (
-              f"level:{data.characters[2].level}     C {len(data.characters[2].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level2
-            #skill_char2
-            response = requests.get(data.characters[2].talents[0].icon)  #skill1
-            image_set_skill20 = BytesIO(response.content)
-            image_skill20 = Image.open(image_set_skill20).resize((20, 20))
-            image_app.paste(image_skill20, (423, 97), mask=image_skill20)
-
-            response = requests.get(data.characters[2].talents[1].icon)  #skill2
-            image_set_skill21 = BytesIO(response.content)
-            image_skill21 = Image.open(image_set_skill21).resize((20, 20))
-            image_app.paste(image_skill21, (463, 97), mask=image_skill21)
-
-            response = requests.get(data.characters[2].talents[2].icon)  #skill3
-            image_set_skill22 = BytesIO(response.content)
-            image_skill22 = Image.open(image_set_skill22).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill22, (503, 97), mask=image_skill22)
-            draw.text((423, 98), (f"     {data.characters[2].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((463, 98), (f"     {data.characters[2].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((502, 98), (f"     {data.characters[2].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 3:
-            #char3
-            response = requests.get(data.characters[3].icon.circle)
-            image_set_char3 = BytesIO(response.content)
-            image_char3 = Image.open(image_set_char3).resize((50, 50))
-            image_app.paste(image_char3, (553, 60), mask=image_char3)
-            draw.text((561, 122), data.characters[3].name, font=font,
-                      fill=(0, 0, 0))  #name3
-            draw.text((606, 80), (
-              f"level:{data.characters[3].level}     C {len(data.characters[3].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level3
-            #skill_char3
-            response = requests.get(data.characters[3].talents[0].icon)  #skill1
-            image_set_skill30 = BytesIO(response.content)
-            image_skill30 = Image.open(image_set_skill30).resize((20, 20))
-            image_app.paste(image_skill30, (605, 97), mask=image_skill30)
-
-            response = requests.get(data.characters[3].talents[1].icon)  #skill2
-            image_set_skill31 = BytesIO(response.content)
-            image_skill31 = Image.open(image_set_skill31).resize((20, 20))
-            image_app.paste(image_skill31, (645, 97), mask=image_skill31)
-
-            response = requests.get(data.characters[3].talents[2].icon)  #skill3
-            image_set_skill32 = BytesIO(response.content)
-            image_skill32 = Image.open(image_set_skill32).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill32, (684, 97), mask=image_skill32)
-            draw.text((605, 98), (f"     {data.characters[3].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((645, 98), (f"     {data.characters[3].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((684, 98), (f"     {data.characters[3].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 4:
-            #char4
-            response = requests.get(data.characters[4].icon.circle)
-            image_set_char4 = BytesIO(response.content)
-            image_char4 = Image.open(image_set_char4).resize((50, 50))
-            image_app.paste(image_char4, (10, 214), mask=image_char4)
-            draw.text((12, 273), data.characters[4].name, font=font,
-                      fill=(0, 0, 0))  #name4
-            draw.text((63, 230), (
-              f"level:{data.characters[4].level}     C {len(data.characters[4].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level4
-            #skill_char4
-            response = requests.get(data.characters[4].talents[0].icon)  #skill1
-            image_set_skill40 = BytesIO(response.content)
-            image_skill40 = Image.open(image_set_skill40).resize((20, 20))
-            image_app.paste(image_skill40, (61, 247), mask=image_skill40)
-
-            response = requests.get(data.characters[4].talents[1].icon)  #skill2
-            image_set_skill41 = BytesIO(response.content)
-            image_skill41 = Image.open(image_set_skill41).resize((20, 20))
-            image_app.paste(image_skill41, (102, 247), mask=image_skill41)
-
-            response = requests.get(data.characters[4].talents[2].icon)  #skill3
-            image_set_skill42 = BytesIO(response.content)
-            image_skill42 = Image.open(image_set_skill42).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill42, (140, 247), mask=image_skill42)
-            draw.text((61, 248), (f"     {data.characters[4].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((102, 248), (f"     {data.characters[4].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((140, 248), (f"     {data.characters[4].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 5:
-            #char5
-            response = requests.get(data.characters[5].icon.circle)
-            image_set_char5 = BytesIO(response.content)
-            image_char5 = Image.open(image_set_char5).resize((50, 50))
-            image_app.paste(image_char5, (193, 214), mask=image_char5)
-            draw.text((195, 273), data.characters[5].name, font=font,
-                      fill=(0, 0, 0))  #name5
-            draw.text((244, 230), (
-              f"level:{data.characters[5].level}     C {len(data.characters[5].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level5
-            #skill_char5
-            response = requests.get(data.characters[5].talents[0].icon)  #skill1
-            image_set_skill50 = BytesIO(response.content)
-            image_skill50 = Image.open(image_set_skill50).resize((20, 20))
-            image_app.paste(image_skill50, (243, 247), mask=image_skill50)
-
-            response = requests.get(data.characters[5].talents[1].icon)  #skill2
-            image_set_skill51 = BytesIO(response.content)
-            image_skill51 = Image.open(image_set_skill51).resize((20, 20))
-            image_app.paste(image_skill51, (285, 247), mask=image_skill51)
-
-            response = requests.get(data.characters[5].talents[2].icon)  #skill3
-            image_set_skill52 = BytesIO(response.content)
-            image_skill52 = Image.open(image_set_skill52).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill52, (323, 247), mask=image_skill52)
-            draw.text((243, 248), (f"     {data.characters[5].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((285, 248), (f"     {data.characters[5].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((323, 248), (f"     {data.characters[5].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 6:
-            #char6
-            response = requests.get(data.characters[6].icon.circle)
-            image_set_char6 = BytesIO(response.content)
-            image_char6 = Image.open(image_set_char6).resize((50, 50))
-            image_app.paste(image_char6, (374, 214), mask=image_char6)
-            draw.text((378, 273), data.characters[6].name, font=font,
-                      fill=(0, 0, 0))  #name6
-            draw.text((425, 230), (
-              f"level:{data.characters[6].level}     C {len(data.characters[6].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level6
-            #skill_char6
-            response = requests.get(data.characters[6].talents[0].icon)  #skill1
-            image_set_skill60 = BytesIO(response.content)
-            image_skill60 = Image.open(image_set_skill60).resize((20, 20))
-            image_app.paste(image_skill60, (426, 247), mask=image_skill60)
-
-            response = requests.get(data.characters[6].talents[1].icon)  #skill2
-            image_set_skill61 = BytesIO(response.content)
-            image_skill61 = Image.open(image_set_skill61).resize((20, 20))
-            image_app.paste(image_skill61, (467, 247), mask=image_skill61)
-
-            response = requests.get(data.characters[6].talents[2].icon)  #skill3
-            image_set_skill62 = BytesIO(response.content)
-            image_skill62 = Image.open(image_set_skill62).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill62, (506, 247), mask=image_skill62)
-            draw.text((426, 248), (f"     {data.characters[6].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((467, 248), (f"     {data.characters[6].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((506, 248), (f"     {data.characters[6].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-          if len(data.characters) > 7:
-            #char7
-            response = requests.get(data.characters[7].icon.circle)
-            image_set_char7 = BytesIO(response.content)
-            image_char7 = Image.open(image_set_char7).resize((50, 50))
-            image_app.paste(image_char7, (558, 214), mask=image_char7)
-            draw.text((561, 273), data.characters[7].name, font=font,
-                      fill=(0, 0, 0))  #name7
-            draw.text((606, 230), (
-              f"level:{data.characters[7].level}     C {len(data.characters[7].constellations)}"
-            ),
-                      font=font,
-                      fill=(0, 0, 0))  #level7
-            #skill_char7
-            response = requests.get(data.characters[7].talents[0].icon)  #skill1
-            image_set_skill70 = BytesIO(response.content)
-            image_skill70 = Image.open(image_set_skill70).resize((20, 20))
-            image_app.paste(image_skill70, (608, 247), mask=image_skill70)
-
-            response = requests.get(data.characters[7].talents[1].icon)  #skill2
-            image_set_skill71 = BytesIO(response.content)
-            image_skill71 = Image.open(image_set_skill71).resize((20, 20))
-            image_app.paste(image_skill71, (648, 247), mask=image_skill71)
-
-            response = requests.get(data.characters[7].talents[2].icon)  #skill3
-            image_set_skill72 = BytesIO(response.content)
-            image_skill72 = Image.open(image_set_skill72).resize(
-              (20, 20)).convert('RGBA')
-            image_app.paste(image_skill72, (687, 247), mask=image_skill72)
-            draw.text((608, 248), (f"     {data.characters[7].talents[0].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((648, 248), (f"     {data.characters[7].talents[1].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
-            draw.text((687, 248), (f"     {data.characters[7].talents[2].level}"),
-                      font=font,
-                      fill=(255, 255, 255))
+            for i in range(min(len(data.characters), 8)):
+                char = data.characters[i]
+        
+                # Character info
+                response = requests.get(char.icon.circle)
+                image_set_char = BytesIO(response.content)
+                image_char = Image.open(image_set_char).resize((50, 50))
+                image_app.paste(image_char, ((i % 4) * 181 + 10, (i // 4) * 154 + 60), mask=image_char)
+        
+                draw.text(((i % 4) * 181 + 12, (i // 4) * 154 + 122), char.name, font=font, fill=(0, 0, 0))
+                draw.text(((i % 4) * 181 + 63, (i // 4) * 154 + 80),
+                          f"level:{char.level}     C {len(char.constellations)}", font=font, fill=(0, 0, 0))
+        
+                # Character skills
+                for j, talent in enumerate(char.talents[:3]):
+                    response = requests.get(talent.icon)
+                    image_set_skill = BytesIO(response.content)
+                    image_skill = Image.open(image_set_skill).resize((20, 20)).convert('RGBA')
+                    image_app.paste(image_skill, ((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 97), mask=image_skill)
+                    draw.text(((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 98), f"     {talent.level}",
+                              font=font, fill=(255, 255, 255))
         else:
-          embed1 = discord.Embed(color=0xed0202)
-          embed1.add_field(name="lỗi",
-                           value="Không tìm thấy dữ liệu cho người dùng này.",
-                           inline=False)
-          embed1.add_field(
-            name="Chuyện gì đã xảy ra?",
-            value=
-            "Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới.",
-            inline=False)
-          embed1.set_image(
-            url=
-            "https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
-          )
-          await Interaction.followup.send(embed=embed1, ephemeral=True)
+            embed1 = discord.Embed(color=0xed0202)
+            embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
+            embed1.add_field(
+                name="Chuyện gì đã xảy ra?",
+                value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới.",
+                inline=False)
+            embed1.set_image(
+                url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
+            )
+            await Interaction.followup.send(embed=embed1, ephemeral=True)
 
         embed = discord.Embed(color=0x0ad2f5)
         author_name = f"{Interaction.user.name}#{Interaction.user.discriminator}"
