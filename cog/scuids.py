@@ -101,12 +101,10 @@ class Select(discord.ui.Select):
         draw.text((812, 150), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         
         #stats
-
         characterp = charactert.stats
         FightProp = FightPropType
         fontt = ImageFont.truetype("zh-cn.ttf", 25)
         
-        # Thông số cần hiển thị
         stat_infos = [
             (("HP", FightProp.FIGHT_PROP_CUR_HP), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png", (644, 245), (40, 40)),
             (("Tấn Công", FightProp.FIGHT_PROP_CUR_ATTACK), "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png", (644, 280), (40, 40)),
@@ -117,11 +115,7 @@ class Select(discord.ui.Select):
             (("Hiệu Quả Nạp", FightProp.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 480), (40, 40)),
             (("Trị Liệu", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 520), (40, 40)),
         ]
-        
-        # Vị trí hiện tại
         current_position = (688, 250)
-        
-        # Vẽ thông số và icon cho mỗi thông số
         for stat_info in stat_infos:
             stat_name = stat_info[0][0]
             stat_value = characterp[stat_info[0][1]].formatted_value
@@ -131,18 +125,13 @@ class Select(discord.ui.Select):
         
             draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))
         
-            # Tải icon từ URL và chèn vào ảnh
             response = requests.get(icon_url)
             icon = BytesIO(response.content)
             icon_image = Image.open(icon).resize(icon_size)
             image_app.paste(icon_image, icon_position, mask=icon_image)
         
-            # Cập nhật vị trí cho lần vẽ tiếp theo
             current_position = (current_position[0], current_position[1] + 40)
-        
-        
         #stnt
-        # Thông số STNT cần hiển thị
         stnt_infos = [
             (("Vật Lý", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 565), (50, 50)),
             (("Gió", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 565), (50, 50)),
@@ -153,11 +142,9 @@ class Select(discord.ui.Select):
             (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
             (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
         ]
-        
-        # Vị trí hiện tại
-        current_position = (694, 578)
-        
-        # Vẽ thông số và icon cho mỗi thông số
+        ynt = (0, 575)
+        xnt = [694, 816, 929, 1043]
+        tntp = 0
         for stnt_info in stnt_infos:
             stnt_name = stnt_info[0][0]
             stnt_value = characterp[stnt_info[0][1]].formatted_value
@@ -165,19 +152,18 @@ class Select(discord.ui.Select):
             stnt_icon_position = stnt_info[2]
             stnt_icon_size = stnt_info[3]
         
-            draw.text(current_position, (f"{stnt_name}: {stnt_value}"), font=fontt, fill=(255, 255, 255))
+            draw.text(xnt,ynt, (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
         
-            # Tải icon từ URL và chèn vào ảnh
             stnt_response = requests.get(stnt_icon_url)
             stnt_icon = BytesIO(stnt_response.content)
             stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
             image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
+            tntp += 1
+            ters = xnt[k % len(xnt)]
+            ynt[0] = ters
+            if tntp >= 4:
+                ynt[1] = 638
         
-            # Cập nhật vị trí cho lần vẽ tiếp theo
-            current_position = (current_position[0], current_position[1] + 63)
-        
-        
-
         #tdv
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
 
@@ -263,8 +249,6 @@ class Select(discord.ui.Select):
                return
         cv_a = (tl_bao * 2) + st_bao
         draw.text((16, 1083), (f"TLbạo:{tl_bao:.1f}% | STbạo:{st_bao:.1f}% | ttnt:{int(ttnt)} | hqn:{hqn}% | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
-
-
 
         x_tdv = 227 #x tổng
         x_tdv_stats1 = 224
