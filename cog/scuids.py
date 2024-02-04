@@ -94,120 +94,99 @@ class Select(discord.ui.Select):
         draw.text((970, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
+        
+        current_position_weapon = (812, 150)
+        y_offset_weapon = 10
+        
         if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
-              draw.text((812, 150), (f"{weapon.stats[1].name.strip()[:12]}: {weapon.stats[1].formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
-        elif weapon.stats[1].name == "Tinh Thông Nguyên Tố":
-             draw.text((812, 150), (f"{weapon.stats[1].name}: {weapon.stats[1].formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+            stat_name = weapon.stats[1].name.strip()[:12]
         else:
-              draw.text((812, 150), (f"{weapon.stats[1].name}: {(weapon.stats[1].formatted_value)}"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+            stat_name = weapon.stats[1].name
+        
+        text_width_weapon, text_height_weapon = draw.textsize(f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17))
+        draw.ellipse([current_position_weapon, (current_position_weapon[0] + text_width_weapon + 20, current_position_weapon[1] + text_height_weapon + 10)], outline=(0, 0, 0), width=2)
+        
+        draw.text((current_position_weapon[0] + 10, current_position_weapon[1] + 5), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        
+        current_position_weapon = (current_position_weapon[0], current_position_weapon[1] + text_height_weapon + y_offset_weapon)
+        
+        #stats
 
-        #Stats
         characterp = charactert.stats
         FightProp = FightPropType
-        fontt=ImageFont.truetype("zh-cn.ttf", 25)
-        draw.text((688, 250), (f"HP: {round(characterp[FightProp.FIGHT_PROP_CUR_HP].value)}"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png")
-        hp = BytesIO(response.content)
-        hp1 = Image.open(hp).resize((40, 40))
-        image_app.paste(hp1, (644, 245), mask=hp1)
-
-        draw.text((688, 285), (f"Tân Công: {round(characterp[FightProp.FIGHT_PROP_CUR_ATTACK].value)}"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png")
-        atk = BytesIO(response.content)
-        atk1 = Image.open(atk).resize((40, 40))
-        image_app.paste(atk1, (644, 280), mask=atk1)
-
-        draw.text((688, 325), (f"Phòng Ngự: {round(characterp[FightProp.FIGHT_PROP_CUR_DEFENSE].value)}"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png")
-        def2 = BytesIO(response.content)
-        def1 = Image.open(def2).resize((40, 40))
-        image_app.paste(def1, (644, 320), mask=def1)
-
-        draw.text((688, 365), (f"Tinh Thông Nguyên Tố: {round(characterp[FightProp.FIGHT_PROP_ELEMENT_MASTERY].value)}"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png")
-        tt = BytesIO(response.content)
-        tt1 = Image.open(tt).resize((40, 40))
-        image_app.paste(tt1, (644, 360), mask=tt1)
-
-        draw.text((688, 405),(f"Tỉ Lệ Bạo: {(characterp[FightProp.FIGHT_PROP_CRITICAL].formatted_value.rstrip('%'))}%"), font=font, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png")
-        tl = BytesIO(response.content)
-        tl1 = Image.open(tl).resize((40, 40))
-        image_app.paste(tl1, (644, 400), mask=tl1)
-
-        draw.text((688, 445),(f"Sát Thương Bạo: {(characterp[FightProp.FIGHT_PROP_CRITICAL_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png")
-        st = BytesIO(response.content)
-        st1 = Image.open(st).resize((40, 40))
-        image_app.paste(st1, (644, 440), mask=st1)
-
-        draw.text((688, 485),(f"Hiệu Quả Nạp: {(characterp[FightProp.FIGHT_PROP_CHARGE_EFFICIENCY].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png")
-        hqn = BytesIO(response.content)
-        hqn1 = Image.open(hqn).resize((40, 40))
-        image_app.paste(hqn1, (644, 480), mask=hqn1)
-
-        draw.text((688, 525),(f"trị liệu: {(characterp[FightProp.FIGHT_PROP_HEAL_ADD].formatted_value)}"), font=fontt, fill=(255, 255, 255))
-        response = requests.get("https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png")
-        tl = BytesIO(response.content)
-        tl1 = Image.open(tl).resize((40, 40))
-        image_app.paste(tl1, (644, 520), mask=tl1)
-        #stnt
-        draw.text((694, 578),(f"{(characterp[FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-
-        response = requests.get("https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png")
-        svl = BytesIO(response.content)
-        svl1 = Image.open(svl).resize((50, 50))
-        image_app.paste(svl1, (644, 565), mask=svl1)
-
-        draw.text((816, 578),(f"{(characterp[FightProp.FIGHT_PROP_WIND_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-
-        response = requests.get("https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless")
-        stp = BytesIO(response.content)
-        stp1 = Image.open(stp).resize((50, 50))
-        image_app.paste(stp1, (766, 565), mask=stp1)
-
-        draw.text((929, 578),(f"{(characterp[FightProp.FIGHT_PROP_ROCK_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
+        fontt = ImageFont.truetype("zh-cn.ttf", 25)
         
-        response = requests.get("https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless")
-        stn = BytesIO(response.content)
-        stn1 = Image.open(stn).resize((50, 50))
-        image_app.paste(stn1, (879, 565), mask=stn1)
-
-        draw.text((1043, 578),(f"{(characterp[FightProp.FIGHT_PROP_ELEC_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-
-        response = requests.get("https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless")
-        stl = BytesIO(response.content)
-        stl1 = Image.open(stl).resize((50, 50))
-        image_app.paste(stl1, (993, 565), mask=stl1)
-
-        draw.text((694, 638),(f"{(characterp[FightProp.FIGHT_PROP_GRASS_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-
-        response = requests.get("https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless")
-        stt = BytesIO(response.content)
-        stt1 = Image.open(stt).resize((50, 50))
-        image_app.paste(stt1, (644, 625), mask=stt1)           
-
-        draw.text((816, 638),(f"{(characterp[FightProp.FIGHT_PROP_WATER_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-
-        response = requests.get("https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless")
-        stt2 = BytesIO(response.content)
-        stt3 = Image.open(stt2).resize((50, 50))
-        image_app.paste(stt3, (766, 625), mask=stt3)          
-
-        draw.text((929, 638),(f"{(characterp[FightProp.FIGHT_PROP_FIRE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255)) 
-
-        response = requests.get("https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless")
-        sth = BytesIO(response.content)
-        sth1 = Image.open(sth).resize((50, 50))
-        image_app.paste(sth1, (879, 625), mask=sth1)          
-
-        draw.text((1043, 638),(f"{(characterp[FightProp.FIGHT_PROP_ICE_ADD_HURT].formatted_value.rstrip('%'))}%"), font=fontt, fill=(255, 255, 255))
-
-        response = requests.get("https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless")
-        stb = BytesIO(response.content)
-        stb1 = Image.open(stb).resize((50, 50))
-        image_app.paste(stb1, (993, 625), mask=stb1)
+        # Thông số cần hiển thị
+        stat_infos = [
+            (("HP", FightProp.FIGHT_PROP_CUR_HP), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png", (644, 245), (40, 40)),
+            (("Tấn Công", FightProp.FIGHT_PROP_CUR_ATTACK), "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png", (644, 280), (40, 40)),
+            (("Phòng Ngự", FightProp.FIGHT_PROP_CUR_DEFENSE), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png", (644, 320), (40, 40)),
+            (("Tinh Thông Nguyên Tố", FightProp.FIGHT_PROP_ELEMENT_MASTERY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png", (644, 360), (40, 40)),
+            (("Tỉ Lệ Bạo", FightProp.FIGHT_PROP_CRITICAL), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png", (644, 400), (40, 40)),
+            (("Sát Thương Bạo", FightProp.FIGHT_PROP_CRITICAL_HURT), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png", (644, 440), (40, 40)),
+            (("Hiệu Quả Nạp", FightProp.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 480), (40, 40)),
+            (("Trị Liệu", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 520), (40, 40)),
+        ]
+        
+        # Vị trí hiện tại
+        current_position = (688, 250)
+        
+        # Vẽ thông số và icon cho mỗi thông số
+        for stat_info in stat_infos:
+            stat_name = stat_info[0][0]
+            stat_value = characterp[stat_info[0][1]].formatted_value
+            icon_url = stat_info[1]
+            icon_position = stat_info[2]
+            icon_size = stat_info[3]
+        
+            draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))
+        
+            # Tải icon từ URL và chèn vào ảnh
+            response = requests.get(icon_url)
+            icon = BytesIO(response.content)
+            icon_image = Image.open(icon).resize(icon_size)
+            image_app.paste(icon_image, icon_position, mask=icon_image)
+        
+            # Cập nhật vị trí cho lần vẽ tiếp theo
+            current_position = (current_position[0], current_position[1] + 40)
+        
+        
+        #stnt
+        # Thông số STNT cần hiển thị
+        stnt_infos = [
+            (("Vật Lý", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 565), (50, 50)),
+            (("Gió", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 565), (50, 50)),
+            (("Đá", FightProp.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 565), (50, 50)),
+            (("Điện", FightProp.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 565), (50, 50)),
+            (("Thảo Mộc", FightProp.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 625), (50, 50)),
+            (("Nước", FightProp.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 625), (50, 50)),
+            (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
+            (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
+        ]
+        
+        # Vị trí hiện tại
+        current_position = (694, 578)
+        
+        # Vẽ thông số và icon cho mỗi thông số
+        for stnt_info in stnt_infos:
+            stnt_name = stnt_info[0][0]
+            stnt_value = characterp[stnt_info[0][1]].formatted_value
+            stnt_icon_url = stnt_info[1]
+            stnt_icon_position = stnt_info[2]
+            stnt_icon_size = stnt_info[3]
+        
+            draw.text(current_position, (f"{stnt_name}: {stnt_value}"), font=fontt, fill=(255, 255, 255))
+        
+            # Tải icon từ URL và chèn vào ảnh
+            stnt_response = requests.get(stnt_icon_url)
+            stnt_icon = BytesIO(stnt_response.content)
+            stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
+            image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
+        
+            # Cập nhật vị trí cho lần vẽ tiếp theo
+            current_position = (current_position[0], current_position[1] + 63)
+        
+        
 
         #tdv
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
@@ -328,10 +307,6 @@ class Select(discord.ui.Select):
             else:
               name_sst = substate.name
             
-            velex = substate.value
-            velax = str(velex / 100).rstrip('0').rstrip('.') if '.' in str(velex / 100) else str(velex / 100)
-            if len(velax) < 0:
-                velax *= 100
             draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
             y_tdv_stats1 += y_tdv_stats2
             element_count += 1
@@ -359,6 +334,7 @@ class Select(discord.ui.Select):
         draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
         draw.text((534, 182), (f"     {charactert.talents[2].level}"),font=font,fill=(255, 255, 255))
 
+        #cm
         Locks = 6 - (len(charactert.constellations))
         x_lock = 532
         y_lock = 569
@@ -372,7 +348,7 @@ class Select(discord.ui.Select):
         lock = len(charactert.constellations)
         inseta = 244
         y_ts = [65,66,63,64,65]
-        for k in range(lock):
+        for k in range(6):
           constellation = charactert.constellations[k]
           response = requests.get(constellation.icon) #skill1
           image_set_skill00 = BytesIO(response.content)
