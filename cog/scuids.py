@@ -34,30 +34,30 @@ class Select(discord.ui.Select):
                 uid = global_data.get("uid")
                 data = await api.fetch_showcase(uid)
                 channel = inset_message.get('channelt')
-
+                
                 embed_loading = discord.Embed(color=discord.Color.yellow())
                 embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>", value="", inline=False)
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
-
+                
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
-
+                
                 url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203735713817043014/Khong_Co_Tieu_e117.png"
                 response = requests.get(url_goc)
                 image_app = Image.open(BytesIO(response.content)).convert("RGBA").resize((1141, 1277))
-                
-                url_hinh2 = "charactert.icon.side"
+                url_hinh2 = charactert.icon.side
                 image_hinh2 = Image.open(BytesIO(requests.get(url_hinh2).content)).convert("RGBA").resize((110, 110))
                 url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203729761889820762/Khong_Co_Tieu_e118.png"
                 image_hinh3 = Image.open(BytesIO(requests.get(url_hinh3).content)).convert("RGBA").resize((125, 140))
-                x2, y2, x3, y3 = 14, 16, 6, 12
-                for a range(char_index):
-                  x3 += 144
+                x3, y3 = 6, 12
+                for _ in range(char_index):
+                    x3 += 144
                 image_app.paste(image_hinh3, (x3, y3), image_hinh3)
-                for i in range(min(len(data.characters), 8)): 
-                  image_app.paste(image_hinh2, (x2, y2), image_hinh2)
-                  x2 += 144
-                
+                x2, y2 = 14, 16
+                for _ in range(min(len(data.characters), 8)):
+                    image_app.paste(image_hinh2, (x2, y2), image_hinh2)
+                    x2 += 144
+
                 font = ImageFont.truetype("zh-cn.ttf", 27)
                 draw = ImageDraw.Draw(image_app)
                 draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
