@@ -94,21 +94,11 @@ class Select(discord.ui.Select):
         draw.text((970, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
         draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
         draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
-        
-        current_position_weapon = (812, 150)
-        y_offset_weapon = 10
-        
         if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
             stat_name = weapon.stats[1].name.strip()[:12]
         else:
             stat_name = weapon.stats[1].name
-        
-        text_width_weapon, text_height_weapon = draw.textbbox((0, 0), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17))
-        draw.ellipse([current_position_weapon, (current_position_weapon[0] + text_width_weapon + 20, current_position_weapon[1] + text_height_weapon + 10)], outline=(0, 0, 0), width=2)
-        
-        draw.text((current_position_weapon[0] + 10, current_position_weapon[1] + 5), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
-        
-        current_position_weapon = (current_position_weapon[0], current_position_weapon[1] + text_height_weapon + y_offset_weapon)
+        draw.text((812, 815), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         
         #stats
 
