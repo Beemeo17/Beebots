@@ -145,13 +145,19 @@ class Select(discord.ui.Select):
         ynt = 575
         xnt = [694, 816, 929, 1043]
         tntp = 0
+        txtx = 0
         for stnt_info in stnt_infos:
             stnt_name = stnt_info[0][0]
             stnt_value = characterp[stnt_info[0][1]].formatted_value
             stnt_icon_url = stnt_info[1]
             stnt_icon_position = stnt_info[2]
             stnt_icon_size = stnt_info[3]
-            draw.text((xnt[tntp], ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
+            txtx += 1
+            if tntp <= 3:
+                draw.text((xnt[txtx], ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
+            else:
+                txtx = 0
+                draw.text((xnt[txtx], ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
             stnt_response = requests.get(stnt_icon_url)
             stnt_icon = BytesIO(stnt_response.content)
             stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
