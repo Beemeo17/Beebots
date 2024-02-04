@@ -194,28 +194,26 @@ class Select(discord.ui.Select):
                         crit_dmg += substate.value 
                       else:
                         return
-                        
-                     text = (f"+{artifact.level}")
-                     text_font = ImageFont.truetype("zh-cn.ttf", 23)
-                     text_bbox = draw.textbbox((0, 0), text, font=text_font) 
-                     box_padding = 1
-                     box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
-                     box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
-                     x = x_tdv_levels
-                     y = 877
-                     if int(cv0) >= 50:
-                        color = (208, 59, 84)
-                     elif int(cv0) >= 42 and int(cv0) <= 49:
-                        color = (203, 208, 59)
-                     elif int(cv0) >= 32 and int(cv0) <= 41:
-                        color = (208, 59, 208)
-                     elif int(cv0) >= 18 and int(cv0) <= 31:
-                        color = (59, 123, 208)
-                     else:
-                        color = (210, 221, 236)
-                        
                     cv0 = (crit_rate) * 2 + crit_dmg
                     draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+                    text = (f"+{artifact.level}")
+                    text_font = ImageFont.truetype("zh-cn.ttf", 23)
+                    text_bbox = draw.textbbox((0, 0), text, font=text_font) 
+                    box_padding = 1
+                    box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
+                    box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
+                    x = x_tdv_levels
+                    y = 876
+                    if int(cv0) >= 50:
+                        color = (208, 59, 84)
+                    elif int(cv0) >= 42 and int(cv0) <= 49:
+                        color = (203, 208, 59)
+                    elif int(cv0) >= 32 and int(cv0) <= 41:
+                        color = (208, 59, 208)
+                    elif int(cv0) >= 18 and int(cv0) <= 31:
+                        color = (59, 123, 208)
+                    else:
+                        color = (210, 221, 236)                       
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
                     draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255) if color != (210, 221, 236) else (0, 0, 0))                  
                     x_tdv_levels += 227
