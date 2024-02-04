@@ -98,7 +98,7 @@ class Select(discord.ui.Select):
             stat_name = weapon.stats[1].name.strip()[:12]
         else:
             stat_name = weapon.stats[1].name
-        draw.text((812, 815), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+        draw.text((812, 150), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
         
         #stats
 
