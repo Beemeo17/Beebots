@@ -151,7 +151,7 @@ class Select(discord.ui.Select):
             stnt_icon_url = stnt_info[1]
             stnt_icon_position = stnt_info[2]
             stnt_icon_size = stnt_info[3]
-            ters = xnt[k % len(xnt)]
+            ters = xnt[len(stnt_info) % len(xnt)]
             ynt[0] = ters
             draw.text((ynt[0], ynt[1]), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
             stnt_response = requests.get(stnt_icon_url)
