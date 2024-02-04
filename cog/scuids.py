@@ -261,21 +261,7 @@ class Select(discord.ui.Select):
                   box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
                   x = x_tdv_level
                   y = 877
-
-                  if int(cv0) >= 50:
-                    color = (208, 59, 84)
-                  elif int(cv0) >= 42 and int(cv0) <= 49:
-                    color = (203, 208, 59)
-                  elif int(cv0) >= 32 and int(cv0) <= 41:
-                    color = (208, 59, 208)
-                  elif int(cv0) >= 18 and int(cv0) <= 31:
-                    color = (59, 123, 208)
-                  else:
-                    color = (210, 221, 236)
-                    
-                  draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                  draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255) if color != (210, 221, 236) else (0, 0, 0))
-                    
+  
                   x_tdv_level += x_tdv
                   for substate in artifact.sub_stats:
                     if substate.name == "Hiệu Quả Nạp Nguyên Tố":
@@ -292,6 +278,20 @@ class Select(discord.ui.Select):
                       y_tdv_stats1 = 973
                       x_tdv_stats += x_tdv_stats1
         
+                    if int(cv0) >= 50:
+                        color = (208, 59, 84)
+                    elif int(cv0) >= 42 and int(cv0) <= 49:
+                        color = (203, 208, 59)
+                    elif int(cv0) >= 32 and int(cv0) <= 41:
+                        color = (208, 59, 208)
+                    elif int(cv0) >= 18 and int(cv0) <= 31:
+                        color = (59, 123, 208)
+                    else:
+                        color = (210, 221, 236)
+                        
+                  draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
+                  draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255) if color != (210, 221, 236) else (0, 0, 0))
+                      
         
                 #thiên phú
                 response = requests.get(charactert.talents[0].icon)  #skill1
