@@ -41,7 +41,6 @@ class Select(discord.ui.Select):
         embed_loading = discord.Embed(color=discord.Color.yellow())
         embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>",value="", inline=False)
         await Interaction.response.edit_message(content=None, embed=embed_loading)
-        embed=discord.Embed()
         if self.values[0] == "char1":
             charactert = data.characters[0]              
         elif self.values[0] == "char2":
@@ -58,11 +57,8 @@ class Select(discord.ui.Select):
             charactert = data.characters[6]
         elif self.values[0] == "char8":
             charactert = data.characters[7]  
-        embed.add_field(name=f"name: {charactert.name}", value=f"độ yêu thích: {charactert.friendship_level}", inline=False)
-        embed.add_field(name=f"level: {charactert.level} / 90 \nLàm mới: {data.ttl}", value="", inline=False)
-        embed.set_thumbnail(url=charactert.icon.front)
-
-        url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203546005841125426/Khong_Co_Tieu_e117_20240204082714.png"
+            
+        url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203237852570193930/Khong_Co_Tieu_e117_20240203141707.png"
         response = requests.get(url_goc)
         ime_app = BytesIO(response.content)
         image_app = Image.open(ime_app).convert("RGBA").resize((1141, 1134))
@@ -163,7 +159,7 @@ class Select(discord.ui.Select):
             stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
             image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
             tntp += 1
-            if tntp >= 4:
+            if tntp == 4 and tntp < 9:
                 ynt += 63
         
         #tdv
@@ -337,12 +333,11 @@ class Select(discord.ui.Select):
         image_app.save(buffer, format='png')
         buffer.seek(0)
         file = discord.File(buffer, filename="showcase.png")
-        embed.add_field(name="showcase", value="", inline=False)
         channel = inset_message.get("channelt")
         messaget = await channel.send(file=file)
         file_url = messaget.attachments[0]
         embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.now())
-        embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)}", inline=False)
+        embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới:{data.ttl}", inline=False)
         embed.set_image(url=file_url)   
         embed.set_thumbnail(url=f"{charactert.icon.front}")
         embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
