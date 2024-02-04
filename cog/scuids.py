@@ -152,12 +152,12 @@ class Select(discord.ui.Select):
             stnt_icon_url = stnt_info[1]
             stnt_icon_position = stnt_info[2]
             stnt_icon_size = stnt_info[3]
-            txtx += 1
-            if tntp <= 3:
+            if txtx < 4:
                 draw.text((xnt[txtx], ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
             else:
                 txtx = 0
                 draw.text((xnt[txtx], ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
+            txtx += 1
             stnt_response = requests.get(stnt_icon_url)
             stnt_icon = BytesIO(stnt_response.content)
             stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
