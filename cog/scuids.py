@@ -4,7 +4,7 @@ from discord import app_commands, PartialEmoji
 import requests
 import os
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 from datetime import datetime, time
 import aiohttp
 import enka
@@ -132,10 +132,10 @@ class Select(discord.ui.Select):
                     stnt_icon_position = stnt_info[2]
                     stnt_icon_size = stnt_info[3]
                     if txtx < 4:
-                        draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
+                        draw.text((xnt[txtx], 574), (f"{float(stnt_value.rstrip('0')) if '.' in stnt_value else stnt_value}"), font=fontt, fill=(255, 255, 255))
                     else:
                         txtx = 0
-                        draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
+                        draw.text((xnt[txtx], 574), (f"{float(stnt_value.rstrip('0')) if '.' in stnt_value else stnt_value}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
                     stnt_response = requests.get(stnt_icon_url)
                     stnt_icon = BytesIO(stnt_response.content)
@@ -251,8 +251,30 @@ class Select(discord.ui.Select):
                   x_tdv_rate += x_tdv
         
                   draw.text((x_tdv_stats, 932), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))
-        
-                  draw.text((x_tdv_level, 877), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
+
+                    
+                  text = (f"+{artifact.level}")
+                  text_font = ImageFont.truetype("zh-cn.ttf", 23)
+                  text_bbox = draw.textbbox((0, 0), text, font=text_font) 
+                  box_padding = 1
+                  box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
+                  box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
+                  x = x_tdv_level
+                  y = 877
+
+                  if cv0 >= 50:
+                      draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(208, 59, 84))
+                  elif cv0 >= 42 and cv0 < 50:
+                    draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(203, 208, 59))
+                  elif cv0 >= 32 and cv0 < 42:
+                      draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(208, 59, 208))
+                  elif cv0 >= 18 and cv0 < 32:
+                      draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(59, 123, 208))
+                  elif cv0 >= 1 and cv0 < 18:
+                      draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=(210, 221, 236))  
+                      
+                  draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255))
+
                   x_tdv_level += x_tdv
                   for substate in artifact.sub_stats:
                     if substate.name == "Hiệu Quả Nạp Nguyên Tố":
