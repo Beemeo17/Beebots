@@ -59,7 +59,7 @@ class Select(discord.ui.Select):
         elif self.values[0] == "char8":
             charactert = data.characters[7]  
         embed.add_field(name=f"name: {charactert.name}", value=f"độ yêu thích: {charactert.friendship_level}", inline=False)
-        embed.add_field(name=f"level: {charactert.level} / 90", value="", inline=False)
+        embed.add_field(name=f"level: {charactert.level} / 90 \nLàm mới: {data.ttl}", value="", inline=False)
         embed.set_thumbnail(url=charactert.icon.front)
 
         url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203237852570193930/Khong_Co_Tieu_e117_20240203141707.png"
@@ -152,7 +152,7 @@ class Select(discord.ui.Select):
             stnt_icon_position = stnt_info[2]
             stnt_icon_size = stnt_info[3]
         
-            draw.text(xnt,ynt, (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
+            draw.text((xnt, ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
         
             stnt_response = requests.get(stnt_icon_url)
             stnt_icon = BytesIO(stnt_response.content)
