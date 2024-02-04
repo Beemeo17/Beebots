@@ -142,7 +142,7 @@ class Select(discord.ui.Select):
             (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
             (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
         ]
-        ynt = (0, 575)
+        ynt = 575
         xnt = [694, 816, 929, 1043]
         tntp = 0
         for stnt_info in stnt_infos:
@@ -151,16 +151,15 @@ class Select(discord.ui.Select):
             stnt_icon_url = stnt_info[1]
             stnt_icon_position = stnt_info[2]
             stnt_icon_size = stnt_info[3]
-            ters = xnt[len(stnt_info) % len(xnt)]
-            ynt[0] = ters
-            draw.text((ynt[0], ynt[1]), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
+            for xxnt in xnt:
+             draw.text((xxnt, ynt), (f"{stnt_value}"), font=fontt, fill=(255, 255, 255))
             stnt_response = requests.get(stnt_icon_url)
             stnt_icon = BytesIO(stnt_response.content)
             stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
             image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
             tntp += 1
             if tntp >= 4:
-                ynt[1] = 638
+                ynt += 63
         
         #tdv
         fonts = ImageFont.truetype("zh-cn.ttf", 16)
