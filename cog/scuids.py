@@ -220,7 +220,7 @@ class Select(discord.ui.Select):
                         fills= (255, 255, 255)
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
                     draw.text((x_tdv_levels, 872), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
-                    draw.text((x_cv1, 900), text, font=text_font, fill=fills)
+                    draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=fills)
                     x_tdv_levels += 227
                     sss += 1
                     if sss <= 3:
