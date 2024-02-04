@@ -401,10 +401,10 @@ class scuids(commands.Cog):
                 response = requests.get(char.icon.circle)
                 image_set_char = BytesIO(response.content)
                 image_char = Image.open(image_set_char).resize((50, 50))
-                image_app.paste(image_char, ((i % 4) * 181 + 10, (i // 4) * 154 + 60), mask=image_char)
+                image_app.paste(image_char, ((i % 4) * 181 + 10, (i // 4) * 154 + 57), mask=image_char)
         
-                draw.text(((i % 4) * 181 + 12, (i // 4) * 154 + 122), char.name, font=font, fill=(0, 0, 0))
-                draw.text(((i % 4) * 181 + 63, (i // 4) * 154 + 80),
+                draw.text(((i % 4) * 181 + 14, (i // 4) * 154 + 119), char.name, font=font, fill=(0, 0, 0))
+                draw.text(((i % 4) * 181 + 63, (i // 4) * 154 + 77),
                           f"level:{char.level}     C {len(char.constellations)}", font=font, fill=(0, 0, 0))
         
                 # Character skills
@@ -412,8 +412,8 @@ class scuids(commands.Cog):
                     response = requests.get(talent.icon)
                     image_set_skill = BytesIO(response.content)
                     image_skill = Image.open(image_set_skill).resize((20, 20)).convert('RGBA')
-                    image_app.paste(image_skill, ((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 97), mask=image_skill)
-                    draw.text(((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 98), f"     {talent.level}",
+                    image_app.paste(image_skill, ((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 94), mask=image_skill)
+                    draw.text(((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 95), f"     {talent.level}",
                               font=font, fill=(255, 255, 255))
         else:
             embed1 = discord.Embed(color=0xed0202)
