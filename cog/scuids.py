@@ -182,6 +182,7 @@ class Select(discord.ui.Select):
                 hp2 = 0
                 def1=0
                 def2=0
+                x_tdv_levels = 166
                 for artifact in charactert.artifacts:
                     crit_rate -= crit_rate
                     crit_dmg -= crit_dmg
@@ -194,8 +195,30 @@ class Select(discord.ui.Select):
                       else:
                         return
                         
+                     text = (f"+{artifact.level}")
+                     text_font = ImageFont.truetype("zh-cn.ttf", 23)
+                     text_bbox = draw.textbbox((0, 0), text, font=text_font) 
+                     box_padding = 1
+                     box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
+                     box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
+                     x = x_tdv_levels
+                     y = 877
+                     if int(cv0) >= 50:
+                        color = (208, 59, 84)
+                     elif int(cv0) >= 42 and int(cv0) <= 49:
+                        color = (203, 208, 59)
+                     elif int(cv0) >= 32 and int(cv0) <= 41:
+                        color = (208, 59, 208)
+                     elif int(cv0) >= 18 and int(cv0) <= 31:
+                        color = (59, 123, 208)
+                     else:
+                        color = (210, 221, 236)
+                        
                     cv0 = (crit_rate) * 2 + crit_dmg
                     draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+                    draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
+                    draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255) if color != (210, 221, 236) else (0, 0, 0))                  
+                    x_tdv_levels += 227
                     sss += 1
                     if sss <= 3:
                       x_cv1 += x_cv2
@@ -276,22 +299,7 @@ class Select(discord.ui.Select):
                     element_count += 1
                     if element_count % 4 == 0:
                       y_tdv_stats1 = 973
-                      x_tdv_stats += x_tdv_stats1
-        
-                    if int(cv0) >= 50:
-                        color = (208, 59, 84)
-                    elif int(cv0) >= 42 and int(cv0) <= 49:
-                        color = (203, 208, 59)
-                    elif int(cv0) >= 32 and int(cv0) <= 41:
-                        color = (208, 59, 208)
-                    elif int(cv0) >= 18 and int(cv0) <= 31:
-                        color = (59, 123, 208)
-                    else:
-                        color = (210, 221, 236)
-                        
-                  draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                  draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255) if color != (210, 221, 236) else (0, 0, 0))
-                      
+                      x_tdv_stats += x_tdv_stats1    
         
                 #thiên phú
                 response = requests.get(charactert.talents[0].icon)  #skill1
