@@ -326,7 +326,7 @@ class Select(discord.ui.Select):
                 embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
                 messagea = inset_message.get("message")
                 await messagea.edit(content=None, embed=embed)
-               except Exception as e:
+            except Exception as e:
                 traceback.print_exc()
                 await channel.send(f"Error: {e}\n{traceback.format_exc()}")
 
