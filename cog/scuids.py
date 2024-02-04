@@ -42,18 +42,18 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
                 
-                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203735713817043014/Khong_Co_Tieu_e117.png"
+                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203758432575037440/Khong_Co_Tieu_e117.png"
                 response = requests.get(url_goc)
                 image_app = Image.open(BytesIO(response.content)).convert("RGBA").resize((1141, 1277))
                 url_hinh2 = charactert.icon.side
                 image_hinh2 = Image.open(BytesIO(requests.get(url_hinh2).content)).convert("RGBA").resize((110, 110))
-                url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203729761889820762/Khong_Co_Tieu_e118.png"
+                url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png"
                 image_hinh3 = Image.open(BytesIO(requests.get(url_hinh3).content)).convert("RGBA").resize((125, 140))
-                x3, y3 = 6, 12
+                x3, y3 = 6, 1129
                 for _ in range(char_index):
                     x3 += 144
                 image_app.paste(image_hinh3, (x3, y3), image_hinh3)
-                x2, y2 = 14, 16
+                x2, y2 = 14, 1131
                 for _ in range(min(len(data.characters), 8)):
                     image_app.paste(image_hinh2, (x2, y2), image_hinh2)
                     x2 += 144
