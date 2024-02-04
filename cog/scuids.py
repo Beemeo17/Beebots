@@ -214,8 +214,14 @@ class Select(discord.ui.Select):
                         color = (59, 123, 208)
                     else:
                         color = (210, 221, 236)                       
+                    if color == (210, 221, 236):
+                        fills= (0, 0, 0)
+                    elif color == (203, 208, 59):
+                        fills= (0, 0, 0)
+                    else:
+                        fills= (255, 255, 255)
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                    draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=(255, 255, 255) if color != (210, 221, 236) else (0, 0, 0))                  
+                    draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=fills)                  
                     x_tdv_levels += 227
                     sss += 1
                     if sss <= 3:
