@@ -132,10 +132,10 @@ class Select(discord.ui.Select):
                     stnt_icon_position = stnt_info[2]
                     stnt_icon_size = stnt_info[3]
                     if txtx < 4:
-                        draw.text((xnt[txtx], 574), (f"{float(stnt_value.rstrip('0')) if '.' in stnt_value else stnt_value}"), font=fontt, fill=(255, 255, 255))
+                        draw.text((xnt[txtx], 574), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     else:
                         txtx = 0
-                        draw.text((xnt[txtx], 574), (f"{float(stnt_value.rstrip('0')) if '.' in stnt_value else stnt_value}"), font=fontt, fill=(255, 255, 255))
+                        draw.text((xnt[txtx], 574), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
                     stnt_response = requests.get(stnt_icon_url)
                     stnt_icon = BytesIO(stnt_response.content)
