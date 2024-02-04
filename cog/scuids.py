@@ -42,16 +42,26 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
 
-                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203237852570193930/Khong_Co_Tieu_e117_20240203141707.png"
+                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203735713817043014/Khong_Co_Tieu_e117.png"
                 response = requests.get(url_goc)
-                ime_app = BytesIO(response.content)
-                image_app = Image.open(ime_app).convert("RGBA").resize((1141, 1134))
+                image_app = Image.open(BytesIO(response.content)).convert("RGBA").resize((1141, 1277))
+                
+                url_hinh2 = "charactert.icon.side"
+                image_hinh2 = Image.open(BytesIO(requests.get(url_hinh2).content)).convert("RGBA").resize((110, 110))
+                url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203729761889820762/Khong_Co_Tieu_e118.png"
+                image_hinh3 = Image.open(BytesIO(requests.get(url_hinh3).content)).convert("RGBA").resize((125, 140))
+                x2, y2, x3, y3 = 14, 16, 6, 12
+                for a range(char_index):
+                  x3 += 144
+                image_app.paste(image_hinh3, (x3, y3), image_hinh3)
+                for i in range(min(len(data.characters), 8)): 
+                  image_app.paste(image_hinh2, (x2, y2), image_hinh2)
+                  x2 += 144
+                
                 font = ImageFont.truetype("zh-cn.ttf", 27)
                 draw = ImageDraw.Draw(image_app)
-        
                 draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
                 draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
-        
                 #char
                 response = requests.get(charactert.icon.gacha)
                 image_set_schar0 = BytesIO(response.content)
@@ -121,10 +131,8 @@ class Select(discord.ui.Select):
                     (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
                     (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
                 ]
-                znt = 578
+                znt, tntp, txtx = 578, 0, 0
                 xnt = [694, 816, 929, 1043]
-                tntp = 0
-                txtx = 0
                 for stnt_info in stnt_infos:
                     stnt_name = stnt_info[0][0]
                     stnt_value = characterp[stnt_info[0][1]].formatted_value
@@ -156,8 +164,7 @@ class Select(discord.ui.Select):
                     else:
                         artifact_counts[artifact_name_set] = 1
                 sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
-                y_position = 672
-                y_offset = 28
+                y_position, y_offset = 672, 28
                 #set tdv
                 for set_name, count in sorted_counts.items(): 
                     if count >= 2 and count < 4:
@@ -166,23 +173,7 @@ class Select(discord.ui.Select):
                     if count >= 4:
                       draw.text((95, 685), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
                 #cv      
-                x_cv1 = 158
-                x_cv2 = 224
-                sss = 0
-                crit_rate = 0
-                crit_dmg = 0
-                
-                st_bao = 0
-                tl_bao = 0
-                hqn = 0
-                ttnt = 0
-                atk1 = 0
-                atk2 = 0
-                hp1 = 0
-                hp2 = 0
-                def1=0
-                def2=0
-                x_tdv_levels = 166
+                x_cv1, x_cv2, sss, crit_rate, crit_dmg, st_bao, hqn, ttnt, atk1, atk2, hp1, hp2, def1, def2, x_tdv_levels = 158, 224, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 166
                 for artifact in charactert.artifacts:
                     crit_rate -= crit_rate
                     crit_dmg -= crit_dmg
@@ -258,15 +249,7 @@ class Select(discord.ui.Select):
                 cv_a = (tl_bao * 2) + st_bao
                 draw.text((16, 1083), (f"TLbạo:{tl_bao:.1f}% | STbạo:{st_bao:.1f}% | ttnt:{int(ttnt)} | hqn:{hqn}% | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
         
-                x_tdv = 227 #x tổng
-                x_tdv_stats1 = 224
-                x_tdv_icon = 43 #icon tdv
-                x_tdv_level = 166
-                x_tdv_rate = 30 #độ hiếm tdv
-                x_tdv_stats = 26 #stats tdv
-                y_tdv_stats1 = 967 #y stats tdv
-                y_tdv_stats2 = 25 
-                element_count = 0 #chia bảng 
+                x_tdv, x_tdv_stats1, x_tdv_icon, x_tdv_level, x_tdv_rate, x_tdv_stats, y_tdv_stats1, y_tdv_stats2, element_count = 227, 244, 43, 166, 30, 26, 967, 25, 0
                 for artifact in charactert.artifacts:
                   response = requests.get(artifact.icon)
                   image_set_tdv0 = BytesIO(response.content)
@@ -279,7 +262,6 @@ class Select(discord.ui.Select):
         
                   draw.text((x_tdv_stats, 932), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))
 
-                    
                   text = (f"+{artifact.level}")
                   text_font = ImageFont.truetype("zh-cn.ttf", 23)
                   text_bbox = draw.textbbox((0, 0), text, font=text_font) 
@@ -326,8 +308,7 @@ class Select(discord.ui.Select):
         
                 #cm
                 Locks = 6 - (len(charactert.constellations))
-                x_lock = 532
-                y_lock = 569
+                x_lock, y_lock = 532, 569
                 for _ in range(Locks):
                   response = requests.get('https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png')
                   image_set_skill00 = BytesIO(response.content)
