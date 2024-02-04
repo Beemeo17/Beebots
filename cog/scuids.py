@@ -121,7 +121,7 @@ class Select(discord.ui.Select):
                     (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
                     (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
                 ]
-                ynt = 574
+                ynt = 578
                 xnt = [694, 816, 929, 1043]
                 tntp = 0
                 txtx = 0
