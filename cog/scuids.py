@@ -103,7 +103,7 @@ class Select(discord.ui.Select):
         else:
             stat_name = weapon.stats[1].name
         
-        text_width_weapon, text_height_weapon = draw.textsize(f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17))
+        text_width_weapon, text_height_weapon = draw.textbbox((0, 0), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17))
         draw.ellipse([current_position_weapon, (current_position_weapon[0] + text_width_weapon + 20, current_position_weapon[1] + text_height_weapon + 10)], outline=(0, 0, 0), width=2)
         
         draw.text((current_position_weapon[0] + 10, current_position_weapon[1] + 5), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
