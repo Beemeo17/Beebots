@@ -42,11 +42,9 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
                 
-                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203758432575037440/Khong_Co_Tieu_e117.png"
+                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203768241986736128/Khong_Co_Tieu_e117.png"
                 response = requests.get(url_goc)
                 image_app = Image.open(BytesIO(response.content)).convert("RGBA").resize((1141, 1277))
-                url_hinh2 = charactert.icon.side
-                image_hinh2 = Image.open(BytesIO(requests.get(url_hinh2).content)).convert("RGBA").resize((110, 110))
                 url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png"
                 image_hinh3 = Image.open(BytesIO(requests.get(url_hinh3).content)).convert("RGBA").resize((125, 140))
                 x3, y3 = 6, 1129
@@ -54,7 +52,10 @@ class Select(discord.ui.Select):
                     x3 += 144
                 image_app.paste(image_hinh3, (x3, y3), image_hinh3)
                 x2, y2 = 14, 1131
-                for _ in range(min(len(data.characters), 8)):
+                for i in range(min(len(data.characters), 8)):
+                    char = data.characters[i]
+                    url_hinh2 = char.icon.side
+                    image_hinh2 = Image.open(BytesIO(requests.get(url_hinh2).content)).convert("RGBA").resize((110, 110))
                     image_app.paste(image_hinh2, (x2, y2), image_hinh2)
                     x2 += 144
 
@@ -256,11 +257,15 @@ class Select(discord.ui.Select):
                 cv_a = (tl_bao * 2) + st_bao
                 draw.text((16, 1083), (f"TLbạo:{tl_bao:.1f}% | STbạo:{st_bao:.1f}% | ttnt:{int(ttnt)} | hqn:{hqn}% | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
         
-                x_tdv, x_tdv_stats1 = 277, 244
-                x_tdv_icon, x_tdv_level = 43, 166
-                x_tdv_rate, x_tdv_stats = 30, 26
-                y_tdv_stats1, y_tdv_stats2 = 967, 25
-                element_count = 0
+                x_tdv = 227 #x tổng
+                x_tdv_stats1 = 224
+                x_tdv_icon = 43 #icon tdv
+                x_tdv_level = 166
+                x_tdv_rate = 30 #độ hiếm tdv
+                x_tdv_stats = 26 #stats tdv
+                y_tdv_stats1 = 967 #y stats tdv
+                y_tdv_stats2 = 25 
+                element_count = 0 #chia bảng 
                 for artifact in charactert.artifacts:
                   response = requests.get(artifact.icon)
                   image_set_tdv0 = BytesIO(response.content)
