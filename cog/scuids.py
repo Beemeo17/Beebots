@@ -42,7 +42,7 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
                 
-                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203768241986736128/Khong_Co_Tieu_e117.png"
+                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png"
                 response = requests.get(url_goc)
                 image_app = Image.open(BytesIO(response.content)).convert("RGBA").resize((1141, 1277))
                 url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png"
@@ -194,15 +194,14 @@ class Select(discord.ui.Select):
                       else:
                         return
                     cv0 = (crit_rate) * 2 + crit_dmg
-                    draw.text((x_cv1, 900), (f"{cv0:.1f}CV"), font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
-                    text = (f"+{artifact.level}")
-                    text_font = ImageFont.truetype("zh-cn.ttf", 23)
+                    text = (f"{cv0:.1f}CV")
+                    text_font = ImageFont.truetype("zh-cn.ttf", 17)
                     text_bbox = draw.textbbox((0, 0), text, font=text_font) 
                     box_padding = 1
                     box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
                     box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
-                    x = x_tdv_levels
-                    y = 876
+                    x = x_cv1
+                    y = 900
                     if int(cv0) >= 50:
                         color = (208, 59, 84)
                     elif int(cv0) >= 42 and int(cv0) <= 49:
@@ -220,7 +219,8 @@ class Select(discord.ui.Select):
                     else:
                         fills= (255, 255, 255)
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                    draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=fills)                  
+                    draw.text((x_tdv_levels, 872), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
+                    draw.text((x_cv1, 900), text, font=text_font, fill=fills)
                     x_tdv_levels += 227
                     sss += 1
                     if sss <= 3:
