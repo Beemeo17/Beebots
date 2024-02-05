@@ -89,16 +89,16 @@ class Select(discord.ui.Select):
                 draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
                 draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
                 #char)
-                image_set_schar0 = BytesIO(responses[3].content)
-                image_schar0 = Image.open(image_set_schar0).resize((744, 352))
+                
+                image_schar0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((744, 352))
                 image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
                 draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
                 draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
                 draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
         
                 #vũ khí              
-                image_set_vk0 = BytesIO(responses[4].content)
-                image_vk0 = Image.open(image_set_vk0).resize((144, 124))
+                
+                image_vk0 = Image.open(BytesIO(responses[4])).convert("RGBA").resize((144, 124))
                 image_app.paste(image_vk0, (650, 33), mask=image_vk0)
         
                 draw.text((820, 36), weapon.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
@@ -138,8 +138,8 @@ class Select(discord.ui.Select):
                 
                     draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))
                 
-                    icon = BytesIO(responses1.content)
-                    icon_image = Image.open(icon).resize(icon_size)
+                    
+                    icon_image = Image.open(BytesIO(responses1)).convert("RGBA").resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
                 
                     current_position = (current_position[0], current_position[1] + 40)
@@ -169,8 +169,8 @@ class Select(discord.ui.Select):
                         txtx = 0
                         draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
-                    stnt_icon = BytesIO(responses2.content)
-                    stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
+                    
+                    stnt_icon_image = Image.open(BytesIO(responses2)).convert("RGBA").resize(stnt_icon_size)
                     image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
                     tntp += 1
                     if tntp == 4 and tntp < 9:
@@ -290,8 +290,8 @@ class Select(discord.ui.Select):
                 element_count = 0 #chia bảng  
                 for artifact in charactert.artifacts:                              
                   responses = await asyncio.gather(*download_images(artifact.icon)) 
-                  image_set_tdv0 = BytesIO(responses[5].content)
-                  image_tdv0 = Image.open(image_set_tdv0).resize((165, 165))
+                  
+                  image_tdv0 = Image.open(BytesIO(responses)).convert("RGBA").resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
                   x_tdv_icon += x_tdv
         
@@ -327,18 +327,18 @@ class Select(discord.ui.Select):
         
                 #thiên phú
                 #skill1
-                image_set_skill00 = BytesIO(responses[6].content)
-                image_skill00 = Image.open(image_set_skill00).resize((60, 60))
+                
+                image_skill00 = Image.open(BytesIO(responses[6])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill00, (532, 15), mask=image_skill00)
         
                 #skill2
-                image_set_skill01 = BytesIO(responses[7].content)
-                image_skill01 = Image.open(image_set_skill01).resize((60, 60))
+                
+                image_skill01 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill01, (532, 84), mask=image_skill01)
         
                 #skill3
-                image_set_skill02 = BytesIO(responses[8].content)
-                image_skill02 = Image.open(image_set_skill02).resize((60, 60)).convert('RGBA')
+                
+                image_skill02 = Image.open(BytesIO(responses[8])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill02, (532, 150), mask=image_skill02)
                 draw.text((534, 47), (f"     {charactert.talents[0].level}"),font=font,fill=(255, 255, 255))
                 draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
@@ -349,8 +349,8 @@ class Select(discord.ui.Select):
                 x_lock, y_lock = 532, 569
                 for _ in range(Locks):
                                     
-                  image_set_skill00 = BytesIO(responses[9].content)
-                  image_skill00 = Image.open(image_set_skill00).resize((60, 60))
+                  
+                  image_skill00 = Image.open(BytesIO(responses[9])).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
                   y_lock -= 65
         
@@ -361,8 +361,8 @@ class Select(discord.ui.Select):
                 responses = await asyncio.gather(*download_images(constellation_icons))   
                 for l in range(lock):
                               
-                  image_set_skill00 = BytesIO(response[l].content)
-                  image_skill00 = Image.open(image_set_skill00).resize((60, 60))
+                  
+                  image_skill00 = Image.open(BytesIO(response[l])).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
                   tert = y_ts[k % len(y_ts)]
                   inseta += tert
