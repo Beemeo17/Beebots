@@ -53,11 +53,18 @@ class Select(discord.ui.Select):
                 charactert = data.characters[char_index]
 
                 for i in range(min(len(data.characters), 8)):
-                    char = data.characters[i]
+                    char = data.characters[i]                                 
                 urls_to_download = [
                     "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
                     "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",
-                    char.icon.side
+                    char.icon.side,
+                    charactert.icon.gacha,
+                    weapon.icon,
+                    artifact.icon,
+                    charactert.talents[0].icon,
+                    charactert.talents[1].icon,
+                    charactert.talents[2].icon,
+                    "https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png",               
                 ]
                 responses = await download_images(urls_to_download)
 
@@ -78,9 +85,8 @@ class Select(discord.ui.Select):
                 draw = ImageDraw.Draw(image_app)
                 draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
                 draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
-                #char
-                response = requests.get(charactert.icon.gacha)
-                image_set_schar0 = BytesIO(response.content)
+                #char)
+                image_set_schar0 = BytesIO(responses[3].content)
                 image_schar0 = Image.open(image_set_schar0).resize((744, 352))
                 image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
                 draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
@@ -88,9 +94,8 @@ class Select(discord.ui.Select):
                 draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
         
                 #vũ khí
-                weapon = charactert.weapon
-                response = requests.get(weapon.icon)
-                image_set_vk0 = BytesIO(response.content)
+                weapon = charactert.weapon                
+                image_set_vk0 = BytesIO(responses[4].content)
                 image_vk0 = Image.open(image_set_vk0).resize((144, 124))
                 image_app.paste(image_vk0, (650, 33), mask=image_vk0)
         
@@ -121,6 +126,7 @@ class Select(discord.ui.Select):
                     (("Trị Liệu", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 520), (40, 40)),
                 ]
                 current_position = (688, 250)
+                responses1 = await download_images(stat_info[1])
                 for stat_info in stat_infos:
                     stat_name = stat_info[0][0]
                     stat_value = characterp[stat_info[0][1]].formatted_value
@@ -130,8 +136,7 @@ class Select(discord.ui.Select):
                 
                     draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))
                 
-                    response = requests.get(icon_url)
-                    icon = BytesIO(response.content)
+                    icon = BytesIO(responses1.content)
                     icon_image = Image.open(icon).resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
                 
@@ -149,6 +154,7 @@ class Select(discord.ui.Select):
                 ]
                 znt, tntp, txtx = 578, 0, 0
                 xnt = [694, 816, 929, 1043]
+                responses2 = await download_images(stnt_info[1])
                 for stnt_info in stnt_infos:
                     stnt_name = stnt_info[0][0]
                     stnt_value = characterp[stnt_info[0][1]].formatted_value
@@ -161,8 +167,7 @@ class Select(discord.ui.Select):
                         txtx = 0
                         draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
-                    stnt_response = requests.get(stnt_icon_url)
-                    stnt_icon = BytesIO(stnt_response.content)
+                    stnt_icon = BytesIO(responses2.content)
                     stnt_icon_image = Image.open(stnt_icon).resize(stnt_icon_size)
                     image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
                     tntp += 1
@@ -281,9 +286,8 @@ class Select(discord.ui.Select):
                 y_tdv_stats1 = 967 #y stats tdv
                 y_tdv_stats2 = 25 
                 element_count = 0 #chia bảng 
-                for artifact in charactert.artifacts:
-                  response = requests.get(artifact.icon)
-                  image_set_tdv0 = BytesIO(response.content)
+                for artifact in charactert.artifacts:                  
+                  image_set_tdv0 = BytesIO(responses[5].content)
                   image_tdv0 = Image.open(image_set_tdv0).resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
                   x_tdv_icon += x_tdv
@@ -319,18 +323,18 @@ class Select(discord.ui.Select):
                       x_tdv_stats += x_tdv_stats1    
         
                 #thiên phú
-                response = requests.get(charactert.talents[0].icon)  #skill1
-                image_set_skill00 = BytesIO(response.content)
+                #skill1
+                image_set_skill00 = BytesIO(responses[6].content)
                 image_skill00 = Image.open(image_set_skill00).resize((60, 60))
                 image_app.paste(image_skill00, (532, 15), mask=image_skill00)
         
-                response = requests.get(charactert.talents[1].icon)  #skill2
-                image_set_skill01 = BytesIO(response.content)
+                #skill2
+                image_set_skill01 = BytesIO(responses[7].content)
                 image_skill01 = Image.open(image_set_skill01).resize((60, 60))
                 image_app.paste(image_skill01, (532, 84), mask=image_skill01)
         
-                response = requests.get(charactert.talents[2].icon)  #skill3
-                image_set_skill02 = BytesIO(response.content)
+                #skill3
+                image_set_skill02 = BytesIO(responses[8].content)
                 image_skill02 = Image.open(image_set_skill02).resize((60, 60)).convert('RGBA')
                 image_app.paste(image_skill02, (532, 150), mask=image_skill02)
                 draw.text((534, 47), (f"     {charactert.talents[0].level}"),font=font,fill=(255, 255, 255))
@@ -341,8 +345,8 @@ class Select(discord.ui.Select):
                 Locks = 6 - (len(charactert.constellations))
                 x_lock, y_lock = 532, 569
                 for _ in range(Locks):
-                  response = requests.get('https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png')
-                  image_set_skill00 = BytesIO(response.content)
+                                    
+                  image_set_skill00 = BytesIO(responses[9].content)
                   image_skill00 = Image.open(image_set_skill00).resize((60, 60))
                   image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
                   y_lock -= 65
@@ -351,8 +355,8 @@ class Select(discord.ui.Select):
                 inseta = 244
                 y_ts = [65,66,63,64,65]
                 for k in range(lock):
-                  constellation = charactert.constellations[k]
-                  response = requests.get(constellation.icon) #skill1
+                  kshk = [charactert.constellations[k].icon,]
+                  responses = await download_images(kshk)                  
                   image_set_skill00 = BytesIO(response.content)
                   image_skill00 = Image.open(image_set_skill00).resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
