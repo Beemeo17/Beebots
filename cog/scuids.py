@@ -355,8 +355,8 @@ class Select(discord.ui.Select):
                 inseta = 244
                 y_ts = [65,66,63,64,65]
                 for k in range(lock):
-                  kshk = [charactert.constellations[k].icon,]
-                  responses = await download_images(kshk)                  
+                  constellation_icons = [char.constellations[k].icon for k in range(len(char.constellations))]
+                  responses = await asyncio.gather(*download_images(constellation_icons))               
                   image_set_skill00 = BytesIO(response.content)
                   image_skill00 = Image.open(image_set_skill00).resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
