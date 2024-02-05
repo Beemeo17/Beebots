@@ -128,7 +128,6 @@ class Select(discord.ui.Select):
                     (("Trị Liệu", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 520), (40, 40)),
                 ]
                 current_position = (688, 250)
-                responses1 = await download_images(stat_info[1])
                 for stat_info in stat_infos:
                     stat_name = stat_info[0][0]
                     stat_value = characterp[stat_info[0][1]].formatted_value
@@ -138,8 +137,8 @@ class Select(discord.ui.Select):
                 
                     draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))
                 
-                    
-                    icon_image = Image.open(BytesIO(responses1)).convert("RGBA").resize(icon_size)
+                    responses1 = await download_images(stat_info[1])
+                    icon_image = Image.open(BytesIO(responses1[len(stat_info)])).convert("RGBA").resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
                 
                     current_position = (current_position[0], current_position[1] + 40)
@@ -169,8 +168,8 @@ class Select(discord.ui.Select):
                         txtx = 0
                         draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
-                    
-                    stnt_icon_image = Image.open(BytesIO(responses2)).convert("RGBA").resize(stnt_icon_size)
+                    responses2 = await download_images(stnt_info[1])
+                    stnt_icon_image = Image.open(BytesIO(responses2[len(stnt_info)])).convert("RGBA").resize(stnt_icon_size)
                     image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
                     tntp += 1
                     if tntp == 4 and tntp < 9:
