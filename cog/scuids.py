@@ -52,6 +52,7 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
 
+                weapon = charactert.weapon  
                 for i in range(min(len(data.characters), 8)):
                     char = data.characters[i]                                 
                 urls_to_download = [
@@ -93,8 +94,7 @@ class Select(discord.ui.Select):
                 draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
                 draw.text((34, 575), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích
         
-                #vũ khí
-                weapon = charactert.weapon                
+                #vũ khí              
                 image_set_vk0 = BytesIO(responses[4].content)
                 image_vk0 = Image.open(image_set_vk0).resize((144, 124))
                 image_app.paste(image_vk0, (650, 33), mask=image_vk0)
