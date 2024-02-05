@@ -20,6 +20,8 @@ global_data = {
 inset_message = {'message' :None, "channelt": None}
 emoji_list = []
 
+now = datetime.datetime.now()
+
 async def fetch_image(session, url):
     async with session.get(url) as response:
         return await response.read()
@@ -44,21 +46,18 @@ class Select(discord.ui.Select):
                 uid = global_data.get("uid")
                 data = await api.fetch_showcase(uid)
                 channel = inset_message.get('channelt')
-
+                loadj_time = now - datetime.timedelta(seconds=7)
                 embed_loading = discord.Embed(color=discord.Color.yellow())
-                embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>", value="", inline=False)
+                embed_loading.add_field(name=f"<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258> <t:{int(loadj_time.timestamp())}:R>", value="", inline=False)
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
 
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
 
-                weapon = charactert.weapon  
-                for i in range(min(len(data.characters), 8)):
-                    char = data.characters[i]                                   
+                weapon = charactert.weapon                                    
                 urls_to_download = [
                     "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
-                    "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",
-                    char.icon.side,
+                    "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",                    
                     charactert.icon.gacha,
                     charactert.weapon.icon,            
                     charactert.talents[0].icon,
@@ -77,7 +76,9 @@ class Select(discord.ui.Select):
 
                 x2, y2 = 14, 1131
                 for i in range(min(len(data.characters), 8)):
-                    image_hinh2 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((110, 110))
+                    char = data.characters[i]
+                    response = requests.get(char.icon.side)
+                    image_hinh2 = Image.open(BytesIO(response.content)).convert("RGBA").resize((110, 110))
                     image_app.paste(image_hinh2, (x2, y2), image_hinh2)
                     x2 += 144
 
@@ -87,7 +88,7 @@ class Select(discord.ui.Select):
                 draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=font, fill=(255, 255, 255)) #player level
                 #char)
                 
-                image_schar0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((744, 352))
+                image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((744, 352))
                 image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
                 draw.text((34, 540), charactert.name, font=font, fill=(255, 255, 255))  #name0
                 draw.text((34, 607), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
@@ -95,7 +96,7 @@ class Select(discord.ui.Select):
         
                 #vũ khí              
                 
-                image_vk0 = Image.open(BytesIO(responses[4])).convert("RGBA").resize((144, 124))
+                image_vk0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((144, 124))
                 image_app.paste(image_vk0, (650, 33), mask=image_vk0)
         
                 draw.text((820, 36), weapon.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
@@ -320,13 +321,13 @@ class Select(discord.ui.Select):
         
                 #thiên phú
                 #skill1                
-                image_skill00 = Image.open(BytesIO(responses[5])).convert("RGBA").resize((60, 60))
+                image_skill00 = Image.open(BytesIO(responses[4])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill00, (532, 15), mask=image_skill00)        
                 #skill2                
-                image_skill01 = Image.open(BytesIO(responses[6])).convert("RGBA").resize((60, 60))
+                image_skill01 = Image.open(BytesIO(responses[5])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill01, (532, 84), mask=image_skill01)        
                 #skill3                
-                image_skill02 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
+                image_skill02 = Image.open(BytesIO(responses[6])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill02, (532, 150), mask=image_skill02)
                 draw.text((534, 47), (f"     {charactert.talents[0].level}"),font=font,fill=(255, 255, 255))
                 draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
@@ -336,7 +337,7 @@ class Select(discord.ui.Select):
                 Locks = 6 - (len(charactert.constellations))
                 x_lock, y_lock = 532, 569
                 for _ in range(Locks):
-                  image_skill00 = Image.open(BytesIO(responses[8])).convert("RGBA").resize((60, 60))
+                  image_skill00 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
                   y_lock -= 65
         
@@ -358,7 +359,8 @@ class Select(discord.ui.Select):
                 messaget = await channel.send(file=file)
                 file_url = messaget.attachments[0]
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.now())
-                embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới:{data.ttl}", inline=False)
+                reload_time = now - datetime.timedelta(seconds=data.ttl)
+                embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False)
                 embed.set_image(url=file_url)   
                 embed.set_thumbnail(url=f"{charactert.icon.front}")
                 embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
