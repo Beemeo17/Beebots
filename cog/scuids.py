@@ -54,16 +54,13 @@ class Select(discord.ui.Select):
 
                 weapon = charactert.weapon  
                 for i in range(min(len(data.characters), 8)):
-                    char = data.characters[i]                                 
-                for artifact in charactert.artifacts:
-                    artifactj = artifact.icon  
+                    char = data.characters[i]                                   
                 urls_to_download = [
                     "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
                     "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",
                     char.icon.side,
                     charactert.icon.gacha,
-                    charactert.weapon.icon,
-                    artifactj,
+                    charactert.weapon.icon,            
                     charactert.talents[0].icon,
                     charactert.talents[1].icon,
                     charactert.talents[2].icon,
@@ -137,8 +134,7 @@ class Select(discord.ui.Select):
                 
                     draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))
                 
-                    responses1 = await download_images(stat_info[1])
-                    icon_image = Image.open(BytesIO(responses1[len(stat_info)])).convert("RGBA").resize(icon_size)
+                    icon_image = Image.open(BytesIO(stat_info[1])).convert("RGBA").resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
                 
                     current_position = (current_position[0], current_position[1] + 40)
@@ -168,8 +164,7 @@ class Select(discord.ui.Select):
                         txtx = 0
                         draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
-                    responses2 = await download_images(stnt_info[1])
-                    stnt_icon_image = Image.open(BytesIO(responses2[len(stnt_info)])).convert("RGBA").resize(stnt_icon_size)
+                    stnt_icon_image = Image.open(BytesIO(stnt_info[1])).convert("RGBA").resize(stnt_icon_size)
                     image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
                     tntp += 1
                     if tntp == 4 and tntp < 9:
@@ -288,9 +283,7 @@ class Select(discord.ui.Select):
                 y_tdv_stats2 = 25 
                 element_count = 0 #chia bảng  
                 for artifact in charactert.artifacts:                              
-                  responses = await asyncio.gather(*download_images(artifact.icon)) 
-                  
-                  image_tdv0 = Image.open(BytesIO(responses)).convert("RGBA").resize((165, 165))
+                  image_tdv0 = Image.open(BytesIO(artifact.icon)).convert("RGBA").resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
                   x_tdv_icon += x_tdv
         
@@ -325,19 +318,14 @@ class Select(discord.ui.Select):
                       x_tdv_stats += x_tdv_stats1    
         
                 #thiên phú
-                #skill1
-                
-                image_skill00 = Image.open(BytesIO(responses[6])).convert("RGBA").resize((60, 60))
-                image_app.paste(image_skill00, (532, 15), mask=image_skill00)
-        
-                #skill2
-                
-                image_skill01 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
-                image_app.paste(image_skill01, (532, 84), mask=image_skill01)
-        
-                #skill3
-                
-                image_skill02 = Image.open(BytesIO(responses[8])).convert("RGBA").resize((60, 60))
+                #skill1                
+                image_skill00 = Image.open(BytesIO(responses[5])).convert("RGBA").resize((60, 60))
+                image_app.paste(image_skill00, (532, 15), mask=image_skill00)        
+                #skill2                
+                image_skill01 = Image.open(BytesIO(responses[6])).convert("RGBA").resize((60, 60))
+                image_app.paste(image_skill01, (532, 84), mask=image_skill01)        
+                #skill3                
+                image_skill02 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill02, (532, 150), mask=image_skill02)
                 draw.text((534, 47), (f"     {charactert.talents[0].level}"),font=font,fill=(255, 255, 255))
                 draw.text((534, 114), (f"     {charactert.talents[1].level}"),font=font,fill=(255, 255, 255))
@@ -347,21 +335,15 @@ class Select(discord.ui.Select):
                 Locks = 6 - (len(charactert.constellations))
                 x_lock, y_lock = 532, 569
                 for _ in range(Locks):
-                                    
-                  
-                  image_skill00 = Image.open(BytesIO(responses[9])).convert("RGBA").resize((60, 60))
+                  image_skill00 = Image.open(BytesIO(responses[8])).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
                   y_lock -= 65
         
                 lock = len(charactert.constellations)
                 inseta = 244
-                y_ts = [65,66,63,64,65]
-                constellation_icons = [charactert.constellations[k].icon for k in range(len(charactert.constellations))]
-                responses = await asyncio.gather(*download_images(constellation_icons))   
-                for l in range(lock):
-                              
-                  
-                  image_skill00 = Image.open(BytesIO(response[l])).convert("RGBA").resize((60, 60))
+                y_ts = [65,66,63,64,65] 
+                for k in range(lock):                                             
+                  image_skill00 = Image.open(BytesIO(charactert.constellations[k].icon)).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
                   tert = y_ts[k % len(y_ts)]
                   inseta += tert
