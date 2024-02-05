@@ -52,10 +52,12 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
 
+                for i in range(min(len(data.characters), 8)):
+                    char = data.characters[i]
                 urls_to_download = [
                     "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
                     "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",
-                    charactert.icon.side
+                    char.icon.side
                 ]
                 responses = await download_images(urls_to_download)
 
@@ -68,8 +70,6 @@ class Select(discord.ui.Select):
 
                 x2, y2 = 14, 1131
                 for i in range(min(len(data.characters), 8)):
-                    char = data.characters[i]
-                    url_hinh2 = char.icon.side
                     image_hinh2 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((110, 110))
                     image_app.paste(image_hinh2, (x2, y2), image_hinh2)
                     x2 += 144
