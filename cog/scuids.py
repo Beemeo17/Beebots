@@ -19,6 +19,16 @@ global_data = {
 }
 inset_message = {'message' :None, "channelt": None}
 emoji_list = []
+
+async def fetch_image(session, url):
+    async with session.get(url) as response:
+        return await response.read()
+
+async def download_images(urls):
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_image(session, url) for url in urls]
+        return await asyncio.gather(*tasks)
+
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,28 +44,33 @@ class Select(discord.ui.Select):
                 uid = global_data.get("uid")
                 data = await api.fetch_showcase(uid)
                 channel = inset_message.get('channelt')
-                
+
                 embed_loading = discord.Embed(color=discord.Color.yellow())
                 embed_loading.add_field(name="<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258>", value="", inline=False)
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
-                
+
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
-                
-                url_goc = "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png"
-                response = requests.get(url_goc)
-                image_app = Image.open(BytesIO(response.content)).convert("RGBA").resize((1141, 1277))
-                url_hinh3 = "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png"
-                image_hinh3 = Image.open(BytesIO(requests.get(url_hinh3).content)).convert("RGBA").resize((125, 140))
+
+                urls_to_download = [
+                    "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
+                    "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",
+                    charactert.icon.side
+                ]
+                responses = await download_images(urls_to_download)
+
+                image_app = Image.open(BytesIO(responses[0])).convert("RGBA").resize((1141, 1277))
+                image_hinh3 = Image.open(BytesIO(responses[1])).convert("RGBA").resize((125, 140))
                 x3, y3 = 6, 1129
                 for _ in range(char_index):
                     x3 += 144
                 image_app.paste(image_hinh3, (x3, y3), image_hinh3)
+
                 x2, y2 = 14, 1131
                 for i in range(min(len(data.characters), 8)):
                     char = data.characters[i]
                     url_hinh2 = char.icon.side
-                    image_hinh2 = Image.open(BytesIO(requests.get(url_hinh2).content)).convert("RGBA").resize((110, 110))
+                    image_hinh2 = Image.open(BytesIO(await fetch_image(session, url_hinh2))).convert("RGBA").resize((110, 110))
                     image_app.paste(image_hinh2, (x2, y2), image_hinh2)
                     x2 += 144
 
