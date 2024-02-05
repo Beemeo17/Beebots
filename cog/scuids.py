@@ -164,7 +164,7 @@ class Select(discord.ui.Select):
                         draw.text((xnt[txtx], znt), (f"{stnt_value.rstrip('0')}"), font=fontt, fill=(255, 255, 255))
                     txtx += 1
                     response = requests.get(stnt_icon_url)
-                    stnt_icon_image = Image.open(BytesIO(requests.content)).convert("RGBA").resize(stnt_icon_size)
+                    stnt_icon_image = Image.open(BytesIO(response.content)).convert("RGBA").resize(stnt_icon_size)
                     image_app.paste(stnt_icon_image, stnt_icon_position, mask=stnt_icon_image)
                     tntp += 1
                     if tntp == 4 and tntp < 9:
@@ -284,7 +284,7 @@ class Select(discord.ui.Select):
                 element_count = 0 #chia bảng  
                 for artifact in charactert.artifacts:                              
                   response = requests.get(artifact.icon)
-                  image_tdv0 = Image.open(BytesIO(requests.content)).convert("RGBA").resize((165, 165))
+                  image_tdv0 = Image.open(BytesIO(response.content)).convert("RGBA").resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
                   x_tdv_icon += x_tdv
         
@@ -345,7 +345,7 @@ class Select(discord.ui.Select):
                 y_ts = [65,66,63,64,65] 
                 for k in range(lock):                                             
                   response = requests.get(charactert.constellations[k].icon)
-                  image_skill00 = Image.open(BytesIO(requests.content)).convert("RGBA").resize((60, 60))
+                  image_skill00 = Image.open(BytesIO(response.content)).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
                   tert = y_ts[k % len(y_ts)]
                   inseta += tert
