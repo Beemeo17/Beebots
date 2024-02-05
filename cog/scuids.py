@@ -20,7 +20,7 @@ global_data = {
 inset_message = {'message' :None, "channelt": None}
 emoji_list = []
 
-now = datetime.datetime.now()
+now = datetime.now()
 
 async def fetch_image(session, url):
     async with session.get(url) as response:
