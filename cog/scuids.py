@@ -45,7 +45,8 @@ class Select(discord.ui.Select):
                 uid = global_data.get("uid")
                 data = await api.fetch_showcase(uid)
                 channel = inset_message.get('channelt')
-                loadj_time = datetime.now() - timedelta(seconds=7)
+                now = datetime.datetime.now()
+                loadj_time = now - datetime.timedelta(seconds=7)
                 embed_loading = discord.Embed(color=discord.Color.yellow())
                 embed_loading.add_field(name=f"<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258> <t:{int(loadj_time.timestamp())}:R>", value="", inline=False)
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
@@ -358,7 +359,7 @@ class Select(discord.ui.Select):
                 messaget = await channel.send(file=file)
                 file_url = messaget.attachments[0]
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.now())
-                reload_time = datetime.now() - timedelta(seconds=data.ttl)
+                reload_time = now - datetime.timedelta(seconds=data.ttl)
                 embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False)
                 embed.set_image(url=file_url)   
                 embed.set_thumbnail(url=f"{charactert.icon.front}")
