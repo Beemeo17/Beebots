@@ -5,7 +5,7 @@ import requests
 import os
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont, ImageOps
-from datetime import datetime, timedelta, time, now
+from datetime import datetime, timedelta, time
 import aiohttp
 import datetime
 import enka
