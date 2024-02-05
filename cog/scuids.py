@@ -55,13 +55,15 @@ class Select(discord.ui.Select):
                 weapon = charactert.weapon  
                 for i in range(min(len(data.characters), 8)):
                     char = data.characters[i]                                 
+                for artifact in charactert.artifacts:
+                    artifactj = artifact.icon  
                 urls_to_download = [
                     "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
                     "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",
                     char.icon.side,
                     charactert.icon.gacha,
                     charactert.weapon.icon,
-                    charactert.artifacts.icon,
+                    artifactj,
                     charactert.talents[0].icon,
                     charactert.talents[1].icon,
                     charactert.talents[2].icon,
@@ -285,8 +287,9 @@ class Select(discord.ui.Select):
                 x_tdv_stats = 26 #stats tdv
                 y_tdv_stats1 = 967 #y stats tdv
                 y_tdv_stats2 = 25 
-                element_count = 0 #chia bảng 
-                for artifact in charactert.artifacts:                  
+                element_count = 0 #chia bảng  
+                for artifact in charactert.artifacts:                              
+                  responses = await asyncio.gather(*download_images(artifact.icon)) 
                   image_set_tdv0 = BytesIO(responses[5].content)
                   image_tdv0 = Image.open(image_set_tdv0).resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
@@ -354,10 +357,11 @@ class Select(discord.ui.Select):
                 lock = len(charactert.constellations)
                 inseta = 244
                 y_ts = [65,66,63,64,65]
-                for k in range(lock):
-                  constellation_icons = [char.constellations[k].icon for k in range(len(char.constellations))]
-                  responses = await asyncio.gather(*download_images(constellation_icons))               
-                  image_set_skill00 = BytesIO(response.content)
+                constellation_icons = [charactert.constellations[k].icon for k in range(len(charactert.constellations))]
+                responses = await asyncio.gather(*download_images(constellation_icons))   
+                for l in range(lock):
+                              
+                  image_set_skill00 = BytesIO(response[l].content)
                   image_skill00 = Image.open(image_set_skill00).resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
                   tert = y_ts[k % len(y_ts)]
