@@ -70,7 +70,7 @@ class Select(discord.ui.Select):
                 for i in range(min(len(data.characters), 8)):
                     char = data.characters[i]
                     url_hinh2 = char.icon.side
-                    image_hinh2 = Image.open(BytesIO(await fetch_image(session, url_hinh2))).convert("RGBA").resize((110, 110))
+                    image_hinh2 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((110, 110))
                     image_app.paste(image_hinh2, (x2, y2), image_hinh2)
                     x2 += 144
 
