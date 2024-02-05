@@ -150,8 +150,7 @@ class Select(discord.ui.Select):
                     (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
                 ]
                 znt, tntp, txtx = 578, 0, 0
-                xnt = [694, 816, 929, 1043]
-                responses2 = await download_images(stnt_info[1])
+                xnt = [694, 816, 929, 1043]                
                 for stnt_info in stnt_infos:
                     stnt_name = stnt_info[0][0]
                     stnt_value = characterp[stnt_info[0][1]].formatted_value
