@@ -124,7 +124,8 @@ class Select(discord.ui.Select):
                     (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
                     (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
                 ]                
-                responset = await download_images(stat_infos[1])
+                urls = [stat_info[1] for stat_info in stat_infos]
+                responset = await download_images(urls)
                 current_position = (688, 250)
                 txtx = 0
                 xnt = [694, 816, 929, 1043] 
