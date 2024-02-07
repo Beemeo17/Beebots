@@ -142,9 +142,9 @@ class Select(discord.ui.Select):
                     if txtx < 7:
                         current_position = (current_position[0], current_position[1] + 40)
                     if txtx >= 7 and txtx < 11:
-                        current_position = (xnt[txtx-8], 582) 
+                        current_position = (xnt[txtx-7], 585) 
                     elif txtx >= 11:
-                        current_position = (xnt[txtx-12], 645)                 
+                        current_position = (xnt[txtx-11], 648)                 
                     txtx += 1                
                 #tdv
                 fonts = ImageFont.truetype("zh-cn.ttf", 16)      
