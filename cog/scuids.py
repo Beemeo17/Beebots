@@ -60,8 +60,8 @@ class Select(discord.ui.Select):
 
                 weapon = charactert.weapon                                    
                 urls_to_download = [
-                    "https://media.discordapp.net/attachments/1107978903294853140/1203771577314050079/Khong_Co_Tieu_e117.png",
-                    "https://media.discordapp.net/attachments/1107978903294853140/1203757712010256425/Khong_Co_Tieu_e118.png",                    
+                    "https://media.discordapp.net/attachments/1107978903294853140/1204653698387808276/Ieu.png?ex=65d5842f&is=65c30f2f&hm=adf322233dc6285a1893e424a77b412505c3b1454aefdf7ac85ad022a90c18b0&",
+                    "https://media.discordapp.net/attachments/1107978903294853140/1204653738715775056/Kgsu.png?ex=65d58438&is=65c30f38&hm=34e1aa2b6f39f02d514c3fcf1957979edf6d687b6b1169c31003228f6a04b8de&",                    
                     charactert.icon.gacha,
                     charactert.weapon.icon,            
                     charactert.talents[0].icon,
