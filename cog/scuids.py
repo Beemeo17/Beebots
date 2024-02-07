@@ -22,17 +22,14 @@ global_data = {
 inset_message = {'message' :None, "channelt": None}
 emoji_list = []
 
-def fetch_image(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.content
-    else:
-        return None
+async def fetch_image(session, url):
+    async with session.get(url) as response:
+        return await response.read()
 
 async def download_images(urls):
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        image_data_list = list(executor.map(fetch_image, urls))
-    return image_data_list
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_image(session, url) for url in urls]
+        return await asyncio.gather(*tasks)
     
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
