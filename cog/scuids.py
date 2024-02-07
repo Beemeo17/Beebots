@@ -115,38 +115,36 @@ class Select(discord.ui.Select):
                     (("Hiệu Quả Nạp", FightProp.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 480), (40, 40)),
                     (("Trị Liệu", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 520), (40, 40)),
                     #stnt
-                    (("Vật Lý", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 565), (50, 50)),
-                    (("Gió", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 565), (50, 50)),
-                    (("Đá", FightProp.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 565), (50, 50)),
-                    (("Điện", FightProp.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 565), (50, 50)),
-                    (("Thảo Mộc", FightProp.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 625), (50, 50)),
-                    (("Nước", FightProp.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 625), (50, 50)),
-                    (("Lửa", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),
-                    (("Băng", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),
+                    ((".", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 565), (50, 50)),#vật lý
+                    ((".", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 565), (50, 50)),#phong
+                    ((".", FightProp.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 565), (50, 50)),#nham
+                    ((".", FightProp.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 565), (50, 50)),#lôi
+                    ((".", FightProp.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 625), (50, 50)),#thảo
+                    ((".", FightProp.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 625), (50, 50)),#thuỷ
+                    ((".", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 625), (50, 50)),#hoả
+                    ((".", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 625), (50, 50)),#băng
                 ]                
                 urls = [stat_info[1] for stat_info in stat_infos]
                 responset = await download_images(urls)
                 current_position = (688, 250)
                 txtx = 0
-                xnt = [694, 816, 929, 1043] 
+                xnt = [693, 815, 928, 1042] 
                 for stat_info in stat_infos:
                     stat_name = stat_info[0][0]
                     stat_value = characterp[stat_info[0][1]].formatted_value
                     icon_url = stat_info[1]
                     icon_position = stat_info[2]
                     icon_size = stat_info[3]
-                            
-                    if txtx < 8:
-                        draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255)) 
-                        current_position = (current_position[0], current_position[1] + 40)
-                    else:
-                        draw.text(current_position, (f"{stat_value}"), font=fontt, fill=(255, 255, 255)) 
+                                                
+                    draw.text(current_position, (f"{stat_name}: {stat_value}"), font=fontt, fill=(255, 255, 255))                         
                     icon_image = Image.open(BytesIO(responset[txtx])).convert("RGBA").resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
+                    if txtx < 8:
+                        current_position = (current_position[0], current_position[1] + 40)
                     if txtx >= 8 and txtx < 12:
-                        current_position = (xnt[txtx-8], 580) 
+                        current_position = (xnt[txtx-8], 578) 
                     elif txtx >= 12:
-                        current_position = (xnt[txtx-12], 643)                 
+                        current_position = (xnt[txtx-12], 641)                 
                     txtx += 1                
                 #tdv
                 fonts = ImageFont.truetype("zh-cn.ttf", 16)      
