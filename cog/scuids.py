@@ -136,15 +136,15 @@ class Select(discord.ui.Select):
                     icon_position = stat_info[2]
                     icon_size = stat_info[3]
                                                 
+                    if txtx >= 8 and txtx < 12:
+                        current_position = (xnt[txtx-8], 585) 
+                    elif txtx >= 12:
+                        current_position = (xnt[txtx-12], 648)                            
                     draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
                     icon_image = Image.open(BytesIO(responset[txtx])).convert("RGBA").resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
-                    if txtx < 7:
-                        current_position = (current_position[0], current_position[1] + 40)
-                    if txtx >= 7 and txtx < 11:
-                        current_position = (xnt[txtx-7], 585) 
-                    elif txtx >= 11:
-                        current_position = (xnt[txtx-11], 648)                 
+                    if txtx < 8:
+                        current_position = (current_position[0], current_position[1] + 40)                 
                     txtx += 1                
                 #tdv
                 fonts = ImageFont.truetype("zh-cn.ttf", 16)      
