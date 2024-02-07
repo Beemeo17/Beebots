@@ -143,10 +143,10 @@ class Select(discord.ui.Select):
                         current_position = (current_position[0], current_position[1] + 40)
                     elif txtx >= 8 and txtx < 12:
                         current_position = (xnt[txtx-8], 580) 
-                        draw.text(current_position, (f"{stat_value}"), font=fontt, fill=(255, 255, 255)) 
+                        draw.text(current_position, (f"{stat_name} {stat_value}"), font=fontt, fill=(255, 255, 255)) 
                     elif txtx >= 12:
                         current_position = (xnt[txtx-12], 643) 
-                        draw.text(current_position, (f"{stat_value}"), font=fontt, fill=(255, 255, 255))                    
+                        draw.text(current_position, (f"{stat_name} {stat_value}"), font=fontt, fill=(255, 255, 255))                    
                     txtx += 1                
                 #tdv
                 fonts = ImageFont.truetype("zh-cn.ttf", 16)      
