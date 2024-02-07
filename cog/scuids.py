@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 from discord import app_commands, PartialEmoji
 import requests
 import os
+import concurrent.futures
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 from datetime import datetime, timedelta, time
