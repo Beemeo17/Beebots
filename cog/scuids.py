@@ -29,11 +29,11 @@ def fetch_image(url):
     else:
         return None
 
-def download_images(urls):
+async def download_images(urls):
     with concurrent.futures.ThreadPoolExecutor() as executor:
         image_data_list = list(executor.map(fetch_image, urls))
     return image_data_list
-
+    
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
