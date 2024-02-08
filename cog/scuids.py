@@ -86,7 +86,7 @@ class Select(discord.ui.Select):
                     charactert.talents[2].icon,
                     "https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png",               
                 ]
-                urlgoc = await ntscuid(f"charactert.element")
+                urlgoc = await ntscuid(charactert.element)
                 responses = await download_images(urls_to_download)
                 image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1134))
                 image_hinh3 = Image.open(BytesIO(responses[1])).convert("RGBA").resize((125, 140))
