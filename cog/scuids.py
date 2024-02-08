@@ -173,10 +173,10 @@ class Select(discord.ui.Select):
                 #set tdv
                 for set_name, count in sorted_counts.items(): 
                     if count >= 2 and count < 4:
-                      draw.text((85, y_position), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
+                      draw.text((72, y_position), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
                       y_position += y_offset
                     if count >= 4:
-                      draw.text((85, 582), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
+                      draw.text((72, 582), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
                 #cv      
                 x_cv1, x_cv2, sss = 158, 224, 0
                 crit_rate, crit_dmg = 0, 0
@@ -240,7 +240,11 @@ class Select(discord.ui.Select):
                   x_tdv_icon += x_tdv        
                   draw.text((x_tdv_rate, 814), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
                   x_tdv_rate += x_tdv
-                  draw.text((x_tdv_stats, 850), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))                  
+                  if artifact.main_stat.name == "Hiệu Quả Nạp Nguyên Tố":
+                      mainst = artifact.main_stat.name.strip()[:12]
+                  else:
+                      mainst = artifact.main_stat.name
+                  draw.text((x_tdv_stats, 850), (f"{mainst}"), font=fonts, fill=(255, 255, 255))                  
                   x_tdv_level += x_tdv
                   for substate in artifact.sub_stats:
                     if substate.name == "Hiệu Quả Nạp Nguyên Tố":
