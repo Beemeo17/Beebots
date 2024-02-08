@@ -145,8 +145,7 @@ class Select(discord.ui.Select):
                 for stat_info in stat_infos:
                     stat_name = stat_info[0][0]
                     stat_value = characterp[stat_info[0][1]].formatted_value
-                    if '.' in stat_value:
-                        stat_value = stat_value.rstrip('0').rstrip('.')
+                    stat_value = f"{stat_value[:-3]}%" if stat_value.endswith('.0%') else stat_value.rstrip('0').rstrip('.')
                     icon_url = stat_info[1]
                     icon_position = stat_info[2]
                     icon_size = stat_info[3]
@@ -411,7 +410,7 @@ class scuids(commands.Cog):
         saved_file = await channel.send(file=filet)
         files_url = saved_file.attachments[0]
         embed.set_image(url=files_url)
-        message = await Interaction.channel.send(embed=embed, view=buttons())
+        message = await Interaction.channel.send(embed=embed, view=SelectView())
         inset_message["message"] = message
      except Exception as s:
         await Interaction.channel.send(s)
