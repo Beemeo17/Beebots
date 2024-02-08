@@ -77,7 +77,7 @@ class Select(discord.ui.Select):
                 
                 weapon = charactert.weapon                                    
                 urls_to_download = [
-                    "https://images-ext-1.discordapp.net/external/7R19aWxqLn1xcjh_vXIjdmQ51meNPtSbejaw4qxkJCw/%3Fcb%3D20210528145929%26path-prefix%3Dvi/https/static.wikia.nocookie.net/genshin-impact/images/4/47/V%25E1%25BA%25ADt_Ph%25E1%25BA%25A9m_EXP_Y%25C3%25AAu_Th%25C3%25ADch.png/revision/latest",
+                    "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
                     "https://media.discordapp.net/attachments/1107978903294853140/1204653738715775056/Kgsu.png?ex=65d58438&is=65c30f38&hm=34e1aa2b6f39f02d514c3fcf1957979edf6d687b6b1169c31003228f6a04b8de&",                    
                     charactert.icon.gacha,
                     charactert.weapon.icon,            
