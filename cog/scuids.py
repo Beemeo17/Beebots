@@ -52,29 +52,8 @@ async def ntscuid(nntsl):
     }
     return urrl_nt[index[nntsl]]
     
-class Select(discord.ui.Select):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        data = global_data.get("data")
-        options = [
-            discord.SelectOption(label=char.name, value=f"char{i+1}") for i, char in enumerate(data.characters)
-        ]
-        super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
-
-    async def callback(self, Interaction: discord.Interaction):
-        async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
-            try:
-                uid = global_data.get("uid")
-                data = await api.fetch_showcase(uid)
-                channel = inset_message.get('channelt')
-                now = datetime.datetime.now()
-                loadj_time = now + datetime.timedelta(seconds=7)
-                embed_loading = discord.Embed(color=discord.Color.yellow())
-                embed_loading.add_field(name=f"<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258> <t:{int(loadj_time.timestamp())}:R>", value="", inline=False)
-                await Interaction.response.edit_message(content=None, embed=embed_loading)
-                char_index = int(self.values[0][-1]) - 1
-                charactert = data.characters[char_index]
-                
+async def image_dcuid(chert):
+                chert = charactert
                 weapon = charactert.weapon                                    
                 urls_to_download = [
                     "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
@@ -151,8 +130,8 @@ class Select(discord.ui.Select):
                     icon_size = stat_info[3]
                                                 
                     if txtx >= 8 and txtx < 12:
-                        fontt = ImageFont.truetype("zh-cn.ttf", 22)
-                        current_position = (xnt[txtx-8], 580) 
+                        fontt = ImageFont.truetype("zh-cn.ttf", 21)
+                        current_position = (xnt[txtx-8], 573) 
                     elif txtx >= 12:
                         current_position = (xnt[txtx-12], 623)                            
                     draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
@@ -290,6 +269,32 @@ class Select(discord.ui.Select):
                 channel = inset_message.get("channelt")
                 messaget = await channel.send(file=file)
                 file_url = messaget.attachments[0]
+                return file_url
+    
+class Select(discord.ui.Select):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        data = global_data.get("data")
+        options = [
+            discord.SelectOption(label=char.name, value=f"char{i+1}") for i, char in enumerate(data.characters)
+        ]
+        super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
+
+    async def callback(self, Interaction: discord.Interaction):
+        async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
+            try:
+                uid = global_data.get("uid")
+                data = await api.fetch_showcase(uid)
+                channel = inset_message.get('channelt')
+                now = datetime.datetime.now()
+                loadj_time = now + datetime.timedelta(seconds=7)
+                embed_loading = discord.Embed(color=discord.Color.yellow())
+                embed_loading.add_field(name=f"<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258> <t:{int(loadj_time.timestamp())}:R>", value="", inline=False)
+                await Interaction.response.edit_message(content=None, embed=embed_loading)
+                char_index = int(self.values[0][-1]) - 1
+                charactert = data.characters[char_index]
+                firl_url = await image_dcuid(charactert)
+            
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
                 reload_time = now + datetime.timedelta(seconds=data.ttl)
                 embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False)
