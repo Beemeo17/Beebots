@@ -32,13 +32,13 @@ async def download_images(urls):
         
 async def ntscuid(nntsl):
     url_nt = [
-        "https://media.discordapp.net/attachments/898424509353316422/1204995980265783296/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=b783f4c035c37c4a9db68bfe936b426d64ddaaad4b1c4eff5a591d91062c3208&",
-        "https://media.discordapp.net/attachments/898424509353316422/1204995980630564894/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=4f5128f4f3a77c574ffe904e31fe6f7827fcfe72c0a91a656637ffc6266fceb3&",
-        "https://media.discordapp.net/attachments/898424509353316422/1204995980999528468/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=c084869118232b0e0c10627f0170b34a7bb3b5128c2c74eb18b3957273884bae&",
-        "https://media.discordapp.net/attachments/898424509353316422/1204995981528137738/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=434cb9d9778b0104ba09c4eccc130f330e94c6b20043e6266c3e831a0e4c695d&",
-        "https://media.discordapp.net/attachments/898424509353316422/1204995981922541598/Test.png?ex=65d6c2f5&is=65c44df5&hm=f39f2009d911bed7b00abb5900ce9429b85aa8d1cfcdef681fea9bc0d3359760&",
-        "https://media.discordapp.net/attachments/898424509353316422/1204995982266212432/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=5bbfaf1b8b8dd4b9863abe14bd57f6339f8725a1dca75c38886f7de5cf65a4b4&",
-        "https://media.discordapp.net/attachments/898424509353316422/1204995982685900871/Test_-_1.png?ex=65d6c2f6&is=65c44df6&hm=62b3c3478f43d46a756a3ff3bf466d3a60412d39bea2faec37447064db7cc23d&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026142193582080/Test_-_1.png?ex=65d6df0c&is=65c46a0c&hm=e7126ea9a7f87329dc41ee099012b5fc23c223a4daad9d4918aa5796f8fa28af&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026142503833650/Khong_Co_Tieu_e126_20240208123919.png?ex=65d6df0c&is=65c46a0c&hm=1e804847f94b4772474e3191f852c2c968edd7bf7963558b3cc53652ef04e3f9&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026142847901766/Khong_Co_Tieu_e127_20240208123943.png?ex=65d6df0c&is=65c46a0c&hm=935ab55924ab9dc750b560c2f7720b4a4b408d8bf5ce6df7f77a057dae475d45&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026143225520158/Khong_Co_Tieu_e128_20240208124007.png?ex=65d6df0c&is=65c46a0c&hm=9b345d2e27a190ba03749a29f03aa97353afe75154c31e8fad7ff2d1a5ba1965&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026143556608030/Khong_Co_Tieu_e129_20240208124026.png?ex=65d6df0c&is=65c46a0c&hm=52f4fa107d5dfdb3130ca390fbd95a722882689bb3d395f239bdb1f0ef00f78c&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026143888212041/Khong_Co_Tieu_e130_20240208124041.png?ex=65d6df0d&is=65c46a0d&hm=3ad5638e909674ee36c11e36eafc008a35ff3ad7a30a9fd3d5219e738648e4b3&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1205026144206852128/Khong_Co_Tieu_e131_20240208124102.png?ex=65d6df0d&is=65c46a0d&hm=a3c58cc6bf8b11cb44301869b6c40ff5ea78baa23c0cd509796abdac8da7167e&",
     ]
     urrl_nt = await download_images(url_nt)
     index = {
@@ -77,7 +77,7 @@ class Select(discord.ui.Select):
                 
                 weapon = charactert.weapon                                    
                 urls_to_download = [
-                    "https://media.discordapp.net/attachments/1107978903294853140/1204653698387808276/Ieu.png?ex=65d5842f&is=65c30f2f&hm=adf322233dc6285a1893e424a77b412505c3b1454aefdf7ac85ad022a90c18b0&",
+                    "https://images-ext-1.discordapp.net/external/7R19aWxqLn1xcjh_vXIjdmQ51meNPtSbejaw4qxkJCw/%3Fcb%3D20210528145929%26path-prefix%3Dvi/https/static.wikia.nocookie.net/genshin-impact/images/4/47/V%25E1%25BA%25ADt_Ph%25E1%25BA%25A9m_EXP_Y%25C3%25AAu_Th%25C3%25ADch.png/revision/latest",
                     "https://media.discordapp.net/attachments/1107978903294853140/1204653738715775056/Kgsu.png?ex=65d58438&is=65c30f38&hm=34e1aa2b6f39f02d514c3fcf1957979edf6d687b6b1169c31003228f6a04b8de&",                    
                     charactert.icon.gacha,
                     charactert.weapon.icon,            
@@ -88,7 +88,7 @@ class Select(discord.ui.Select):
                 ]
                 urlgoc = await ntscuid(charactert.element)
                 responses = await download_images(urls_to_download)
-                image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1134))
+                image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1010))
                 font = ImageFont.truetype("zh-cn.ttf", 27)
                 draw = ImageDraw.Draw(image_app)
                 draw.text((38, 24), data.player.nickname, font=font, fill=(255, 255, 255)) #player name
@@ -97,8 +97,10 @@ class Select(discord.ui.Select):
                 image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((744, 352))
                 image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
                 draw.text((34, 531), charactert.name, font=font, fill=(255, 255, 255))  #name0
-                draw.text((34, 598), (f"Level:{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
-                draw.text((34, 566), (f"Độ Yêu Thích: {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích        
+                image_flo = Image.open(BytesIO(responses[0])).convert("RGBA").resize((24, 24))
+                image_app.paste(image_flo, (34, 469), mask=image_flo)
+                draw.text((34, 501), (f"lv.{charactert.level} / {charactert.max_level}"), font=font, fill=(255, 255, 255))  #level0
+                draw.text((34, 469), (f"  {charactert.friendship_level}"), font=font, fill=(255, 255, 255))  #độ yêu thích        
                 #vũ khí                              
                 image_vk0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((144, 124))
                 image_app.paste(image_vk0, (650, 33), mask=image_vk0)
@@ -167,22 +169,17 @@ class Select(discord.ui.Select):
                     else:
                         artifact_counts[artifact_name_set] = 1
                 sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
-                y_position, y_offset = 672, 28
+                y_position, y_offset = 566, 32
                 #set tdv
                 for set_name, count in sorted_counts.items(): 
                     if count >= 2 and count < 4:
                       draw.text((95, y_position), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
                       y_position += y_offset
                     if count >= 4:
-                      draw.text((95, 685), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
+                      draw.text((95, 582), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
                 #cv      
                 x_cv1, x_cv2, sss = 158, 224, 0
                 crit_rate, crit_dmg = 0, 0
-                st_bao, tl_bao = 0, 0
-                hqn, ttnt = 0, 0
-                atk1, atk2 = 0, 0
-                hp1, hp2 = 0, 0
-                def1, def2 = 0, 0
                 x_tdv_levels = 166
                 for artifact in charactert.artifacts:
                     crit_rate -= crit_rate
@@ -203,7 +200,7 @@ class Select(discord.ui.Select):
                     box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
                     box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
                     x = x_cv1
-                    y = 900
+                    y = 776
                     if int(cv0) >= 50:
                         color = (208, 59, 84)
                     elif int(cv0) >= 42 and int(cv0) <= 49:
@@ -219,60 +216,31 @@ class Select(discord.ui.Select):
                     else:
                         fills= (255, 255, 255)
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                    draw.text((x_tdv_levels, 872), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
+                    draw.text((x_tdv_levels, 748), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
                     draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=fills)
                     x_tdv_levels += 227
                     sss += 1
                     if sss <= 3:
                       x_cv1 += x_cv2
                     else:
-                      x_cv1 += 226
-        
-                    for substate in artifact.sub_stats:
-                      if substate.name == "Tỷ Lệ Bạo Kích":
-                        tl_bao += substate.value 
-                      elif substate.name == "ST Bạo Kích":
-                        st_bao += substate.value 
-                      elif substate.name == "Tinh Thông Nguyên Tố":
-                        ttnt += substate.value
-                      elif substate.name == "Hiệu Quả Nạp Nguyên Tố":
-                        hqn += substate.value
-                      elif substate.name == "HP":
-                        if substate.is_percentage:
-                            hp1 += substate.value
-                        else:
-                          hp2  += substate.value
-                      elif substate.name == "Phòng Ngự":
-                        if substate.is_percentage:
-                            def1 += substate.value
-                        else:
-                           def2 += substate.value
-                      elif substate.name == "Tấn Công":
-                        if substate.is_percentage:
-                            atk1 += substate.value
-                        else:
-                           atk2 += substate.value
-                      else: 
-                       return
-                cv_a = (tl_bao * 2) + st_bao
-                draw.text((16, 1083), (f"TLbạo:{tl_bao:.1f}% | STbạo:{st_bao:.1f}% | ttnt:{int(ttnt)} | hqn:{hqn}% | atk:{atk1:.1f}% | atk:{int(atk2)} | HP:{hp1:.1f}% | HP:{int(hp2)} | def:{def1:.1f}% | def:{int(def2)}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))        
+                      x_cv1 += 226    
                 x_tdv = 227 #x tổng
                 x_tdv_stats1 = 224
                 x_tdv_icon = 43 #icon tdv
                 x_tdv_level = 166
                 x_tdv_rate = 30 #độ hiếm tdv
                 x_tdv_stats = 26 #stats tdv
-                y_tdv_stats1 = 967 #y stats tdv
+                y_tdv_stats1 = 843 #y stats tdv
                 y_tdv_stats2 = 25 
                 element_count = 0 #chia bảng  
                 for artifact in charactert.artifacts:                              
                   response = requests.get(artifact.icon)
                   image_tdv0 = Image.open(BytesIO(response.content)).convert("RGBA").resize((165, 165))
-                  image_app.paste(image_tdv0, (x_tdv_icon, 756), mask=image_tdv0)
+                  image_app.paste(image_tdv0, (x_tdv_icon, 632), mask=image_tdv0)
                   x_tdv_icon += x_tdv        
-                  draw.text((x_tdv_rate, 896), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
+                  draw.text((x_tdv_rate, 772), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
                   x_tdv_rate += x_tdv
-                  draw.text((x_tdv_stats, 932), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))                  
+                  draw.text((x_tdv_stats, 808), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))                  
                   x_tdv_level += x_tdv
                   for substate in artifact.sub_stats:
                     if substate.name == "Hiệu Quả Nạp Nguyên Tố":
@@ -285,7 +253,6 @@ class Select(discord.ui.Select):
                     y_tdv_stats1 += y_tdv_stats2
                     element_count += 1
                     if element_count % 4 == 0:
-                      y_tdv_stats1 = 973
                       x_tdv_stats += x_tdv_stats1    
                 #thiên phú
                 skill_positions = [(532, 15), (532, 84), (532, 150)]                
