@@ -52,8 +52,7 @@ async def ntscuid(nntsl):
     }
     return urrl_nt[index[nntsl]]
     
-async def image_dcuid(chert):
-                chert = charactert
+async def image_dcuid(charactert):
                 weapon = charactert.weapon                                    
                 urls_to_download = [
                     "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
@@ -284,7 +283,7 @@ class Select(discord.ui.Select):
         async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
             try:
                 uid = global_data.get("uid")
-                data = await api.fetch_showcase(uid)
+                data = global_data.get("data")
                 channel = inset_message.get('channelt')
                 now = datetime.datetime.now()
                 loadj_time = now + datetime.timedelta(seconds=7)
@@ -293,7 +292,7 @@ class Select(discord.ui.Select):
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
-                firl_url = await image_dcuid(charactert)
+                firl_url = await image_dcuid(data.characters[char_index])
             
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
                 reload_time = now + datetime.timedelta(seconds=data.ttl)
