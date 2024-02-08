@@ -40,19 +40,19 @@ async def ntscuid(nntsl):
     "https://media.discordapp.net/attachments/898424509353316422/1204995982685900871/Test_-_1.png?ex=65d6c2f6&is=65c44df6&hm=62b3c3478f43d46a756a3ff3bf466d3a60412d39bea2faec37447064db7cc23d&",
     ]
     urrl_nt = await download_images(url_nt)
-    if nntsl == "Wind:
+    if nntsl == "Wind":
         urlgoc = urrl_nt[0]
-    elif nntsl == "Rock:
+    elif nntsl == "Rock":
         urlgoc = urrl_nt[1]
-    elif nntsl == "Electric:
+    elif nntsl == "Electric":
         urlgoc = urrl_nt[2]
-    elif nntsl == "Grass:
+    elif nntsl == "Grass":
         urlgoc = urrl_nt[3]
-    elif nntsl == "Water:
+    elif nntsl == "Water":
         urlgoc = urrl_nt[4]
-    elif nntsl == "Fire:
+    elif nntsl == "Fire":
         urlgoc = urrl_nt[5]
-    elif nntsl == "Ice:
+    elif nntsl == "Ice":
         urlgoc = urrl_nt[6]
         
 class Select(discord.ui.Select):
