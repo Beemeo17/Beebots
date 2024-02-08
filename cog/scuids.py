@@ -97,10 +97,10 @@ class Select(discord.ui.Select):
                 image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((744, 352))
                 image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
                 draw.text((34, 531), charactert.name, font=font, fill=(255, 255, 255))  #name0
-                image_flo = Image.open(BytesIO(responses[0])).convert("RGBA").resize((30, 30))
-                image_app.paste(image_flo, (34, 437), mask=image_flo)
+                image_flo = Image.open(BytesIO(responses[0])).convert("RGBA").resize((35, 35))
+                image_app.paste(image_flo, (34, 434), mask=image_flo)
                 draw.text((34, 469), (f"lv.{charactert.level} / {charactert.max_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #level0
-                draw.text((34, 437), (f"    {charactert.friendship_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #độ yêu thích        
+                draw.text((34, 437), (f"     {charactert.friendship_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #độ yêu thích        
                 #vũ khí                              
                 image_vk0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((144, 124))
                 image_app.paste(image_vk0, (650, 33), mask=image_vk0)
@@ -200,7 +200,7 @@ class Select(discord.ui.Select):
                     box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
                     box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
                     x = x_cv1
-                    y = 803
+                    y = 818
                     if int(cv0) >= 50:
                         color = (208, 59, 84)
                     elif int(cv0) >= 42 and int(cv0) <= 49:
@@ -216,7 +216,7 @@ class Select(discord.ui.Select):
                     else:
                         fills= (255, 255, 255)
                     draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                    draw.text((x_tdv_levels, 775), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
+                    draw.text((x_tdv_levels, 790), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
                     draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=fills)
                     x_tdv_levels += 227
                     sss += 1
@@ -230,17 +230,17 @@ class Select(discord.ui.Select):
                 x_tdv_level = 166
                 x_tdv_rate = 30 #độ hiếm tdv
                 x_tdv_stats = 26 #stats tdv
-                y_tdv_stats1 = 870 #y stats tdv
+                y_tdv_stats1 = 891 #y stats tdv
                 y_tdv_stats2 = 25 
                 element_count = 0 #chia bảng  
                 for artifact in charactert.artifacts:                              
                   response = requests.get(artifact.icon)
                   image_tdv0 = Image.open(BytesIO(response.content)).convert("RGBA").resize((165, 165))
-                  image_app.paste(image_tdv0, (x_tdv_icon, 659), mask=image_tdv0)
+                  image_app.paste(image_tdv0, (x_tdv_icon, 674), mask=image_tdv0)
                   x_tdv_icon += x_tdv        
-                  draw.text((x_tdv_rate, 799), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
+                  draw.text((x_tdv_rate, 814), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
                   x_tdv_rate += x_tdv
-                  draw.text((x_tdv_stats, 835), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))                  
+                  draw.text((x_tdv_stats, 850), artifact.main_stat.name, font=fonts, fill=(255, 255, 255))                  
                   x_tdv_level += x_tdv
                   for substate in artifact.sub_stats:
                     if substate.name == "Hiệu Quả Nạp Nguyên Tố":
@@ -253,7 +253,7 @@ class Select(discord.ui.Select):
                     y_tdv_stats1 += y_tdv_stats2
                     element_count += 1
                     if element_count % 4 == 0:
-                      y_tdv_stats1 -= 75
+                      y_tdv_stats1 = 891
                       x_tdv_stats += x_tdv_stats1    
                 #thiên phú
                 skill_positions = [(532, 15), (532, 84), (532, 150)]                
