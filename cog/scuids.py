@@ -53,6 +53,7 @@ async def ntscuid(nntsl):
     return urrl_nt[index[nntsl]]
     
 async def image_dcuid(charactert):
+    async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
                 uid = global_data.get("uid")
                 data = global_data.get("data")
                 weapon = charactert.weapon                                    
