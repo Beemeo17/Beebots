@@ -132,7 +132,7 @@ async def image_dcuid(charactert):
                                                 
                     if txtx >= 8 and txtx < 12:
                         fontt = ImageFont.truetype("zh-cn.ttf", 21)
-                        current_position = (xnt[txtx-8], 573) 
+                        current_position = (xnt[txtx-8], 570) 
                     elif txtx >= 12:
                         current_position = (xnt[txtx-12], 623)                            
                     draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
@@ -347,7 +347,7 @@ class scuids(commands.Cog):
 
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
   async def scuid(self, Interaction, uid: int):
-    async with enka.EnkaAPI() as api:
+    async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
      try:
         uid = uid
         data = await api.fetch_showcase(uid)
