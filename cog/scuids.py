@@ -53,6 +53,7 @@ async def ntscuid(nntsl):
     return urrl_nt[index[nntsl]]
     
 async def image_dcuid(charactert):
+                data = global_data.get("data")
                 weapon = charactert.weapon                                    
                 urls_to_download = [
                     "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
