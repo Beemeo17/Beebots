@@ -139,7 +139,7 @@ class Select(discord.ui.Select):
                 ]                
                 urls = [stat_info[1] for stat_info in stat_infos]
                 responset = await download_images(urls)
-                current_position = (688, 225)
+                current_position = (688, 222)
                 txtx = 0
                 xnt = [693, 815, 928, 1042] 
                 for stat_info in stat_infos:
@@ -151,9 +151,10 @@ class Select(discord.ui.Select):
                     icon_size = stat_info[3]
                                                 
                     if txtx >= 8 and txtx < 12:
-                        current_position = (xnt[txtx-8], 550) 
+                        fontt = ImageFont.truetype("zh-cn.ttf", 22)
+                        current_position = (xnt[txtx-8], 580) 
                     elif txtx >= 12:
-                        current_position = (xnt[txtx-12], 613)                            
+                        current_position = (xnt[txtx-12], 623)                            
                     draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
                     icon_image = Image.open(BytesIO(responset[txtx])).convert("RGBA").resize(icon_size)
                     image_app.paste(icon_image, icon_position, mask=icon_image)
