@@ -294,7 +294,7 @@ class Select(discord.ui.Select):
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
-                firl_url = await image_dcuid(data.characters[char_index])
+                file_url = await image_dcuid(data.characters[char_index])
             
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
                 reload_time = now + datetime.timedelta(seconds=data.ttl)
