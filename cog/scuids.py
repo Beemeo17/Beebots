@@ -13,6 +13,7 @@ import asyncio
 import traceback
 from enka.enums import FightPropType, Language
 import operator
+import re
 
 global_data = {
     "data": None,
@@ -51,6 +52,10 @@ async def ntscuid(nntsl):
         "Ice": 6
     }
     return urrl_nt[index[nntsl]]
+    
+async def clean_number(a):
+    cleaned_a = re.sub(r'\.0*$', '', a)
+    return cleaned_a
     
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
@@ -151,6 +156,8 @@ class Select(discord.ui.Select):
                                                 
                     if txtx >= 8 and txtx < 12:
                         current_position = (xnt[txtx-8], 550) 
+                    elif txtx >= 7:
+                        stat_value = await clean_number(characterp[stat_info[0][1]].formatted_value)
                     elif txtx >= 12:
                         current_position = (xnt[txtx-12], 613)                            
                     draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
