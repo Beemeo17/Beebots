@@ -31,30 +31,27 @@ async def download_images(urls):
         return await asyncio.gather(*tasks)
         
 async def ntscuid(nntsl):
-    url_nt =["https://media.discordapp.net/attachments/898424509353316422/1204995980265783296/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=b783f4c035c37c4a9db68bfe936b426d64ddaaad4b1c4eff5a591d91062c3208&",
-    "https://media.discordapp.net/attachments/898424509353316422/1204995980630564894/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=4f5128f4f3a77c574ffe904e31fe6f7827fcfe72c0a91a656637ffc6266fceb3&",
-    "https://media.discordapp.net/attachments/898424509353316422/1204995980999528468/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=c084869118232b0e0c10627f0170b34a7bb3b5128c2c74eb18b3957273884bae&",
-    "https://media.discordapp.net/attachments/898424509353316422/1204995981528137738/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=434cb9d9778b0104ba09c4eccc130f330e94c6b20043e6266c3e831a0e4c695d&",
-    "https://media.discordapp.net/attachments/898424509353316422/1204995981922541598/Test.png?ex=65d6c2f5&is=65c44df5&hm=f39f2009d911bed7b00abb5900ce9429b85aa8d1cfcdef681fea9bc0d3359760&",
-    "https://media.discordapp.net/attachments/898424509353316422/1204995982266212432/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=5bbfaf1b8b8dd4b9863abe14bd57f6339f8725a1dca75c38886f7de5cf65a4b4&",
-    "https://media.discordapp.net/attachments/898424509353316422/1204995982685900871/Test_-_1.png?ex=65d6c2f6&is=65c44df6&hm=62b3c3478f43d46a756a3ff3bf466d3a60412d39bea2faec37447064db7cc23d&",
+    url_nt = [
+        "https://media.discordapp.net/attachments/898424509353316422/1204995980265783296/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=b783f4c035c37c4a9db68bfe936b426d64ddaaad4b1c4eff5a591d91062c3208&",
+        "https://media.discordapp.net/attachments/898424509353316422/1204995980630564894/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=4f5128f4f3a77c574ffe904e31fe6f7827fcfe72c0a91a656637ffc6266fceb3&",
+        "https://media.discordapp.net/attachments/898424509353316422/1204995980999528468/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=c084869118232b0e0c10627f0170b34a7bb3b5128c2c74eb18b3957273884bae&",
+        "https://media.discordapp.net/attachments/898424509353316422/1204995981528137738/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=434cb9d9778b0104ba09c4eccc130f330e94c6b20043e6266c3e831a0e4c695d&",
+        "https://media.discordapp.net/attachments/898424509353316422/1204995981922541598/Test.png?ex=65d6c2f5&is=65c44df5&hm=f39f2009d911bed7b00abb5900ce9429b85aa8d1cfcdef681fea9bc0d3359760&",
+        "https://media.discordapp.net/attachments/898424509353316422/1204995982266212432/Test_-_1.png?ex=65d6c2f5&is=65c44df5&hm=5bbfaf1b8b8dd4b9863abe14bd57f6339f8725a1dca75c38886f7de5cf65a4b4&",
+        "https://media.discordapp.net/attachments/898424509353316422/1204995982685900871/Test_-_1.png?ex=65d6c2f6&is=65c44df6&hm=62b3c3478f43d46a756a3ff3bf466d3a60412d39bea2faec37447064db7cc23d&",
     ]
     urrl_nt = await download_images(url_nt)
-    if nntsl == "Wind":
-        urlgoc = urrl_nt[0]
-    elif nntsl == "Rock":
-        urlgoc = urrl_nt[1]
-    elif nntsl == "Electric":
-        urlgoc = urrl_nt[2]
-    elif nntsl == "Grass":
-        urlgoc = urrl_nt[3]
-    elif nntsl == "Water":
-        urlgoc = urrl_nt[4]
-    elif nntsl == "Fire":
-        urlgoc = urrl_nt[5]
-    elif nntsl == "Ice":
-        urlgoc = urrl_nt[6]
-        
+    index = {
+        "Wind": 0,
+        "Rock": 1,
+        "Electric": 2,
+        "Grass": 3,
+        "Water": 4,
+        "Fire": 5,
+        "Ice": 6
+    }
+    return urrl_nt[index[nntsl]]
+    
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -89,9 +86,9 @@ class Select(discord.ui.Select):
                     charactert.talents[2].icon,
                     "https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png",               
                 ]
-                urlgoc = await ntscuid(charactert.element)
+                urlgoc = await ntscuid(f"charactert.element")
                 responses = await download_images(urls_to_download)
-                image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1277))
+                image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1134))
                 image_hinh3 = Image.open(BytesIO(responses[1])).convert("RGBA").resize((125, 140))
                 x3, y3 = 6, 1129
                 for _ in range(char_index):
