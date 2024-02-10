@@ -145,7 +145,7 @@ async def image_dcuid(charactert):
                     charactert.talents[2].icon,
                     "https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png",               
                 ]
-                urlgoc = await ntscuid(charactert.element)
+                urlgoc = await ntscuid(charactert.element.value)
                 responses = await download_images(urls_to_download)
                 image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1010))
                 font = ImageFont.truetype("zh-cn.ttf", 27)
