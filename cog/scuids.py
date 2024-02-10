@@ -30,6 +30,80 @@ async def download_images(urls):
         tasks = [fetch_image(session, url) for url in urls]
         return await asyncio.gather(*tasks)
         
+async def generate_image(data):
+    async with aiohttp.ClientSession() as session:
+        uid = global_data.get("uid")
+        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205811528792801310/68267580-F785-45E6-9EDE-5C211354ECC3.png?ex=65d9ba7f&is=65c7457f&hm=2b6262da8c29744665046a45bc8a4bfd06074b078fbea0aadee68ccb04437063&')
+        image_appt = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((600, 850))
+        image_apptk = Image.new("RGBA", (600, 850), (255, 255, 255, 255))
+        draw = ImageDraw.Draw(image_appt)
+
+        player_icon_url = data.characters[0].icon.circle
+        player_icon_data = await fetch_image(session, player_icon_url)
+        player_icon = Image.open(BytesIO(player_icon_data)).resize((140, 140)).convert("RGBA")
+        image_appt.paste(player_icon, (84, 52))
+        
+        draw.text((238, 60), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
+        draw.text((238, 110), data.player.signature, font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
+        draw.text((238, 200), f"Hạng mạo hiểm {data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
+        draw.text((89, 204), f"UID: {uid}", font=ImageFont.truetype("zh-cn.ttf", 13), fill=(255, 255, 255))
+        draw.text((138, 260), f"{data.player.achievements}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
+        draw.text((322, 260), f"{data.player.abyss_floor}-{data.player.abyss_level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
+
+        x, y = 15, 380
+        for i, char in enumerate(data.characters[:8]):
+        
+            char_icon_url = char.icon.circle
+            char_icon_data = await fetch_image(session, char_icon_url)
+            char_icon = Image.open(BytesIO(char_icon_data)).resize((80, 80))
+                                                                    
+            url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445000511488/Khong_Co_Tieu_e137_20240210152124-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=2442e609a8b315270789d41b02fc316c4e412cdb1782035ce2736c2b67f2aade&')
+            char_image = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
+            char_draw = ImageDraw.Draw(char_image)
+            char_image.paste(char_icon, (10, 12))
+    
+            char_draw.text((101, 4), char.name, font=ImageFont.truetype("zh-cn.ttf", 15), fill=(255, 255, 255))
+            char_draw.text((102, 33), f"Lv.{char.level}/{char.max_level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
+            char_draw.text((180, 34), f"C{len(char.constellations)}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
+            char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
+
+            crit_dmg = 0
+            crit_rate = 0
+            x_skill = 105
+            for artifact in char.artifacts:
+                for substate in artifact.sub_stats:
+                    if substate.name == "Tỷ Lệ Bạo Kích":
+                        crit_rate += substate.value
+                    elif substate.name == "ST Bạo Kích":
+                        crit_dmg += substate.value
+            cv0 = (crit_rate) * 2 + crit_dmg
+            char_draw.text((193, 59), f"{cv0:.1f}CV", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
+            for j, talent in enumerate(char.talents[:3]):
+                talent_icon_url = talent.icon
+                talent_icon_data = await fetch_image(session, talent_icon_url)
+                talent_icon = Image.open(BytesIO(talent_icon_data)).resize((20, 20)).convert('RGBA')
+                char_image.paste(talent_icon, (105 + j * 47, 80))
+                char_draw.text((x_skill+23, 82), f"{talent.level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
+                x_skill += 47
+                char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
+                
+            image_appt.paste(char_image, (x, y))
+            x += 294
+            if (i + 1) % 2 == 0:
+                x = 15
+                y += 115
+        buffer = BytesIO()
+        image_app.save(buffer, format='png')
+        buffer.seek(0)
+        filet = discord.File(buffer, filename="output.png")      
+        channel = self.bot.get_channel(1118977913392476210)
+        inset_message["channelt"] = channel
+        saved_file = await channel.send(file=filet)
+        files_url = saved_file.attachments[0]
+        embed= discord.Embed()
+        embed.set_image(url=files_url)
+        return embed
+        
 async def ntscuid(nntsl):
     url_nt = [
         "https://media.discordapp.net/attachments/1107978903294853140/1205026142193582080/Test_-_1.png?ex=65d6df0c&is=65c46a0c&hm=e7126ea9a7f87329dc41ee099012b5fc23c223a4daad9d4918aa5796f8fa28af&",
@@ -217,7 +291,7 @@ async def image_dcuid(charactert):
                 y_tdv_stats2 = 25 
                 element_count = 0 #chia bảng  
                 for artifact in charactert.artifacts:                              
-                  response = requests.get(artifact.icon)
+                  response = await fetch_image(session, artifact.icon)
                   image_tdv0 = Image.open(BytesIO(response.content)).convert("RGBA").resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 674), mask=image_tdv0)
                   x_tdv_icon += x_tdv        
@@ -259,7 +333,7 @@ async def image_dcuid(charactert):
                 inseta = 244
                 y_ts = [65,66,63,64,65] 
                 for k in range(lock):                                             
-                  response = requests.get(charactert.constellations[k].icon)
+                  response = await fetch_image(session, charactert.constellations[k].icon)
                   image_skill00 = Image.open(BytesIO(response.content)).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
                   tert = y_ts[k % len(y_ts)]
@@ -354,38 +428,11 @@ class scuids(commands.Cog):
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
-        url_goc = 'https://cdn.discordapp.com/attachments/1093887180096671824/1100077580008312922/Khong_Co_Tieu_e36_20230424221522.png'
-        response = requests.get(url_goc)
-        ime_app = BytesIO(response.content)
-        image_app = Image.open(ime_app).convert("RGBA")
-
-        font = ImageFont.truetype("zh-cn.ttf", 14)
-        draw = ImageDraw.Draw(image_app)
-        emoji_thanhtuu = discord.utils.get(self.bot.emojis, name="thanhtuu_beebot")
-        emoji_lahoan = discord.utils.get(self.bot.emojis, name="lahoan_beebot")
-        emoji_owo = discord.utils.get(self.bot.emojis, name="kiemanh")
-        emoji_enka = discord.utils.get(self.bot.emojis, name="enka_beebot")
-        emoji_aspirine = discord.utils.get(self.bot.emojis, name="aspirine_beebot")
         embed = discord.Embed()
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
         if data.characters is not None and len(data.characters) > 0:
-            for i in range(min(len(data.characters), 8)):
-                char = data.characters[i]
-                response = requests.get(char.icon.circle)
-                image_set_char = BytesIO(response.content)
-                image_char = Image.open(image_set_char).resize((50, 50))
-                image_app.paste(image_char, ((i % 4) * 181 + 10, (i // 4) * 154 + 57), mask=image_char)        
-                draw.text(((i % 4) * 181 + 14, (i // 4) * 154 + 119), char.name, font=font, fill=(0, 0, 0))
-                draw.text(((i % 4) * 181 + 63, (i // 4) * 154 + 77),
-                          f"level:{char.level}     C {len(char.constellations)}", font=font, fill=(0, 0, 0))                    
-                for j, talent in enumerate(char.talents[:3]):
-                    response = requests.get(talent.icon)
-                    image_set_skill = BytesIO(response.content)
-                    image_skill = Image.open(image_set_skill).resize((20, 20)).convert('RGBA')
-                    image_app.paste(image_skill, ((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 94), mask=image_skill)
-                    draw.text(((i % 4) * 181 + 61 + j * 40, (i // 4) * 154 + 95), f"     {talent.level}",
-                              font=font, fill=(255, 255, 255))
+           embeds= await generate_image(data) 
         else:
             embed1 = discord.Embed(color=0xed0202)
             embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
@@ -397,28 +444,8 @@ class scuids(commands.Cog):
                 url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
             )
             await Interaction.followup.send(embed=embed1, ephemeral=True)
-        embed = discord.Embed(color=0x0ad2f5)
-        author_name = f"{Interaction.user.name}#{Interaction.user.discriminator}"
-        embed.set_author(name=author_name, icon_url=Interaction.user.avatar)
-        embed.add_field(name='✨===Player°Info===✨', value="", inline=False)
-        embed.add_field(name=f"`UID:`||{uid}||  {str(emoji_owo)}  `AR` {data.player.level}", value="", inline=False)
-        embed.set_thumbnail(url=f"{data.player.namecard.full}")
-        embed.add_field(name=f"`name:` **{data.player.nickname}**", value=f"", inline=False)
-        embed.add_field(name=f"`chữ ký:` {data.player.signature}", value='', inline=False)
-        embed.add_field(name='', value=f' {str(emoji_thanhtuu)} `Thành Tựu:` **{data.player.achievements}**', inline=True)
-        embed.add_field(name='', value=f' {str(emoji_lahoan)} `La Hoàn:` **{data.player.abyss_floor} - {data.player.abyss_level}**', inline=True)
-        embed.add_field(name="✨=characters°preview=✨", value="", inline=False)
-        embed.add_field(name="", value=f" {str(emoji_enka)}[chi tiết char](https://enka.network/u/{uid}/) • {str(emoji_aspirine)}[tính dame char](https://genshin.aspirine.su/#uid{uid})", inline=False)
-        buffer = BytesIO()
-        image_app.save(buffer, format='png')
-        buffer.seek(0)
-        filet = discord.File(buffer, filename="output.png")      
-        channel = self.bot.get_channel(1118977913392476210)
-        inset_message["channelt"] = channel
-        saved_file = await channel.send(file=filet)
-        files_url = saved_file.attachments[0]
-        embed.set_image(url=files_url)
-        message = await Interaction.channel.send(embed=embed, view=SelectView())
+        
+        message = await Interaction.channel.send(embed=embeds, view=SelectView())
         inset_message["message"] = message
      except Exception as s:
         await Interaction.channel.send(s)
