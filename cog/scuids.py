@@ -29,7 +29,7 @@ async def download_images(urls):
     async with aiohttp.ClientSession() as session:
         tasks = [fetch_image(session, url) for url in urls]
         return await asyncio.gather(*tasks)
-        
+
 async def generate_image(data):
     async with aiohttp.ClientSession() as session:
         uid = global_data.get("uid")
@@ -42,7 +42,7 @@ async def generate_image(data):
         player_icon_data = await fetch_image(session, player_icon_url)
         player_icon = Image.open(BytesIO(player_icon_data)).resize((140, 140)).convert("RGBA")
         image_appt.paste(player_icon, (84, 52))
-        
+
         draw.text((238, 60), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
         draw.text((238, 110), data.player.signature, font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
         draw.text((238, 200), f"Hạng mạo hiểm {data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
@@ -52,16 +52,16 @@ async def generate_image(data):
 
         x, y = 15, 380
         for i, char in enumerate(data.characters[:8]):
-        
+
             char_icon_url = char.icon.circle
             char_icon_data = await fetch_image(session, char_icon_url)
             char_icon = Image.open(BytesIO(char_icon_data)).resize((80, 80))
-                                                                    
+
             url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445000511488/Khong_Co_Tieu_e137_20240210152124-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=2442e609a8b315270789d41b02fc316c4e412cdb1782035ce2736c2b67f2aade&')
             char_image = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
             char_draw = ImageDraw.Draw(char_image)
             char_image.paste(char_icon, (10, 12))
-    
+
             char_draw.text((101, 4), char.name, font=ImageFont.truetype("zh-cn.ttf", 15), fill=(255, 255, 255))
             char_draw.text((102, 33), f"Lv.{char.level}/{char.max_level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
             char_draw.text((180, 34), f"C{len(char.constellations)}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
@@ -70,7 +70,7 @@ async def generate_image(data):
             crit_dmg = 0
             crit_rate = 0
             x_skill = 105
-            for artifact in char.artifacts:
+            for h, artifact in enumerate(char.artifacts[:5]):
                 for substate in artifact.sub_stats:
                     if substate.name == "Tỷ Lệ Bạo Kích":
                         crit_rate += substate.value
@@ -86,24 +86,19 @@ async def generate_image(data):
                 char_draw.text((x_skill+23, 82), f"{talent.level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
                 x_skill += 47
                 char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
-                
+
             image_appt.paste(char_image, (x, y))
             x += 294
             if (i + 1) % 2 == 0:
                 x = 15
                 y += 115
         buffer = BytesIO()
-        image_app.save(buffer, format='png')
+        image_appt.save(buffer, format='png')
         buffer.seek(0)
         filet = discord.File(buffer, filename="output.png")      
-        channel = self.bot.get_channel(1118977913392476210)
-        inset_message["channelt"] = channel
-        saved_file = await channel.send(file=filet)
-        files_url = saved_file.attachments[0]
-        embed= discord.Embed()
-        embed.set_image(url=files_url)
-        return embed
-        
+        channel = inset_message.get("channelt")
+        return filet
+
 async def ntscuid(nntsl):
     url_nt = [
         "https://media.discordapp.net/attachments/1107978903294853140/1205026142193582080/Test_-_1.png?ex=65d6df0c&is=65c46a0c&hm=e7126ea9a7f87329dc41ee099012b5fc23c223a4daad9d4918aa5796f8fa28af&",
@@ -124,10 +119,11 @@ async def ntscuid(nntsl):
         "Fire": 5,
         "Ice": 6
     }
-    return urrl_nt[index[nntsl]]
-    
+    return urrl_nt[index["Ice"]]
+
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
+        async with aiohttp.ClientSession() as session:
                 uid = global_data.get("uid")
                 data = global_data.get("data")
                 weapon = charactert.weapon                                    
@@ -197,14 +193,14 @@ async def image_dcuid(charactert):
                 current_position = (688, 222)
                 txtx = 0
                 xnt = [693, 815, 928, 1042] 
-                for stat_info in stat_infos:
+                for o, stat_info in enumerate(stat_infos[:16]):
                     stat_name = stat_info[0][0]
                     stat_value = characterp[stat_info[0][1]].formatted_value
                     stat_value = f"{stat_value[:-3]}%" if stat_value.endswith('.0%') else stat_value.rstrip('0').rstrip('.')
                     icon_url = stat_info[1]
                     icon_position = stat_info[2]
                     icon_size = stat_info[3]
-                                                
+
                     if txtx >= 8 and txtx < 12:
                         fontt = ImageFont.truetype("zh-cn.ttf", 21)
                         current_position = (xnt[txtx-8], 570) 
@@ -219,7 +215,7 @@ async def image_dcuid(charactert):
                 #tdv
                 fonts = ImageFont.truetype("zh-cn.ttf", 16)      
                 artifact_counts = {}
-                for artifact in charactert.artifacts:
+                for p, artifact in enumerate(charactert.artifacts[:5]):
                     artifact_name_set = artifact.set_name
                     if artifact_name_set in artifact_counts:
                         artifact_counts[artifact_name_set] += 1
@@ -238,10 +234,10 @@ async def image_dcuid(charactert):
                 x_cv1, x_cv2, sss = 158, 224, 0
                 crit_rate, crit_dmg = 0, 0
                 x_tdv_levels = 166
-                for artifact in charactert.artifacts:
+                for a, artifact in enumerate(charactert.artifacts[:5]):
                     crit_rate -= crit_rate
                     crit_dmg -= crit_dmg
-                    for substate in artifact.sub_stats:
+                    for s, substate in enumerate(artifact.sub_stats[:4]):
                      if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
                       if substate.name == "Tỷ Lệ Bạo Kích":
                         crit_rate += substate.value 
@@ -290,9 +286,10 @@ async def image_dcuid(charactert):
                 y_tdv_stats1 = 891 #y stats tdv
                 y_tdv_stats2 = 25 
                 element_count = 0 #chia bảng  
-                for artifact in charactert.artifacts:                              
-                  response = await fetch_image(session, artifact.icon)
-                  image_tdv0 = Image.open(BytesIO(response.content)).convert("RGBA").resize((165, 165))
+                for d, artifact in enumerate(charactert.artifacts[:5]):     
+                  art_icon = artifact.icon
+                  response = await fetch_image(session, art_icon)
+                  image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon, 674), mask=image_tdv0)
                   x_tdv_icon += x_tdv        
                   draw.text((x_tdv_rate, 814), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
@@ -303,7 +300,7 @@ async def image_dcuid(charactert):
                       mainst = artifact.main_stat.name
                   draw.text((x_tdv_stats, 850), (f"{mainst}"), font=fonts, fill=(255, 255, 255))                  
                   x_tdv_level += x_tdv
-                  for substate in artifact.sub_stats:
+                  for f, substate in enumerate(artifact.sub_stats[:4]):
                     if substate.name == "Hiệu Quả Nạp Nguyên Tố":
                       name_sst = substate.name.strip()[:12]
                     elif substate.name == "Tinh Thông Nguyên Tố":
@@ -334,7 +331,7 @@ async def image_dcuid(charactert):
                 y_ts = [65,66,63,64,65] 
                 for k in range(lock):                                             
                   response = await fetch_image(session, charactert.constellations[k].icon)
-                  image_skill00 = Image.open(BytesIO(response.content)).convert("RGBA").resize((60, 60))
+                  image_skill00 = Image.open(BytesIO(response)).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
                   tert = y_ts[k % len(y_ts)]
                   inseta += tert        
@@ -346,7 +343,7 @@ async def image_dcuid(charactert):
                 messaget = await channel.send(file=file)
                 file_url = messaget.attachments[0]
                 return file_url
-    
+
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -370,7 +367,7 @@ class Select(discord.ui.Select):
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
                 file_url = await image_dcuid(data.characters[char_index])
-            
+
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
                 reload_time = now + datetime.timedelta(seconds=data.ttl)
                 embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False)
@@ -421,10 +418,10 @@ class scuids(commands.Cog):
     print('='* 50)
 
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
-  async def scuid(self, Interaction, uid: int):
+  async def scuid(self, Interaction):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
      try:
-        uid = uid
+        uid = 831335713
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
@@ -432,7 +429,7 @@ class scuids(commands.Cog):
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
         if data.characters is not None and len(data.characters) > 0:
-           embeds= await generate_image(data) 
+            print(1)
         else:
             embed1 = discord.Embed(color=0xed0202)
             embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
@@ -444,11 +441,20 @@ class scuids(commands.Cog):
                 url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
             )
             await Interaction.followup.send(embed=embed1, ephemeral=True)
-        
-        message = await Interaction.channel.send(embed=embeds, view=SelectView())
+
+        filet= await generate_image(data) 
+        channel = self.bot.get_channel(1118977913392476210)
+        inset_message["channelt"] = channel
+        saved_file = await channel.send(file=filet)
+        files_url = saved_file.attachments[0]
+        embed= discord.Embed()
+        embed.set_image(url=files_url)
+        message = await Interaction.channel.send(embed=embed, view=SelectView())
         inset_message["message"] = message
      except Exception as s:
         await Interaction.channel.send(s)
+        traceback.print_exc()
+        await channel.send(f"Error: {e}\n{traceback.format_exc()}")
         return s
 
 async def setup(bot):
