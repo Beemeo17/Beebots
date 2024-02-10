@@ -33,20 +33,19 @@ async def download_images(urls):
 async def generate_image(data):
     async with aiohttp.ClientSession() as session:
         uid = global_data.get("uid")
-        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205811528792801310/68267580-F785-45E6-9EDE-5C211354ECC3.png?ex=65d9ba7f&is=65c7457f&hm=2b6262da8c29744665046a45bc8a4bfd06074b078fbea0aadee68ccb04437063&')
+        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445436723220/68267580-F785-45E6-9EDE-5C211354ECC3-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=c0e3f58ffc70c1182874024b93bca082121e2bd569e541f286468431b5526e59&')
         image_appt = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((600, 850))
-        image_apptk = Image.new("RGBA", (600, 850), (255, 255, 255, 255))
         draw = ImageDraw.Draw(image_appt)
 
         player_icon_url = data.characters[0].icon.circle
         player_icon_data = await fetch_image(session, player_icon_url)
         player_icon = Image.open(BytesIO(player_icon_data)).resize((140, 140)).convert("RGBA")
-        image_appt.paste(player_icon, (84, 52))
+        image_appt.paste(player_icon, (84, 52), player_icon)
 
-        draw.text((238, 60), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
-        draw.text((238, 110), data.player.signature, font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
-        draw.text((238, 200), f"Hạng mạo hiểm {data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
-        draw.text((89, 204), f"UID: {uid}", font=ImageFont.truetype("zh-cn.ttf", 13), fill=(255, 255, 255))
+        draw.text((238, 60), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 16), fill=(0, 0, 0))
+        draw.text((238, 110), data.player.signature, font=ImageFont.truetype("zh-cn.ttf", 14), fill=(0, 0, 0))
+        draw.text((238, 206), f"Hạng mạo hiểm {data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
+        draw.text((89, 206), f"UID: {uid}", font=ImageFont.truetype("zh-cn.ttf", 13), fill=(255, 255, 255))
         draw.text((138, 260), f"{data.player.achievements}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
         draw.text((322, 260), f"{data.player.abyss_floor}-{data.player.abyss_level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
 
@@ -55,12 +54,21 @@ async def generate_image(data):
 
             char_icon_url = char.icon.circle
             char_icon_data = await fetch_image(session, char_icon_url)
-            char_icon = Image.open(BytesIO(char_icon_data)).resize((80, 80))
+            char_icon = Image.open(BytesIO(char_icon_data)).convert("RGBA").resize((80, 80))
 
+            if "Shogun" in char.name:
+                namecac = char.name.split(" ")[-1].replace("Shogun", "Shougun")
+            elif "Alhaitham" in char.name: 
+                namecac = char.name.split(" ")[-1].replace("Alhaitham", "Alhatham")
+            else:
+                namecac = char.name.split(" ")[-1]
+            char_icon_datak = await fetch_image(session, f"https://enka.network/ui/UI_NameCardPic_{namecac}_P.png")
+            char_image = Image.open(BytesIO(char_icon_datak)).convert("RGBA").resize((279, 104))
             url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445000511488/Khong_Co_Tieu_e137_20240210152124-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=2442e609a8b315270789d41b02fc316c4e412cdb1782035ce2736c2b67f2aade&')
-            char_image = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
+            char_iconk = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
             char_draw = ImageDraw.Draw(char_image)
-            char_image.paste(char_icon, (10, 12))
+            char_image.paste(char_iconk, (0, 0), char_iconk)
+            char_image.paste(char_icon, (10, 12), char_icon)
 
             char_draw.text((101, 4), char.name, font=ImageFont.truetype("zh-cn.ttf", 15), fill=(255, 255, 255))
             char_draw.text((102, 33), f"Lv.{char.level}/{char.max_level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
@@ -70,7 +78,7 @@ async def generate_image(data):
             crit_dmg = 0
             crit_rate = 0
             x_skill = 105
-            for h, artifact in enumerate(char.artifacts[:5]):
+            for artifact in char.artifacts:
                 for substate in artifact.sub_stats:
                     if substate.name == "Tỷ Lệ Bạo Kích":
                         crit_rate += substate.value
@@ -82,7 +90,7 @@ async def generate_image(data):
                 talent_icon_url = talent.icon
                 talent_icon_data = await fetch_image(session, talent_icon_url)
                 talent_icon = Image.open(BytesIO(talent_icon_data)).resize((20, 20)).convert('RGBA')
-                char_image.paste(talent_icon, (105 + j * 47, 80))
+                char_image.paste(talent_icon, (105 + j * 47, 80), talent_icon)
                 char_draw.text((x_skill+23, 82), f"{talent.level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
                 x_skill += 47
                 char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
@@ -119,7 +127,7 @@ async def ntscuid(nntsl):
         "Fire": 5,
         "Ice": 6
     }
-    return urrl_nt[index["Ice"]]
+    return urrl_nt[index[nntsl]]
 
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
