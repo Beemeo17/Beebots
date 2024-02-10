@@ -418,10 +418,10 @@ class scuids(commands.Cog):
     print('='* 50)
 
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
-  async def scuid(self, Interaction):
+  async def scuid(self, Interaction, uid: int):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
      try:
-        uid = 831335713
+        uid = uid
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
