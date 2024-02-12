@@ -4,7 +4,7 @@ from discord import app_commands, PartialEmoji
 import requests
 import os
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageEnhance
 from datetime import datetime, timedelta, time
 import aiohttp
 import datetime
@@ -30,51 +30,52 @@ async def download_images(urls):
         tasks = [fetch_image(session, url) for url in urls]
         return await asyncio.gather(*tasks)
 
+async def count_occurrences(value, lower_limit, upper_limit):
+    count = 1
+    m = value
+    for l in range(1, 10):
+        if lower_limit <= (m / l) <= upper_limit:
+            return count
+        else:
+            count += 1
+
 async def generate_image(data):
     async with aiohttp.ClientSession() as session:
         uid = global_data.get("uid")
-        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445436723220/68267580-F785-45E6-9EDE-5C211354ECC3-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=c0e3f58ffc70c1182874024b93bca082121e2bd569e541f286468431b5526e59&')
+        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1206074586098176010/F7C59933-6074-48A1-8422-A66E5B12B81F.png?ex=65daaf7d&is=65c83a7d&hm=bf8a3b1baedfa274063937d09302701f079f5691e37a88261013e7e44067f11a&')
         image_appt = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((600, 850))
         draw = ImageDraw.Draw(image_appt)
-
-        player_icon_url = data.characters[0].icon.circle
-        player_icon_data = await fetch_image(session, player_icon_url)
-        player_icon = Image.open(BytesIO(player_icon_data)).resize((140, 140)).convert("RGBA")
-        image_appt.paste(player_icon, (84, 52), player_icon)
-
+        player_icon_data = await fetch_image(session, data.player.profile_picture_icon.side)
+        player_icon = Image.open(BytesIO(player_icon_data)).resize((141, 141)).convert("RGBA")
+        image_appt.paste(player_icon, (77, 62), player_icon)
         draw.text((238, 60), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 16), fill=(0, 0, 0))
-        draw.text((238, 110), data.player.signature, font=ImageFont.truetype("zh-cn.ttf", 14), fill=(0, 0, 0))
-        draw.text((238, 206), f"Hạng mạo hiểm {data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(255, 255, 255))
-        draw.text((89, 206), f"UID: {uid}", font=ImageFont.truetype("zh-cn.ttf", 13), fill=(255, 255, 255))
-        draw.text((138, 260), f"{data.player.achievements}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
-        draw.text((322, 260), f"{data.player.abyss_floor}-{data.player.abyss_level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
-
+        draw.text((238, 104), data.player.signature, font=ImageFont.truetype("zh-cn.ttf", 14), fill=(0, 0, 0))
+        draw.text((476, 171), f"{data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(0, 0, 0))
+        draw.text((480, 208), f"{data.player.world_level}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(0, 0, 0))
+        draw.text((78, 208), f"UID:{uid}", font=ImageFont.truetype("zh-cn.ttf", 18), fill=(255, 255, 255))
+        draw.text((138, 266), f"{data.player.achievements}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
+        draw.text((322, 266), f"{data.player.abyss_floor}-{data.player.abyss_level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
         x, y = 15, 380
         for i, char in enumerate(data.characters[:8]):
-
-            char_icon_url = char.icon.circle
-            char_icon_data = await fetch_image(session, char_icon_url)
-            char_icon = Image.open(BytesIO(char_icon_data)).convert("RGBA").resize((80, 80))
-
-            if "Shogun" in char.name:
-                namecac = char.name.split(" ")[-1].replace("Shogun", "Shougun")
-            elif "Alhaitham" in char.name: 
-                namecac = char.name.split(" ")[-1].replace("Alhaitham", "Alhatham")
+            if char.costume is not None:
+              m = char.costume.icon.circle
             else:
-                namecac = char.name.split(" ")[-1]
-            char_icon_datak = await fetch_image(session, f"https://enka.network/ui/UI_NameCardPic_{namecac}_P.png")
-            char_image = Image.open(BytesIO(char_icon_datak)).convert("RGBA").resize((279, 104))
+              m = char.icon.circle
+            char_icon_data = await fetch_image(session, m)
+            char_icon = Image.open(BytesIO(char_icon_data)).convert("RGBA").resize((80, 80))
+            char_icon_datak = await fetch_image(session, char.namecard.full)
+            char_imaget = Image.open(BytesIO(char_icon_datak)).convert("RGBA").resize((279, 104))
             url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445000511488/Khong_Co_Tieu_e137_20240210152124-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=2442e609a8b315270789d41b02fc316c4e412cdb1782035ce2736c2b67f2aade&')
             char_iconk = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
+            enhancer = ImageEnhance.Brightness(char_imaget)
+            char_image = enhancer.enhance(0.8)
             char_draw = ImageDraw.Draw(char_image)
             char_image.paste(char_iconk, (0, 0), char_iconk)
             char_image.paste(char_icon, (10, 12), char_icon)
-
             char_draw.text((101, 4), char.name, font=ImageFont.truetype("zh-cn.ttf", 15), fill=(255, 255, 255))
             char_draw.text((102, 33), f"Lv.{char.level}/{char.max_level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
             char_draw.text((180, 34), f"C{len(char.constellations)}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
             char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
-
             crit_dmg = 0
             crit_rate = 0
             x_skill = 105
@@ -109,13 +110,13 @@ async def generate_image(data):
 
 async def ntscuid(nntsl):
     url_nt = [
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026142193582080/Test_-_1.png?ex=65d6df0c&is=65c46a0c&hm=e7126ea9a7f87329dc41ee099012b5fc23c223a4daad9d4918aa5796f8fa28af&",
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026142503833650/Khong_Co_Tieu_e126_20240208123919.png?ex=65d6df0c&is=65c46a0c&hm=1e804847f94b4772474e3191f852c2c968edd7bf7963558b3cc53652ef04e3f9&",
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026142847901766/Khong_Co_Tieu_e127_20240208123943.png?ex=65d6df0c&is=65c46a0c&hm=935ab55924ab9dc750b560c2f7720b4a4b408d8bf5ce6df7f77a057dae475d45&",
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026143225520158/Khong_Co_Tieu_e128_20240208124007.png?ex=65d6df0c&is=65c46a0c&hm=9b345d2e27a190ba03749a29f03aa97353afe75154c31e8fad7ff2d1a5ba1965&",
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026143556608030/Khong_Co_Tieu_e129_20240208124026.png?ex=65d6df0c&is=65c46a0c&hm=52f4fa107d5dfdb3130ca390fbd95a722882689bb3d395f239bdb1f0ef00f78c&",
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026143888212041/Khong_Co_Tieu_e130_20240208124041.png?ex=65d6df0d&is=65c46a0d&hm=3ad5638e909674ee36c11e36eafc008a35ff3ad7a30a9fd3d5219e738648e4b3&",
-        "https://media.discordapp.net/attachments/1107978903294853140/1205026144206852128/Khong_Co_Tieu_e131_20240208124102.png?ex=65d6df0d&is=65c46a0d&hm=a3c58cc6bf8b11cb44301869b6c40ff5ea78baa23c0cd509796abdac8da7167e&",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623380741038090/Khong_Co_Tieu_e151_20240212222810.png?ex=65dcae97&is=65ca3997&hm=6a770a13c7b708e78ef315cb2f42c9be341f2bbc9c5a7134fe2554899e6e7a6c&a",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623381131231232/Khong_Co_Tieu_e152_20240212222844.png?ex=65dcae98&is=65ca3998&hm=f9062bc6d4dc71ec6e819b12fd8b9cd319c1143346ec90616f04c3748b207da8&a",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623381475033098/Khong_Co_Tieu_e153_20240212222858.png?ex=65dcae98&is=65ca3998&hm=51728d2ef5a141cf3aab459db011c9337d5083cb1fb82c6ce23f466fcd50edb5&a",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623381861048410/Khong_Co_Tieu_e154_20240212222916.png?ex=65dcae98&is=65ca3998&hm=59378ff4f989f1e608b03590fd832138f105c258434d7a683969c1fc5a468854&a",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623382364360744/Khong_Co_Tieu_e155_20240212222931.png?ex=65dcae98&is=65ca3998&hm=b055faba3424ce0cae45eb6f726e38d01abfe62db6229f6034b62d46e0ccc85b&a",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623382976856155/Khong_Co_Tieu_e156_20240212222949.png?ex=65dcae98&is=65ca3998&hm=f698eb3d1ef4b6260bd5df3e4a721814a2a9cf9949a6eb44fb5ca4c3e529e909&a",
+        "https://media.discordapp.net/attachments/1107978903294853140/1206623383614132285/Khong_Co_Tieu_e157_20240212223010.png?ex=65dcae98&is=65ca3998&hm=8ea0db5d93b5164d07427d8f9fb4b5c33beedf7f670eda151b7ed21a5819c71c&a",
     ]
     urrl_nt = await download_images(url_nt)
     index = {
@@ -129,228 +130,256 @@ async def ntscuid(nntsl):
     }
     return urrl_nt[index[nntsl]]
 
+async def licon(vlue):
+    icon_inp ={
+  "FIGHT_PROP_HP": "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png",
+  "FIGHT_PROP_ATTACK": "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png",
+  "FIGHT_PROP_DEFENSE": 'https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png',
+  "FIGHT_PROP_HP_PERCENT": "https://cdn.discordapp.com/attachments/1107978903294853140/1206225150249402438/Khong_Co_Tieu_e138.png?ex=65db3bb6&is=65c8c6b6&hm=ce8836260a9b3e88ea7dc9c6c73450718e65ea737a82c3d68eddc1c4ab407967&a",
+  "FIGHT_PROP_ATTACK_PERCENT": "https://cdn.discordapp.com/attachments/1107978903294853140/1206587924301221888/Khong_Co_Tieu_e138.png?ex=65dc8d92&is=65ca1892&hm=da11bd50fad8386daa3cff92af82998885f366bdd5cb67834d0b7680ee686f05&a",
+  "FIGHT_PROP_DEFENSE_PERCENT": "https://media.discordapp.net/attachments/1107978903294853140/1206224714545111091/Khong_Co_Tieu_e138.png?ex=65db3b4e&is=65c8c64e&hm=98ff83553535e37d784074528a87560659be494784d27a31062c3322f35d114f&a",
+  "FIGHT_PROP_CRITICAL": "https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png",
+  "FIGHT_PROP_CRITICAL_HURT": "https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png",
+  "FIGHT_PROP_CHARGE_EFFICIENCY": 'https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png',
+  "FIGHT_PROP_HEAL_ADD": 'https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png',
+  "FIGHT_PROP_ELEMENT_MASTERY": "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png",
+  "FIGHT_PROP_PHYSICAL_ADD_HURT": 'https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png',
+  "FIGHT_PROP_WIND_ADD_HURT": 'https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless',
+  "FIGHT_PROP_ROCK_ADD_HURT": 'https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless',
+  "FIGHT_PROP_ELEC_ADD_HURT": 'https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless',
+  "FIGHT_PROP_GRASS_ADD_HURT": 'https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless',
+  "FIGHT_PROP_WATER_ADD_HURT": 'https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless',
+  "FIGHT_PROP_FIRE_ADD_HURT": 'https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless',
+  "FIGHT_PROP_ICE_ADD_HURT": 'https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless',
+ }
+    return icon_inp[vlue]
+
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
-        async with aiohttp.ClientSession() as session:
-                uid = global_data.get("uid")
-                data = global_data.get("data")
-                weapon = charactert.weapon                                    
-                urls_to_download = [
-                    "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
-                    "https://media.discordapp.net/attachments/1107978903294853140/1204653738715775056/Kgsu.png?ex=65d58438&is=65c30f38&hm=34e1aa2b6f39f02d514c3fcf1957979edf6d687b6b1169c31003228f6a04b8de&",                    
-                    charactert.icon.gacha,
-                    charactert.weapon.icon,            
-                    charactert.talents[0].icon,
-                    charactert.talents[1].icon,
-                    charactert.talents[2].icon,
-                    "https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png",               
-                ]
-                urlgoc = await ntscuid(charactert.element.value)
-                responses = await download_images(urls_to_download)
-                image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1010))
-                font = ImageFont.truetype("zh-cn.ttf", 27)
-                draw = ImageDraw.Draw(image_app)
-                draw.text((38, 24), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255)) #player name
-                draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255)) #player level
-                #char)                
-                image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((744, 352))
-                image_app.paste(image_schar0, (-120, 95), mask=image_schar0)
-                draw.text((34, 531), charactert.name, font=font, fill=(255, 255, 255))  #name0
-                image_flo = Image.open(BytesIO(responses[0])).convert("RGBA").resize((35, 35))
-                image_app.paste(image_flo, (34, 434), mask=image_flo)
-                draw.text((34, 469), (f"lv.{charactert.level} / {charactert.max_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #level0
-                draw.text((34, 437), (f"     {charactert.friendship_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #độ yêu thích        
-                #vũ khí                              
-                image_vk0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((144, 124))
-                image_app.paste(image_vk0, (650, 33), mask=image_vk0)
-                draw.text((820, 36), weapon.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
-                draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
-                draw.text((970, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
-                draw.text((677, 146), (f"{'*'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))#rate
-                draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
-                if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
-                    stat_name = weapon.stats[1].name.strip()[:12]
-                else:
-                    stat_name = weapon.stats[1].name
-                draw.text((812, 150), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))                
-                #stats
-                characterp = charactert.stats
-                FightProp = FightPropType
-                fontt = ImageFont.truetype("zh-cn.ttf", 25)                
-                stat_infos = [
-                    (("HP: ", FightProp.FIGHT_PROP_CUR_HP), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png", (644, 220), (40, 40)),
-                    (("Tấn Công: ", FightProp.FIGHT_PROP_CUR_ATTACK), "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png", (644, 255), (40, 40)),
-                    (("Phòng Ngự: ", FightProp.FIGHT_PROP_CUR_DEFENSE), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png", (644, 295), (40, 40)),
-                    (("Tinh Thông Nguyên Tố: ", FightProp.FIGHT_PROP_ELEMENT_MASTERY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png", (644, 335), (40, 40)),
-                    (("Tỉ Lệ Bạo: ", FightProp.FIGHT_PROP_CRITICAL), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png", (644, 375), (40, 40)),
-                    (("Sát Thương Bạo: ", FightProp.FIGHT_PROP_CRITICAL_HURT), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png", (644, 415), (40, 40)),
-                    (("Hiệu Quả Nạp: ", FightProp.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 455), (40, 40)),
-                    (("Trị Liệu: ", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 495), (40, 40)),
-                    #stnt
-                    (("", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 540), (50, 50)),#vật lý
-                    (("", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 540), (50, 50)),#phong
-                    (("", FightProp.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 540), (50, 50)),#nham
-                    (("", FightProp.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 540), (50, 50)),#lôi
-                    (("", FightProp.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 600), (50, 50)),#thảo
-                    (("", FightProp.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 600), (50, 50)),#thuỷ
-                    (("", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 600), (50, 50)),#hoả
-                    (("", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 600), (50, 50)),#băng
-                ]                
-                urls = [stat_info[1] for stat_info in stat_infos]
-                responset = await download_images(urls)
-                current_position = (688, 222)
-                txtx = 0
-                xnt = [693, 815, 928, 1042] 
-                for o, stat_info in enumerate(stat_infos[:16]):
-                    stat_name = stat_info[0][0]
-                    stat_value = characterp[stat_info[0][1]].formatted_value
-                    stat_value = f"{stat_value[:-3]}%" if stat_value.endswith('.0%') else stat_value.rstrip('0').rstrip('.')
-                    icon_url = stat_info[1]
-                    icon_position = stat_info[2]
-                    icon_size = stat_info[3]
-
-                    if txtx >= 8 and txtx < 12:
-                        fontt = ImageFont.truetype("zh-cn.ttf", 21)
-                        current_position = (xnt[txtx-8], 570) 
-                    elif txtx >= 12:
-                        current_position = (xnt[txtx-12], 623)                            
-                    draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
-                    icon_image = Image.open(BytesIO(responset[txtx])).convert("RGBA").resize(icon_size)
-                    image_app.paste(icon_image, icon_position, mask=icon_image)
-                    if txtx < 8:
-                        current_position = (current_position[0], current_position[1] + 40)                 
-                    txtx += 1                
-                #tdv
-                fonts = ImageFont.truetype("zh-cn.ttf", 16)      
-                artifact_counts = {}
-                for p, artifact in enumerate(charactert.artifacts[:5]):
-                    artifact_name_set = artifact.set_name
-                    if artifact_name_set in artifact_counts:
-                        artifact_counts[artifact_name_set] += 1
-                    else:
-                        artifact_counts[artifact_name_set] = 1
-                sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
-                y_position, y_offset = 566, 32
-                #set tdv
-                for set_name, count in sorted_counts.items(): 
-                    if count >= 2 and count < 4:
-                      draw.text((72, y_position), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
-                      y_position += y_offset
-                    if count >= 4:
-                      draw.text((72, 582), f"{set_name} {count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
-                #cv      
-                x_cv1, x_cv2, sss = 158, 224, 0
-                crit_rate, crit_dmg = 0, 0
-                x_tdv_levels = 166
-                for a, artifact in enumerate(charactert.artifacts[:5]):
-                    crit_rate -= crit_rate
-                    crit_dmg -= crit_dmg
-                    for s, substate in enumerate(artifact.sub_stats[:4]):
-                     if substate.name == "Tỷ Lệ Bạo Kích" or substate.name == "ST Bạo Kích":
-                      if substate.name == "Tỷ Lệ Bạo Kích":
-                        crit_rate += substate.value 
-                      elif substate.name == "ST Bạo Kích":
-                        crit_dmg += substate.value 
-                      else:
-                        return
-                    cv0 = (crit_rate) * 2 + crit_dmg
-                    text = (f"{cv0:.1f}CV")
-                    text_font = ImageFont.truetype("zh-cn.ttf", 17)
-                    text_bbox = draw.textbbox((0, 0), text, font=text_font) 
-                    box_padding = 1
-                    box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
-                    box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding     
-                    x = x_cv1
-                    y = 818
-                    if int(cv0) >= 50:
-                        color = (208, 59, 84)
-                    elif int(cv0) >= 42 and int(cv0) <= 49:
-                        color = (203, 208, 59)
-                    elif int(cv0) >= 32 and int(cv0) <= 41:
-                        color = (208, 59, 208)
-                    elif int(cv0) >= 18 and int(cv0) <= 31:
-                        color = (59, 123, 208)
-                    else:
-                        color = (210, 221, 236)                       
-                    if color == (210, 221, 236) or color == (203, 208, 59):
-                        fills= (0, 0, 0)
-                    else:
-                        fills= (255, 255, 255)
-                    draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
-                    draw.text((x_tdv_levels, 790), (f"+{artifact.level}"), font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))                   
-                    draw.text((x + box_padding, y + box_padding), text, font=text_font, fill=fills)
-                    x_tdv_levels += 227
-                    sss += 1
-                    if sss <= 3:
-                      x_cv1 += x_cv2
-                    else:
-                      x_cv1 += 226    
-                x_tdv = 227 #x tổng
-                x_tdv_stats1 = 224
-                x_tdv_icon = 43 #icon tdv
-                x_tdv_level = 166
-                x_tdv_rate = 30 #độ hiếm tdv
-                x_tdv_stats = 26 #stats tdv
-                y_tdv_stats1 = 891 #y stats tdv
-                y_tdv_stats2 = 25 
-                element_count = 0 #chia bảng  
-                for d, artifact in enumerate(charactert.artifacts[:5]):     
-                  art_icon = artifact.icon
-                  response = await fetch_image(session, art_icon)
-                  image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((165, 165))
-                  image_app.paste(image_tdv0, (x_tdv_icon, 674), mask=image_tdv0)
-                  x_tdv_icon += x_tdv        
-                  draw.text((x_tdv_rate, 814), (f"{'*'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 38), fill=(255, 255, 0))
-                  x_tdv_rate += x_tdv
-                  if artifact.main_stat.name == "Hiệu Quả Nạp Nguyên Tố":
-                      mainst = artifact.main_stat.name.strip()[:12]
+        async with aiohttp.ClientSession() as session: 
+              uid = global_data.get("uid")
+              data = global_data.get("data")
+              weapon = charactert.weapon       
+              if charactert.costume is not None:
+                m = charactert.costume.icon.gacha
+                x = 83
+              else:
+                m = charactert.icon.gacha  
+                x = -83
+              urls_to_download = [
+                  "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
+                  "https://media.discordapp.net/attachments/1107978903294853140/1204653738715775056/Kgsu.png?ex=65d58438&is=65c30f38&hm=34e1aa2b6f39f02d514c3fcf1957979edf6d687b6b1169c31003228f6a04b8de&",                    
+                  m,
+                  charactert.weapon.icon,            
+                  charactert.talents[0].icon,
+                  charactert.talents[1].icon,
+                  charactert.talents[2].icon,
+                  "https://media.discordapp.net/attachments/1114095095210311680/1151759944278884352/R.png",               
+              ]
+              urlgoc = await ntscuid(charactert.element.value)
+              responses = await download_images(urls_to_download)
+              image_app = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((1141, 1026))
+              font = ImageFont.truetype("zh-cn.ttf", 27)
+              draw = ImageDraw.Draw(image_app)
+              draw.text((38, 24), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255)) #player name
+              draw.text((38, 51), (f"UID:{uid}  AR:{data.player.level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255)) #player level
+              #char)           
+              image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA")
+              xc , yc = image_schar0.size
+              image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((xc//3, yc//3))
+              image_app.paste(image_schar0, (x, 95), mask=image_schar0)
+              draw.text((34, 528), charactert.name, font=font, fill=(255, 255, 255))  #name0
+              image_flo = Image.open(BytesIO(responses[0])).convert("RGBA").resize((35, 35))
+              image_app.paste(image_flo, (34, 434), mask=image_flo)
+              draw.text((34, 469), (f"lv.{charactert.level} / {charactert.max_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #level0
+              draw.text((34, 437), (f"     {charactert.friendship_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #độ yêu thích        
+              #vũ khí                              
+              image_vk0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((144, 124))
+              image_app.paste(image_vk0, (650, 33), mask=image_vk0)
+              draw.text((820, 36), weapon.name, font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
+              draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
+              draw.text((956, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
+              draw.text(((671, 146)) if weapon.rarity == 5 else (681, 146), (f"{'★'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))#rate
+              draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
+              if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
+                  stat_name = weapon.stats[1].name.strip()[:12]
+              else:
+                  stat_name = weapon.stats[1].name
+              draw.text((831, 150), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))                
+              #stats
+              characterp = charactert.stats
+              FightProp = FightPropType
+              fontt = ImageFont.truetype("zh-cn.ttf", 25)                
+              stat_infos = [
+                  (("HP: ", FightProp.FIGHT_PROP_MAX_HP), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png", (644, 220-12), (40, 40)),
+                  (("Tấn Công: ", FightProp.FIGHT_PROP_CUR_ATTACK), "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png", (644, 255-12), (40, 40)),
+                  (("Phòng Ngự: ", FightProp.FIGHT_PROP_CUR_DEFENSE), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png", (644, 295-12), (40, 40)),
+                  (("Tinh Thông Nguyên Tố: ", FightProp.FIGHT_PROP_ELEMENT_MASTERY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png", (644, 335-12), (40, 40)),
+                  (("Tỉ Lệ Bạo: ", FightProp.FIGHT_PROP_CRITICAL), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png", (644, 375-12), (40, 40)),
+                  (("Sát Thương Bạo: ", FightProp.FIGHT_PROP_CRITICAL_HURT), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png", (644, 415-12), (40, 40)),
+                  (("Hiệu Quả Nạp: ", FightProp.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 455-12), (40, 40)),
+                  (("Trị Liệu: ", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 495-12), (40, 40)),
+                  #stnt
+                  (("", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 540-12), (50, 50)),#vật lý
+                  (("", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 540-12), (50, 50)),#phong
+                  (("", FightProp.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 540-12), (50, 50)),#nham
+                  (("", FightProp.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 540-12), (50, 50)),#lôi
+                  (("", FightProp.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 600-12), (50, 50)),#thảo
+                  (("", FightProp.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 600-12), (50, 50)),#thuỷ
+                  (("", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 600-12), (50, 50)),#hoả
+                  (("", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 600-12), (50, 50)),#băng
+              ]                
+              urls = [stat_info[1] for stat_info in stat_infos]
+              responset = await download_images(urls)
+              current_position = (688, 210)
+              txtx = 0
+              xnt = [693, 815, 928, 1042] 
+              for o, stat_info in enumerate(stat_infos[:16]):
+                  stat_name = stat_info[0][0]
+                  stat_value = characterp[stat_info[0][1]].formatted_value
+                  stat_value = f"{stat_value[:-3]}%" if stat_value.endswith('.0%') else stat_value.rstrip('0').rstrip('.')
+                  icon_url = stat_info[1]
+                  icon_position = stat_info[2]
+                  icon_size = stat_info[3]
+                  if txtx >= 8 and txtx < 12:
+                      fontt = ImageFont.truetype("zh-cn.ttf", 21)
+                      current_position = (xnt[txtx-8], 570-12) 
+                  elif txtx >= 12:
+                      current_position = (xnt[txtx-12], 623-12)                            
+                  draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
+                  icon_image = Image.open(BytesIO(responset[txtx])).convert("RGBA").resize(icon_size)
+                  image_app.paste(icon_image, icon_position, mask=icon_image)
+                  if txtx < 8:
+                      current_position = (current_position[0], current_position[1] + 40)                 
+                  txtx += 1                
+              #tdv
+              fonts = ImageFont.truetype("zh-cn.ttf", 16)      
+              artifact_counts = {}
+              for p, artifact in enumerate(charactert.artifacts[:5]):
+                  artifact_name_set = artifact.set_name
+                  if artifact_name_set in artifact_counts:
+                      artifact_counts[artifact_name_set] += 1
                   else:
-                      mainst = artifact.main_stat.name
-                  draw.text((x_tdv_stats, 850), (f"{mainst}"), font=fonts, fill=(255, 255, 255))                  
+                      artifact_counts[artifact_name_set] = 1
+              sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
+              y_position, y_offset = 571, 32
+              #set tdv
+              for set_name, count in sorted_counts.items(): 
+                  if count >= 2 and count < 4:
+                    draw.text((72, y_position), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
+                    y_position += y_offset
+                  if count >= 4:
+                    draw.text((72, 586), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
+              #cv      
+              x_cv1, x_cv2, sss = 158, 224, 0
+              x_tdv_levels = 166
+              for v, artifact in enumerate(charactert.artifacts[:5]):
+                  crit_dmg = 0
+                  crit_rate = 0
+                  for c, substate in enumerate(artifact.sub_stats[:4]):
+                    crit_rate = substate.value if substate.name == "Tỷ Lệ Bạo Kích" else crit_rate
+                    crit_dmg = substate.value if substate.name == "ST Bạo Kích" else crit_dmg
+                  cv0 = crit_rate * 2 + crit_dmg
+                  text = f"{cv0:.1f}CV"
+                  text_font = ImageFont.truetype("zh-cn.ttf", 17)
+                  text_bbox = draw.textbbox((0, 0), text, font=text_font) 
+                  box_padding = 1
+                  box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
+                  box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding
+                  x = x_cv1
+                  y = 818
+                  
+                  color = (
+                      (208, 59, 84) if cv0 >= 50
+                      else (203, 208, 59) if 42 <= cv0 <= 49
+                      else (208, 59, 208) if 32 <= cv0 <= 41
+                      else (59, 123, 208) if 18 <= cv0 <= 31
+                      else (210, 221, 236)
+                  )
+                  fills = (0, 0, 0) if color in [(210, 221, 236), (203, 208, 59)] else (255, 255, 255)
+                  
+                  draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
+                  draw.text((x_tdv_levels, 790), f"+{artifact.level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
+                  draw.text((x + 1, y + 1), text, font=text_font, fill=fills)
+                  x_tdv_levels += 227
+                  sss += 1
+                  x_cv1 += x_cv2 if sss <= 3 else 226
+              variables = {
+                  "FIGHT_PROP_CRITICAL_HURT": (5.4, 7.9),
+                  "FIGHT_PROP_CRITICAL": (2.7, 4.0),
+                  "FIGHT_PROP_CHARGE_EFFICIENCY": (4.5, 6.6),
+                  "FIGHT_PROP_ELEMENT_MASTERY": (16, 24),
+                  "FIGHT_PROP_HP_PERCENT": (4.1, 5.9),
+                  "FIGHT_PROP_HP": (209, 300),
+                  "FIGHT_PROP_DEFENSE_PERCENT": (5.1, 7.4),
+                  "FIGHT_PROP_DEFENSE": (16, 24),
+                  "FIGHT_PROP_ATTACK_PERCENT": (4.1, 5.9),
+                  "FIGHT_PROP_ATTACK": (14, 20),
+              }
+              x_tdv, x_tdv_stats1, x_tdv_icon, x_tdv_level = 227, 224, 43, 166
+              x_tdv_rate, x_tdv_stats = 25, 30
+              y_tdv_stats1, y_tdv_stats2 = 850, 40
+              element_count = 0
+              element_count1 = 0
+              for b, artifact in enumerate(charactert.artifacts[:5]):
+                  response = await fetch_image(session, artifact.icon)
+                  image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((165, 165))
+                  image_app.paste(image_tdv0, (x_tdv_icon-20, 674), mask=image_tdv0)
+                  icono = await licon(artifact.main_stat.type.value)
+                  response = await fetch_image(session, icono)
+                  image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((50, 50))
+                  image_app.paste(image_tdv0, (x_tdv_stats+139, 659), mask=image_tdv0)            
+                  draw.text((x_tdv_rate, 814), (f"{'★'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))
+                  draw.text((x_tdv_rate-8, 654), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))                  
+                  x_tdv_icon += x_tdv
+                  x_tdv_rate += x_tdv
                   x_tdv_level += x_tdv
-                  for f, substate in enumerate(artifact.sub_stats[:4]):
-                    if substate.name == "Hiệu Quả Nạp Nguyên Tố":
-                      name_sst = substate.name.strip()[:12]
-                    elif substate.name == "Tinh Thông Nguyên Tố":
-                      name_sst = substate.name.strip()[:10]
-                    else:
-                      name_sst = substate.name           
-                    draw.text((x_tdv_stats, y_tdv_stats1), (f"{name_sst} {substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
-                    y_tdv_stats1 += y_tdv_stats2
-                    element_count += 1
-                    if element_count % 4 == 0:
-                      y_tdv_stats1 = 891
-                      x_tdv_stats += x_tdv_stats1    
-                #thiên phú
-                skill_positions = [(532, 15), (532, 84), (532, 150)]                
-                for i in range(3):
-                    image_skill = Image.open(BytesIO(responses[i + 4])).convert("RGBA").resize((60, 60))
-                    image_app.paste(image_skill, skill_positions[i], mask=image_skill)
-                    draw.text((534, 47 + i * 67), (f"     {charactert.talents[i].level}"), font=font, fill=(255, 255, 255))                                
-                #cm
-                Locks = 6 - (len(charactert.constellations))
-                x_lock, y_lock = 532, 569
-                for _ in range(Locks):
-                  image_skill00 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
-                  image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
-                  y_lock -= 65        
-                lock = len(charactert.constellations)
-                inseta = 244
-                y_ts = [65,66,63,64,65] 
-                for k in range(lock):                                             
-                  response = await fetch_image(session, charactert.constellations[k].icon)
-                  image_skill00 = Image.open(BytesIO(response)).convert("RGBA").resize((60, 60))
-                  image_app.paste(image_skill00, (532, inseta), mask=image_skill00)
-                  tert = y_ts[k % len(y_ts)]
-                  inseta += tert        
-                buffer = BytesIO()
-                image_app.save(buffer, format='png')
-                buffer.seek(0)
-                file = discord.File(buffer, filename="showcase.png")
-                channel = inset_message.get("channelt")
-                messaget = await channel.send(file=file)
-                file_url = messaget.attachments[0]
-                return file_url
+                  for n, substate in enumerate(artifact.sub_stats[:4]):
+                      response = await fetch_image(session, await licon(substate.type.value))
+                      image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((40, 40))
+                      image_app.paste(image_tdv0, (x_tdv_stats, y_tdv_stats1), mask=image_tdv0)                    
+                      occurrence = await count_occurrences(float(substate.formatted_value.replace('%', '')), *variables[substate.type.value])                  
+                      draw.text((x_tdv_stats+45, y_tdv_stats1+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
+                      draw.text((x_tdv_stats+128, y_tdv_stats1+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=(255, 255, 250))                     
+                      y_tdv_stats1 += y_tdv_stats2
+                      element_count += 1
+                      if element_count % 4 == 0: 
+                        y_tdv_stats1 = 850
+                        if element_count < 16:
+                          x_tdv_stats += x_tdv_stats1
+                  element_count1 += 1
+                  if element_count1 % 4 == 0:
+                    x_tdv_stats += (x_tdv_stats1 - 4)
+              #thiên phú
+              skill_positions = [(538, 18), (538, 84), (538, 150)]                
+              for i in range(3):
+                  image_skill = Image.open(BytesIO(responses[i + 4])).convert("RGBA").resize((60, 60))
+                  image_app.paste(image_skill, skill_positions[i], mask=image_skill)
+                  draw.text((534, 47 + i * 67), (f"     {charactert.talents[i].level}"), font=font, fill=(255, 255, 255))                                
+              #cm
+              Locks = 6 - (len(charactert.constellations))
+              x_lock, y_lock = 538, 566
+              for _ in range(Locks):
+                image_skill00 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
+                image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
+                y_lock -= 65        
+              lock = len(charactert.constellations)
+              inseta = 244
+              y_ts = [65,66,63,64,65] 
+              for k in range(lock):                                             
+                response = await fetch_image(session, charactert.constellations[k].icon)
+                image_skill00 = Image.open(BytesIO(response)).convert("RGBA").resize((60, 60))
+                image_app.paste(image_skill00, (538, inseta), mask=image_skill00)
+                tert = y_ts[k % len(y_ts)]
+                inseta += tert      
+              buffer = BytesIO()
+              image_app.save(buffer, format='png')
+              buffer.seek(0)
+              file = discord.File(buffer, filename="showcase.png")
+              channel = inset_message.get("channelt")
+              messaget = await channel.send(file=file)
+              file_url = messaget.attachments[0]
+              return file_url
 
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
@@ -426,10 +455,10 @@ class scuids(commands.Cog):
     print('='* 50)
 
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
-  async def scuid(self, Interaction, uid: int):
+  async def scuid(self, Interaction):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
      try:
-        uid = uid
+        uid = 831335713
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
