@@ -30,14 +30,23 @@ async def download_images(urls):
         tasks = [fetch_image(session, url) for url in urls]
         return await asyncio.gather(*tasks)
 
-async def count_occurrences(value, lower_limit, upper_limit):
+async def count_occurrences(value1, value2):
+    variab = {
+                  "FIGHT_PROP_CRITICAL_HURT": (5.4, 7.9),
+                  "FIGHT_PROP_CRITICAL": (2.7, 4.0),
+                  "FIGHT_PROP_CHARGE_EFFICIENCY": (4.5, 6.6),
+                  "FIGHT_PROP_ELEMENT_MASTERY": (16, 24),
+                  "FIGHT_PROP_HP_PERCENT": (4.1, 5.9),
+                  "FIGHT_PROP_HP": (209, 300),
+                  "FIGHT_PROP_DEFENSE_PERCENT": (5.1, 7.4),
+                  "FIGHT_PROP_DEFENSE": (16, 24),
+                  "FIGHT_PROP_ATTACK_PERCENT": (4.1, 5.9),
+                  "FIGHT_PROP_ATTACK": (14, 20),
+              }
+    value = variab[value2]
     count = 1
-    m = value
-    for l in range(1, 10):
-        if lower_limit <= (m / l) <= upper_limit:
-            return count
-        else:
-            count += 1
+    for l in range(1, 7):
+        return count if value[0] <= (value1 / l) <= value[1] else count + 1
 
 async def generate_image(data):
     async with aiohttp.ClientSession() as session:
@@ -95,7 +104,6 @@ async def generate_image(data):
                 char_draw.text((x_skill+23, 82), f"{talent.level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
                 x_skill += 47
                 char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
-
             image_appt.paste(char_image, (x, y))
             x += 294
             if (i + 1) % 2 == 0:
@@ -131,6 +139,7 @@ async def ntscuid(nntsl):
     return urrl_nt[index[nntsl]]
 
 async def licon(vlue):
+  async with aiohttp.ClientSession() as session: 
     icon_inp ={
   "FIGHT_PROP_HP": "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png",
   "FIGHT_PROP_ATTACK": "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png",
@@ -152,25 +161,20 @@ async def licon(vlue):
   "FIGHT_PROP_FIRE_ADD_HURT": 'https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless',
   "FIGHT_PROP_ICE_ADD_HURT": 'https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless',
  }
-    return icon_inp[vlue]
+    icus = await fetch_image(session, icon_inp[vlue])
+    return icus
 
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
         async with aiohttp.ClientSession() as session: 
               uid = global_data.get("uid")
               data = global_data.get("data")
-              weapon = charactert.weapon       
-              if charactert.costume is not None:
-                m = charactert.costume.icon.gacha
-                x = 83
-              else:
-                m = charactert.icon.gacha  
-                x = -83
+              weapon = charactert.weapon     
               urls_to_download = [
                   "https://static.wikia.nocookie.net/genshin-impact/images/4/47/V%E1%BA%ADt_Ph%E1%BA%A9m_EXP_Y%C3%AAu_Th%C3%ADch.png/revision/latest?cb=20210528145929&path-prefix=vi",
                   "https://media.discordapp.net/attachments/1107978903294853140/1204653738715775056/Kgsu.png?ex=65d58438&is=65c30f38&hm=34e1aa2b6f39f02d514c3fcf1957979edf6d687b6b1169c31003228f6a04b8de&",                    
-                  m,
-                  charactert.weapon.icon,            
+                  charactert.costume.icon.gacha if charactert.costume is not None else charactert.icon.gacha
+                  ,charactert.weapon.icon,            
                   charactert.talents[0].icon,
                   charactert.talents[1].icon,
                   charactert.talents[2].icon,
@@ -187,12 +191,10 @@ async def image_dcuid(charactert):
               image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA")
               xc , yc = image_schar0.size
               image_schar0 = Image.open(BytesIO(responses[2])).convert("RGBA").resize((xc//3, yc//3))
-              image_app.paste(image_schar0, (x, 95), mask=image_schar0)
+              image_app.paste(image_schar0, (83 if charactert.costume is not None else -83, 95), mask=image_schar0)
               draw.text((34, 528), charactert.name, font=font, fill=(255, 255, 255))  #name0
-              image_flo = Image.open(BytesIO(responses[0])).convert("RGBA").resize((35, 35))
-              image_app.paste(image_flo, (34, 434), mask=image_flo)
               draw.text((34, 469), (f"lv.{charactert.level} / {charactert.max_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #level0
-              draw.text((34, 437), (f"     {charactert.friendship_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #độ yêu thích        
+              draw.text((34, 437), (f"BFF.{charactert.friendship_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #độ yêu thích        
               #vũ khí                              
               image_vk0 = Image.open(BytesIO(responses[3])).convert("RGBA").resize((144, 124))
               image_app.paste(image_vk0, (650, 33), mask=image_vk0)
@@ -200,52 +202,46 @@ async def image_dcuid(charactert):
               draw.text((644, 33), (f"R{weapon.refinement}"), font=font, fill=(255, 255, 255)) #tinh luyện
               draw.text((956, 104), (f"{weapon.level}/{weapon.max_level}"), font=font, fill=(255, 255, 255)) #level
               draw.text(((671, 146)) if weapon.rarity == 5 else (681, 146), (f"{'★'*weapon.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))#rate
-              draw.text((842, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
-              if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố":
-                  stat_name = weapon.stats[1].name.strip()[:12]
-              else:
-                  stat_name = weapon.stats[1].name
+              draw.text((840, 104), (f"{round(weapon.stats[0].value)}"), font=font, fill=(255, 255, 255))#atk#dòng chính
+              stat_name = weapon.stats[1].name.strip()[:12] if weapon.stats[1].name == "Hiệu Quả Nạp Nguyên Tố" else weapon.stats[1].name
               draw.text((831, 150), f"{stat_name}: {weapon.stats[1].formatted_value}", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))                
               #stats
-              characterp = charactert.stats
-              FightProp = FightPropType
-              fontt = ImageFont.truetype("zh-cn.ttf", 25)                
               stat_infos = [
-                  (("HP: ", FightProp.FIGHT_PROP_MAX_HP), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png", (644, 220-12), (40, 40)),
-                  (("Tấn Công: ", FightProp.FIGHT_PROP_CUR_ATTACK), "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png", (644, 255-12), (40, 40)),
-                  (("Phòng Ngự: ", FightProp.FIGHT_PROP_CUR_DEFENSE), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png", (644, 295-12), (40, 40)),
-                  (("Tinh Thông Nguyên Tố: ", FightProp.FIGHT_PROP_ELEMENT_MASTERY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png", (644, 335-12), (40, 40)),
-                  (("Tỉ Lệ Bạo: ", FightProp.FIGHT_PROP_CRITICAL), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png", (644, 375-12), (40, 40)),
-                  (("Sát Thương Bạo: ", FightProp.FIGHT_PROP_CRITICAL_HURT), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png", (644, 415-12), (40, 40)),
-                  (("Hiệu Quả Nạp: ", FightProp.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 455-12), (40, 40)),
-                  (("Trị Liệu: ", FightProp.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 495-12), (40, 40)),
+                  (("HP: ", FightPropType.FIGHT_PROP_MAX_HP), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990290942951545/CHUH17121.png", (644, 220-12), (40, 40)),
+                  (("Tấn Công: ", FightPropType.FIGHT_PROP_CUR_ATTACK), "https://media.discordapp.net/attachments/1118977913392476210/1118990421289357452/atk.png", (644, 255-12), (40, 40)),
+                  (("Phòng Ngự: ", FightPropType.FIGHT_PROP_CUR_DEFENSE), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526595727501/THFM69251.png", (644, 295-12), (40, 40)),
+                  (("Tinh Thông Nguyên Tố: ", FightPropType.FIGHT_PROP_ELEMENT_MASTERY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990526247608361/ttnt.png", (644, 335-12), (40, 40)),
+                  (("Tỉ Lệ Bạo: ", FightPropType.FIGHT_PROP_CRITICAL), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990420903477248/cr.png", (644, 375-12), (40, 40)),
+                  (("Sát Thương Bạo: ", FightPropType.FIGHT_PROP_CRITICAL_HURT), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990421582954577/cd.png", (644, 415-12), (40, 40)),
+                  (("Hiệu Quả Nạp: ", FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 455-12), (40, 40)),
+                  (("Trị Liệu: ", FightPropType.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 495-12), (40, 40)),
                   #stnt
-                  (("", FightProp.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 540-12), (50, 50)),#vật lý
-                  (("", FightProp.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 540-12), (50, 50)),#phong
-                  (("", FightProp.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 540-12), (50, 50)),#nham
-                  (("", FightProp.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 540-12), (50, 50)),#lôi
-                  (("", FightProp.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 600-12), (50, 50)),#thảo
-                  (("", FightProp.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 600-12), (50, 50)),#thuỷ
-                  (("", FightProp.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 600-12), (50, 50)),#hoả
-                  (("", FightProp.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 600-12), (50, 50)),#băng
+                  (("", FightPropType.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 540-12), (50, 50)),#vật lý
+                  (("", FightPropType.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 540-12), (50, 50)),#phong
+                  (("", FightPropType.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 540-12), (50, 50)),#nham
+                  (("", FightPropType.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 540-12), (50, 50)),#lôi
+                  (("", FightPropType.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 600-12), (50, 50)),#thảo
+                  (("", FightPropType.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 600-12), (50, 50)),#thuỷ
+                  (("", FightPropType.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 600-12), (50, 50)),#hoả
+                  (("", FightPropType.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 600-12), (50, 50)),#băng
               ]                
-              urls = [stat_info[1] for stat_info in stat_infos]
+              urls = [stat_info[1] for n, stat_info in enumerate(stat_infos[:16])]
               responset = await download_images(urls)
               current_position = (688, 210)
               txtx = 0
-              xnt = [693, 815, 928, 1042] 
+              xnt = [693, 815, 928, 1042]   
               for o, stat_info in enumerate(stat_infos[:16]):
                   stat_name = stat_info[0][0]
-                  stat_value = characterp[stat_info[0][1]].formatted_value
+                  stat_value = charactert.stats[stat_info[0][1]].formatted_value
                   stat_value = f"{stat_value[:-3]}%" if stat_value.endswith('.0%') else stat_value.rstrip('0').rstrip('.')
                   icon_url = stat_info[1]
                   icon_position = stat_info[2]
                   icon_size = stat_info[3]
+                  fontt = ImageFont.truetype("zh-cn.ttf", 25) if 12 > txtx <= 8 else ImageFont.truetype("zh-cn.ttf", 21) 
                   if txtx >= 8 and txtx < 12:
-                      fontt = ImageFont.truetype("zh-cn.ttf", 21)
                       current_position = (xnt[txtx-8], 570-12) 
                   elif txtx >= 12:
-                      current_position = (xnt[txtx-12], 623-12)                            
+                      current_position = (xnt[txtx-12], 623-12)                              
                   draw.text(current_position, (f"{stat_name}{stat_value}"), font=fontt, fill=(255, 255, 255))                         
                   icon_image = Image.open(BytesIO(responset[txtx])).convert("RGBA").resize(icon_size)
                   image_app.paste(icon_image, icon_position, mask=icon_image)
@@ -273,22 +269,12 @@ async def image_dcuid(charactert):
               #cv      
               x_cv1, x_cv2, sss = 158, 224, 0
               x_tdv_levels = 166
-              for v, artifact in enumerate(charactert.artifacts[:5]):
-                  crit_dmg = 0
-                  crit_rate = 0
+              for v, artifact in enumerate (charactert.artifacts[:5]):
+                  crit_dmg, crit_rate = 0, 0
                   for c, substate in enumerate(artifact.sub_stats[:4]):
                     crit_rate = substate.value if substate.name == "Tỷ Lệ Bạo Kích" else crit_rate
                     crit_dmg = substate.value if substate.name == "ST Bạo Kích" else crit_dmg
-                  cv0 = crit_rate * 2 + crit_dmg
-                  text = f"{cv0:.1f}CV"
-                  text_font = ImageFont.truetype("zh-cn.ttf", 17)
-                  text_bbox = draw.textbbox((0, 0), text, font=text_font) 
-                  box_padding = 1
-                  box_width = text_bbox[2] - text_bbox[0] + 2 * box_padding
-                  box_height = text_bbox[3] - text_bbox[1] + 2 * box_padding
-                  x = x_cv1
-                  y = 818
-                  
+                  cv0 = crit_rate * 2 + crit_dmg                                    
                   color = (
                       (208, 59, 84) if cv0 >= 50
                       else (203, 208, 59) if 42 <= cv0 <= 49
@@ -296,60 +282,41 @@ async def image_dcuid(charactert):
                       else (59, 123, 208) if 18 <= cv0 <= 31
                       else (210, 221, 236)
                   )
-                  fills = (0, 0, 0) if color in [(210, 221, 236), (203, 208, 59)] else (255, 255, 255)
-                  
-                  draw.rounded_rectangle([x - 5, y - 5, x + box_width + 5, y + box_height + 5], 10, fill=color)
+                  fills = (0, 0, 0) if color in [(210, 221, 236), (203, 208, 59)] else (255, 255, 255)                  
+                  draw.rounded_rectangle([x_cv1 - 5, 818 - 5, x_cv1 + 68 + 5, 818 + 18 + 5], 10, fill=color)
                   draw.text((x_tdv_levels, 790), f"+{artifact.level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
-                  draw.text((x + 1, y + 1), text, font=text_font, fill=fills)
+                  draw.text((x_cv1 + 1, 818 + 1), f"{cv0:.1f}CV", font=ImageFont.truetype("zh-cn.ttf", 17), fill=fills)
                   x_tdv_levels += 227
                   sss += 1
-                  x_cv1 += x_cv2 if sss <= 3 else 226
-              variables = {
-                  "FIGHT_PROP_CRITICAL_HURT": (5.4, 7.9),
-                  "FIGHT_PROP_CRITICAL": (2.7, 4.0),
-                  "FIGHT_PROP_CHARGE_EFFICIENCY": (4.5, 6.6),
-                  "FIGHT_PROP_ELEMENT_MASTERY": (16, 24),
-                  "FIGHT_PROP_HP_PERCENT": (4.1, 5.9),
-                  "FIGHT_PROP_HP": (209, 300),
-                  "FIGHT_PROP_DEFENSE_PERCENT": (5.1, 7.4),
-                  "FIGHT_PROP_DEFENSE": (16, 24),
-                  "FIGHT_PROP_ATTACK_PERCENT": (4.1, 5.9),
-                  "FIGHT_PROP_ATTACK": (14, 20),
-              }
+                  x_cv1 += x_cv2 if sss <= 3 else 226              
               x_tdv, x_tdv_stats1, x_tdv_icon, x_tdv_level = 227, 224, 43, 166
               x_tdv_rate, x_tdv_stats = 25, 30
               y_tdv_stats1, y_tdv_stats2 = 850, 40
               element_count = 0
-              element_count1 = 0
               for b, artifact in enumerate(charactert.artifacts[:5]):
                   response = await fetch_image(session, artifact.icon)
                   image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((165, 165))
                   image_app.paste(image_tdv0, (x_tdv_icon-20, 674), mask=image_tdv0)
-                  icono = await licon(artifact.main_stat.type.value)
-                  response = await fetch_image(session, icono)
+                  response = await licon(artifact.main_stat.type.value)
                   image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((50, 50))
                   image_app.paste(image_tdv0, (x_tdv_stats+139, 659), mask=image_tdv0)            
                   draw.text((x_tdv_rate, 814), (f"{'★'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))
-                  draw.text((x_tdv_rate-8, 654), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))                  
+                  draw.text((x_tdv_stats-11, 654), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))                  
                   x_tdv_icon += x_tdv
                   x_tdv_rate += x_tdv
                   x_tdv_level += x_tdv
                   for n, substate in enumerate(artifact.sub_stats[:4]):
-                      response = await fetch_image(session, await licon(substate.type.value))
+                      response = await licon(substate.type.value)
                       image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((40, 40))
                       image_app.paste(image_tdv0, (x_tdv_stats, y_tdv_stats1), mask=image_tdv0)                    
-                      occurrence = await count_occurrences(float(substate.formatted_value.replace('%', '')), *variables[substate.type.value])                  
-                      draw.text((x_tdv_stats+45, y_tdv_stats1+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=(255, 255, 255))
-                      draw.text((x_tdv_stats+128, y_tdv_stats1+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=(255, 255, 250))                     
+                      occurrence = await count_occurrences(float(substate.formatted_value.replace('%', '')), substate.type.value)                  
+                      draw.text((x_tdv_stats+45, y_tdv_stats1+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=((255, 255, 255) if occurrence >= 2 else (149, 149, 149)))
+                      draw.text((x_tdv_stats+128, y_tdv_stats1+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=((255, 255, 255) if occurrence >= 2 else (149, 149, 149)))                 
                       y_tdv_stats1 += y_tdv_stats2
                       element_count += 1
                       if element_count % 4 == 0: 
                         y_tdv_stats1 = 850
-                        if element_count < 16:
-                          x_tdv_stats += x_tdv_stats1
-                  element_count1 += 1
-                  if element_count1 % 4 == 0:
-                    x_tdv_stats += (x_tdv_stats1 - 4)
+                        x_tdv_stats += x_tdv_stats1 if element_count < 16 else (x_tdv_stats1 - 4)
               #thiên phú
               skill_positions = [(538, 18), (538, 84), (538, 150)]                
               for i in range(3):
@@ -357,16 +324,15 @@ async def image_dcuid(charactert):
                   image_app.paste(image_skill, skill_positions[i], mask=image_skill)
                   draw.text((534, 47 + i * 67), (f"     {charactert.talents[i].level}"), font=font, fill=(255, 255, 255))                                
               #cm
-              Locks = 6 - (len(charactert.constellations))
+              Locks = (len(charactert.constellations))          
               x_lock, y_lock = 538, 566
-              for _ in range(Locks):
+              for _ in range(6 - Locks):
                 image_skill00 = Image.open(BytesIO(responses[7])).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill00, (x_lock, y_lock), mask=image_skill00)
                 y_lock -= 65        
-              lock = len(charactert.constellations)
               inseta = 244
               y_ts = [65,66,63,64,65] 
-              for k in range(lock):                                             
+              for k in range(Locks):                                             
                 response = await fetch_image(session, charactert.constellations[k].icon)
                 image_skill00 = Image.open(BytesIO(response)).convert("RGBA").resize((60, 60))
                 image_app.paste(image_skill00, (538, inseta), mask=image_skill00)
@@ -396,27 +362,23 @@ class Select(discord.ui.Select):
                 uid = global_data.get("uid")
                 data = global_data.get("data")
                 channel = inset_message.get('channelt')
+                messagea = inset_message.get("message")
                 now = datetime.datetime.now()
-                loadj_time = now + datetime.timedelta(seconds=7)
-                embed_loading = discord.Embed(color=discord.Color.yellow())
-                embed_loading.add_field(name=f"<a:aloading:1152869299942338591> **Đang tạo thông tin..** <a:ganyurollst:1118761352064946258> <t:{int(loadj_time.timestamp())}:R>", value="", inline=False)
+                embed_loading = discord.Embed(title="<a:aloading:1152869299942338591> **Đang tạo thông tin..__Hãy kiên nhẫn__** <a:ganyurollst:1118761352064946258>", color=discord.Color.yellow())
                 await Interaction.response.edit_message(content=None, embed=embed_loading)
                 char_index = int(self.values[0][-1]) - 1
                 charactert = data.characters[char_index]
-                file_url = await image_dcuid(data.characters[char_index])
-
                 embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
                 reload_time = now + datetime.timedelta(seconds=data.ttl)
-                embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False)
-                embed.set_image(url=file_url)   
+                embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False) 
                 embed.set_thumbnail(url=f"{charactert.icon.front}")
                 embed.set_footer(text=f"{uid}", icon_url=f"{Interaction.user.avatar}")
-                messagea = inset_message.get("message")
+                file_url = await image_dcuid(data.characters[char_index])
+                embed.set_image(url=file_url)
                 await messagea.edit(content=None, embed=embed)
             except Exception as e:
                 traceback.print_exc()
                 await channel.send(f"Error: {e}\n{traceback.format_exc()}")
-
 
 class SelectView(discord.ui.View):
     def __init__(self, *, timeout=300):
@@ -465,21 +427,12 @@ class scuids(commands.Cog):
         embed = discord.Embed()
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
-        if data.characters is not None and len(data.characters) > 0:
-            print(1)
-        else:
-            embed1 = discord.Embed(color=0xed0202)
-            embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
-            embed1.add_field(
-                name="Chuyện gì đã xảy ra?",
-                value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới.",
-                inline=False)
-            embed1.set_image(
-                url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
-            )
-            await Interaction.followup.send(embed=embed1, ephemeral=True)
-
-        filet= await generate_image(data) 
+        embed1 = discord.Embed(color=0xed0202)
+        embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
+        embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới", inline=False)
+        embed1.set_image(url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
+        )
+        filet= await generate_image(data) if data.characters is not None and len(data.characters) > 0 else await Interaction.followup.send(embed=embed1, ephemeral=True)
         channel = self.bot.get_channel(1118977913392476210)
         inset_message["channelt"] = channel
         saved_file = await channel.send(file=filet)
