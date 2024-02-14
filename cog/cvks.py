@@ -76,7 +76,7 @@ class ServerInfo(commands.Cog):
             await channel.send("chúc mọi người một ngày mới vui vẻ 🧩**Good Morning**🧩")
         elif  current_time.hour == 22 and current_time.minute == 0:
             await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
-        elif current_time.hour == 23 and current_time.minute == 4:
+        elif current_time.hour == 23 and current_time.minute == 3:
             await logins()
   
     @commands.Cog.listener()
@@ -87,8 +87,6 @@ class ServerInfo(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-      channel = self.bot.get_channel(1118977913392476210)
-      channelt['channelm'] = channel
       filename = os.path.basename(__file__)
       print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
       print('='* 50)
@@ -96,6 +94,8 @@ class ServerInfo(commands.Cog):
     @tasks.loop(seconds=10)
     async def update_data(self):
         try:
+            channel = self.bot.get_channel(1118977913392476210)
+            channelt['channelm'] = channel
             tz = pytz.timezone('Asia/Ho_Chi_Minh')
             guild = self.bot.get_guild(550601755709407233)
             channel = self.bot.get_channel(1105730219110825984)
