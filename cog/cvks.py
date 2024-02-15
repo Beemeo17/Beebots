@@ -60,6 +60,9 @@ class ServerInfo(commands.Cog):
         self.tz = pytz.timezone('Asia/Ho_Chi_Minh')
         self.update_data.start()
         self.send_greetings.start()
+        self.update_presence.start()
+    def cog_unload(self):
+        self.update_presence.cancel()
 
     @tasks.loop(seconds=60)
     async def update_presence(self):
@@ -67,6 +70,10 @@ class ServerInfo(commands.Cog):
         start_time = datetime.now()
         game = discord.Game(name="❄️HIVE Teyvat❄️")
         await self.bot.change_presence(activity=game)
+
+    @update_presence.before_loop
+    async def before_update_presence(self):
+        await self.bot.wait_until_ready()
 
     @tasks.loop(seconds=60)
     async def send_greetings(self):
@@ -76,7 +83,7 @@ class ServerInfo(commands.Cog):
             await channel.send("chúc mọi người một ngày mới vui vẻ 🧩**Good Morning**🧩")
         elif  current_time.hour == 22 and current_time.minute == 0:
             await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
-        elif current_time.hour == 23 and current_time.minute == 3:
+        elif current_time.hour == 23 and current_time.minute == 18:
             await logins()
   
     @commands.Cog.listener()
