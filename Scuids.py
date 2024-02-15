@@ -445,10 +445,8 @@ class scuids(commands.Cog):
         message = await Interaction.channel.send(embed=embed, view=SelectView())
         inset_message["message"] = message
      except Exception as s:
-        await Interaction.channel.send(s)
         traceback.print_exc()
-        await channel.send(f"Error: {e}\n{traceback.format_exc()}")
-        return s
+        await channel.send(f"Error: {s}\n{traceback.format_exc()}")
 
 async def setup(bot):
   await bot.add_cog(scuids(bot))
