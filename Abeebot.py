@@ -24,8 +24,10 @@ async def load():
   for filename in os.listdir('./cog'):
     if filename.endswith(".py"):
       await bot.load_extension(f'cog.{filename[:-3]}')
+      
 async def main():
+  await bot.load_extension("scuids")
   await load()
-  await bot.start(os.environ['TOKEN'])
+  await bot.start(os.environ["TOKEN"])
   
 asyncio.run(main())
