@@ -443,7 +443,7 @@ class scuids(commands.Cog):
         elif user is not None:
               uid = data[str(user.id)]["uid"] if str(user.id) in data else 831335714
         else:
-              uid = data[user_id]["uid"] if str(user.id) in data else 831335714
+              uid = data[user_id]["uid"] if str(user_id) in data else 831335714
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
