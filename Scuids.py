@@ -13,6 +13,19 @@ import asyncio
 import traceback
 from enka.enums import FightPropType, Language
 import operator
+import json
+
+files = "test.json"
+def load_data():
+    try:
+        with open(files, 'r') as file:
+            data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        data = {}
+    return data
+def save_data(data):
+    with open(files, 'w') as file:
+        json.dump(data, file, indent=4)
 
 global_data = {
     "data": None,
@@ -420,32 +433,42 @@ class scuids(commands.Cog):
     print('='* 50)
 
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
-  async def scuid(self, Interaction, uid: int):
+  async def scuid(self, Interaction, uid: int = None , user: discord.Member = None):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
      try:
-        uid = uid
+        data = load_data()
+        user_id = str(Interaction.user.id)
+        if uid is not None:
+          uid = uid
+        elif user is not None:
+              uid = data[str(user.id)]["uid"] if str(user.id) in data else 831335714
+        else:
+              uid = data[user_id]["uid"] if str(user.id) in data else 831335714
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
         embed = discord.Embed()
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
-        embed1 = discord.Embed(color=0xed0202)
-        embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
-        embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới", inline=False)
-        embed1.set_image(url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png"
-        )
-        filet= await generate_image(data) if data.characters is not None and len(data.characters) > 0 else await Interaction.followup.send(embed=embed1, ephemeral=True)
         channel = self.bot.get_channel(1118977913392476210)
         inset_message["channelt"] = channel
-        saved_file = await channel.send(file=filet)
-        files_url = saved_file.attachments[0]
-        embed= discord.Embed()
-        embed.set_image(url=files_url)
-        message = await Interaction.channel.send(embed=embed, view=SelectView())
-        inset_message["message"] = message
+        if data.characters is not None and len(data.characters) > 0:
+          filet= await generate_image(data)
+          saved_file = await channel.send(file=filet)
+          files_url = saved_file.attachments[0]
+          embed= discord.Embed()
+          embed.set_image(url=files_url)
+          message = await Interaction.channel.send(embed=embed, view=SelectView()) if data.characters is not None and len(data.characters) > 0 else await Interaction.followup.send(embed=embed1, ephemeral=True)
+          inset_message["message"] = message
+        else:
+          embed1 = discord.Embed(color=0xed0202)
+          embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
+          embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới \n\n```Hoặc bạn đang sửa dụng Biến User Hoặc không sửa dụng biến khi Bạn hoặc User không có dữ liệu UID```", inline=False)
+          embed1.set_image(url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png")
+          await Interaction.followup.send(embed=embed1, ephemeral=True)
      except Exception as s:
-        await Interaction.channel.send(s)
+        traceback.print_exc()
+        await channel.send(f"Error: {s}\n{traceback.format_exc()}")
 
 async def setup(bot):
   await bot.add_cog(scuids(bot))
