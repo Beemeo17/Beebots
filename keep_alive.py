@@ -6,9 +6,9 @@ import datetime
 app = Flask(__name__)
 start_time = datetime.datetime.now()
 
-# Tắt thông báo trên console
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+
 
 @app.route('/')
 def home():
@@ -17,8 +17,10 @@ def home():
     hours = uptime.seconds // 3600
     return render_template('index.html', uptime=hours)
 
+
 def run():
-    app.run(host='0.0.0.0', port=433)
+    app.run(host='0.0.0.0', port=8080)
+
 
 def keep_alive():
     t = Thread(target=run)
