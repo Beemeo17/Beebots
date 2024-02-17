@@ -111,7 +111,7 @@ async def licon(vlue):
  }
     icus = await fetch_image(session, icon_inp[vlue])
     return icus
-
+  
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
         async with aiohttp.ClientSession() as session: 
@@ -164,20 +164,20 @@ async def image_dcuid(charactert):
                   (("Hiệu Quả Nạp: ", FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525501022218/hqn.png", (644, 455-12), (40, 40)),
                   (("Trị Liệu: ", FightPropType.FIGHT_PROP_HEAL_ADD), "https://cdn.discordapp.com/attachments/1118977913392476210/1118990525794619402/heal.png", (644, 495-12), (40, 40)),
                   #stnt
-                  (("", FightPropType.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (644, 540-12), (50, 50)),#vật lý
-                  (("", FightPropType.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (766, 540-12), (50, 50)),#phong
-                  (("", FightPropType.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (879, 540-12), (50, 50)),#nham
-                  (("", FightPropType.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (993, 540-12), (50, 50)),#lôi
-                  (("", FightPropType.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (644, 600-12), (50, 50)),#thảo
-                  (("", FightPropType.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (766, 600-12), (50, 50)),#thuỷ
-                  (("", FightPropType.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (879, 600-12), (50, 50)),#hoả
-                  (("", FightPropType.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (993, 600-12), (50, 50)),#băng
+                  (("", FightPropType.FIGHT_PROP_PHYSICAL_ADD_HURT), "https://cdn.discordapp.com/attachments/1092394580009295952/1119211230872211476/350.png", (641-10, 540-12), (50, 50)),#vật lý
+                  (("", FightPropType.FIGHT_PROP_WIND_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026021228544.webp?size=96&quality=lossless", (768-12, 540-12), (50, 50)),#phong
+                  (("", FightPropType.FIGHT_PROP_ROCK_ADD_HURT), "https://cdn.discordapp.com/emojis/882253025895399504.webp?size=96&quality=lossless", (895-12, 540-12), (50, 50)),#nham
+                  (("", FightPropType.FIGHT_PROP_ELEC_ADD_HURT), "https://cdn.discordapp.com/emojis/882254148584759317.webp?size=96&quality=lossless", (1022-12, 540-12), (50, 50)),#lôi
+                  (("", FightPropType.FIGHT_PROP_GRASS_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026113507349.webp?size=96&quality=lossless", (641-10, 600-12), (50, 50)),#thảo
+                  (("", FightPropType.FIGHT_PROP_WATER_ADD_HURT), "https://cdn.discordapp.com/emojis/882254676916068393.webp?size=96&quality=lossless", (768-12, 600-12), (50, 50)),#thuỷ
+                  (("", FightPropType.FIGHT_PROP_FIRE_ADD_HURT), "https://cdn.discordapp.com/emojis/882254077361262592.webp?size=96&quality=lossless", (895-12, 600-12), (50, 50)),#hoả
+                  (("", FightPropType.FIGHT_PROP_ICE_ADD_HURT), "https://cdn.discordapp.com/emojis/882253026046390292.webp?size=96&quality=lossless", (1022-12, 600-12), (50, 50)),#băng
               ]                
               urls = [stat_info[1] for n, stat_info in enumerate(stat_infos[:16])]
               responset = await download_images(urls)
               current_position = (688, 210)
               txtx = 0
-              xnt = [693, 815, 928, 1042]   
+              xnt = [687-10, 814-12, 941-12, 1068-12]
               for o, stat_info in enumerate(stat_infos[:16]):
                   stat_name = stat_info[0][0]
                   stat_value = charactert.stats[stat_info[0][1]].formatted_value
@@ -270,7 +270,7 @@ async def image_dcuid(charactert):
               for i in range(3):
                   image_skill = Image.open(BytesIO(responses[i + 4])).convert("RGBA").resize((60, 60))
                   image_app.paste(image_skill, skill_positions[i], mask=image_skill)
-                  draw.text((534 if charactert.talents[i].level > 9 else 536, 47 + i * 67), (f"     {charactert.talents[i].level}"), font=font, fill=(255, 255, 255))                                
+                  draw.text((572 if charactert.talents[i].level > 9 else 581, 47 + i * 67), f"{charactert.talents[i].level}", font=font, fill=(255, 255, 255))                                
               #cm
               Locks = (len(charactert.constellations))          
               x_lock, y_lock = 538, 566
@@ -301,7 +301,7 @@ async def generate_image(data):
         urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1206074586098176010/F7C59933-6074-48A1-8422-A66E5B12B81F.png?ex=65daaf7d&is=65c83a7d&hm=bf8a3b1baedfa274063937d09302701f079f5691e37a88261013e7e44067f11a&')
         image_appt = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((600, 850))
         draw = ImageDraw.Draw(image_appt)
-        player_icon_data = await fetch_image(session, data.player.profile_picture_icon.side)
+        player_icon_data = await fetch_image(session, data.player.profile_picture_icon.circle)
         player_icon = Image.open(BytesIO(player_icon_data)).resize((141, 141)).convert("RGBA")
         image_appt.paste(player_icon, (77, 62), player_icon)
         draw.text((238, 60), data.player.nickname, font=ImageFont.truetype("zh-cn.ttf", 16), fill=(0, 0, 0))
@@ -435,6 +435,8 @@ class scuids(commands.Cog):
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
   async def scuid(self, Interaction, uid: int = None , user: discord.Member = None):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
+     channel = self.bot.get_channel(1118977913392476210)
+     inset_message["channelt"] = channel
      try:
         data = load_data()
         user_id = str(Interaction.user.id)
@@ -450,8 +452,6 @@ class scuids(commands.Cog):
         embed = discord.Embed()
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
-        channel = self.bot.get_channel(1118977913392476210)
-        inset_message["channelt"] = channel
         if data.characters is not None and len(data.characters) > 0:
           filet= await generate_image(data)
           saved_file = await channel.send(file=filet)
@@ -467,8 +467,7 @@ class scuids(commands.Cog):
           embed1.set_image(url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png")
           await Interaction.followup.send(embed=embed1, ephemeral=True)
      except Exception as s:
-        traceback.print_exc()
-        await channel.send(f"Error: {s}\n{traceback.format_exc()}")
+        await channel.send(f"Error: {s}")
 
 async def setup(bot):
   await bot.add_cog(scuids(bot))
