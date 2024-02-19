@@ -15,29 +15,28 @@ async def fetch_image(session, url):
         return await response.read()
 
 async def cre(xp, yp):
-  async with aiohttp.ClientSession() as session: 
-    urlg = "https://media.discordapp.net/attachments/1107978903294853140/1209149933635117137/3AF1A67D-FA57-4D1B-AD8E-63B68CF53894.png?ex=65e5dfa1&is=65d36aa1&hm=845659fb12f4d8d3e864d0bfa23d58ff846bc1c6c92b8d9a190c779701b15457&a"
-    luur = await fetch_image(session, urlg)
-    imgapp = Image.open(BytesIO(luur)).convert("RGBA").resize((100, 100))
-    draw = ImageDraw.Draw(imgapp)
-    nv_url = "https://media.discordapp.net/attachments/1107978903294853140/1209147724398727208/image0.jpg?ex=65e5dd92&is=65d36892&hm=f69226f3f85370ae12af6bd8479aec9cf3a70d7d40d16fc5fb902421e5bb2769&a"
-    lunv = await fetch_image(session, nv_url)
-    nvop = Image.open(BytesIO(lunv)).convert("RGBA").resize((17, 17))
-    imgapp.paste(nvop, (42, 42), mask=nvop)
-    vp_url = "https://media.discordapp.net/attachments/1107978903294853140/1209147827662487593/image0.jpg?ex=65e5ddaa&is=65d368aa&hm=ba84af0c3e747128d33725edd250c30a3b961f6b2988c4a770641cfb2a992503&a"
-    luvp = await fetch_image(session, vp_url)
-    vpop = Image.open(BytesIO(luvp)).convert("RGBA").resize((17, 17))
-    imgapp.paste(vpop, (xp, yp), mask=vpop)
-    buffer = BytesIO()
-    imgapp.save(buffer, format='png')
-    buffer.seek(0)
-    file = discord.File(buffer, filename="output.png")      
-    channel = isput.get("channel")
-    message = await channel.send(file=file)
-    file_url = message.attachments[0]
-    embed = discord.Embed()
-    embed.set_image(url=file_url)
-    return embed
+    async with aiohttp.ClientSession() as session:
+        urls = [
+            "https://media.discordapp.net/attachments/1107978903294853140/1209149933635117137/3AF1A67D-FA57-4D1B-AD8E-63B68CF53894.png?ex=65e5dfa1&is=65d36aa1&hm=845659fb12f4d8d3e864d0bfa23d58ff846bc1c6c92b8d9a190c779701b15457&a",
+            "https://media.discordapp.net/attachments/1107978903294853140/1209147724398727208/image0.jpg?ex=65e5dd92&is=65d36892&hm=f69226f3f85370ae12af6bd8479aec9cf3a70d7d40d16fc5fb902421e5bb2769&a",
+            "https://media.discordapp.net/attachments/1107978903294853140/1209147827662487593/image0.jpg?ex=65e5ddaa&is=65d368aa&hm=ba84af0c3e747128d33725edd250c30a3b961f6b2988c4a770641cfb2a992503&a"
+        ]
+        images = await asyncio.gather(*[fetch_image(session, url) for url in urls])
+        imgapp = Image.open(BytesIO(images[0])).convert("RGBA").resize((100, 100))
+        draw = ImageDraw.Draw(imgapp)
+        for image, pos in zip(images[1:], [(42, 42), (xp, yp)]):
+            nvop = Image.open(BytesIO(image)).convert("RGBA").resize((17, 17))
+            imgapp.paste(nvop, pos, mask=nvop)
+        buffer = BytesIO()
+        imgapp.save(buffer, format='png')
+        buffer.seek(0)
+        file = discord.File(buffer, filename="output.png")      
+        channel = isput.get("channel")
+        message = await channel.send(file=file)
+        file_url = message.attachments[0]
+        embed = discord.Embed()
+        embed.set_image(url=file_url)
+        return embed
         
 class Button(discord.ui.View):
   def __init__ (self, *, timeout=300):
