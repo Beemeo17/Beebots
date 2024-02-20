@@ -1,11 +1,9 @@
 import discord
-from discord.ext import commands, tasks
-from discord import app_commands, PartialEmoji
-import requests
+from discord.ext import commands
+from discord import app_commands
 import os
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageEnhance
-from datetime import datetime, timedelta, time
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import aiohttp
 import datetime
 import enka
@@ -14,6 +12,7 @@ import traceback
 from enka.enums import FightPropType, Language
 import operator
 import json
+import base64
 
 files = "test.json"
 def load_data():
@@ -42,6 +41,17 @@ async def download_images(urls):
     async with aiohttp.ClientSession() as session:
         tasks = [fetch_image(session, url) for url in urls]
         return await asyncio.gather(*tasks)
+
+async def upload_img(url: str, session: aiohttp.ClientSession) -> str:
+    payload = {
+        "key": "6d207e02198a847aa98d0a2a901485a5",
+        "source": url,
+    }
+    async with session.post(
+        "https://freeimage.host/api/1/upload", data=payload
+    ) as resp:
+        data = await resp.json()
+    return data["image"]["url"]
 
 async def count_occurrences(value1, value2):
     variab = {
@@ -289,10 +299,8 @@ async def image_dcuid(charactert):
               buffer = BytesIO()
               image_app.save(buffer, format='png')
               buffer.seek(0)
-              file = discord.File(buffer, filename="showcase.png")
-              channel = inset_message.get("channelt")
-              messaget = await channel.send(file=file)
-              file_url = messaget.attachments[0]
+              image_url = base64.b64encode(buffer.getvalue()).decode()
+              file_url = await upload_img(image_url, session)
               return file_url
 
 async def generate_image(data):
@@ -359,9 +367,9 @@ async def generate_image(data):
         buffer = BytesIO()
         image_appt.save(buffer, format='png')
         buffer.seek(0)
-        filet = discord.File(buffer, filename="output.png")      
-        channel = inset_message.get("channelt")
-        return filet
+        image_url = base64.b64encode(buffer.getvalue()).decode()
+        file_url = await upload_img(image_url, session)
+        return file_url
 
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
@@ -453,11 +461,9 @@ class scuids(commands.Cog):
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
         if data.characters is not None and len(data.characters) > 0:
-          filet= await generate_image(data)
-          saved_file = await channel.send(file=filet)
-          files_url = saved_file.attachments[0]
+          file_url= await generate_image(data)
           embed= discord.Embed()
-          embed.set_image(url=files_url)
+          embed.set_image(url=file_url)
           message = await Interaction.channel.send(embed=embed, view=SelectView()) if data.characters is not None and len(data.characters) > 0 else await Interaction.followup.send(embed=embed1, ephemeral=True)
           inset_message["message"] = message
         else:
