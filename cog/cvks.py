@@ -85,12 +85,6 @@ class ServerInfo(commands.Cog):
             await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
         elif current_time.hour == 23 and current_time.minute == 18:
             await logins()
-  
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandNotFound):
-            return
-        raise erro
 
     @commands.Cog.listener()
     async def on_ready(self):
