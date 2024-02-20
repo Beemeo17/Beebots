@@ -41,7 +41,7 @@ async def cre(xp, yp):
             nvop = Image.open(BytesIO(image)).convert("RGBA").resize((17, 17))
             imgapp.paste(nvop, pos, mask=nvop)
         buffer = BytesIO()
-        image_appt.save(buffer, format='png')
+        imgapp.save(buffer, format='png')
         buffer.seek(0)
         image_url = base64.b64encode(buffer.getvalue()).decode()
         file_url = await upload_img(image_url, session)
@@ -102,5 +102,3 @@ class gem(commands.Cog):
 
 async def setup(bot):
   await bot.add_cog(gem(bot))
-    
-  
