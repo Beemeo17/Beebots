@@ -6,8 +6,21 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps, ImageEnhance
 from datetime import datetime, timedelta, time
 import aiohttp
 import datetime
-import asyncio
 import json
+import asyncio
+import io
+import base64
+
+async def upload_img(url: str, session: aiohttp.ClientSession) -> str:
+    payload = {
+        "key": "6d207e02198a847aa98d0a2a901485a5",
+        "source": url,
+    }
+    async with session.post(
+        "https://freeimage.host/api/1/upload", data=payload
+    ) as resp:
+        data = await resp.json()
+    return data["image"]["url"]
 
 isput = {"x" :None, "y" :None, "channel" :None}
 async def fetch_image(session, url):
@@ -28,12 +41,10 @@ async def cre(xp, yp):
             nvop = Image.open(BytesIO(image)).convert("RGBA").resize((17, 17))
             imgapp.paste(nvop, pos, mask=nvop)
         buffer = BytesIO()
-        imgapp.save(buffer, format='png')
+        image_appt.save(buffer, format='png')
         buffer.seek(0)
-        file = discord.File(buffer, filename="output.png")      
-        channel = isput.get("channel")
-        message = await channel.send(file=file)
-        file_url = message.attachments[0]
+        image_url = base64.b64encode(buffer.getvalue()).decode()
+        file_url = await upload_img(image_url, session)
         embed = discord.Embed()
         embed.set_image(url=file_url)
         return embed
