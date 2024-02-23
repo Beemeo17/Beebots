@@ -265,7 +265,7 @@ async def image_dcuid(charactert):
               buffer.seek(0)
               image_url = base64.b64encode(buffer.getvalue()).decode()
               file_url = await upload_img(image_url, session)
-              return file_urlurl
+              return file_url
 
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
