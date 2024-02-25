@@ -8,7 +8,6 @@ import aiohttp
 import datetime
 import enka
 import asyncio
-import traceback
 from enka.enums import FightPropType, Language
 import operator
 import json
@@ -121,35 +120,35 @@ async def licon(vlue):
  }
     icus = await fetch_image(session, icon_inp[vlue])
     return icus
-  
+    
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
         async with aiohttp.ClientSession() as session: 
               uid = global_data.get("uid")
               data = global_data.get("data")
               weapon = charactert.weapon     
-              urls_to_download = [
-                  charactert.costume.icon.gacha if charactert.costume is not None else charactert.icon.gacha,
+              urls_to_download = [charactert.costume.icon.gacha if charactert.costume is not None else charactert.icon.gacha,
                   charactert.weapon.icon,            
                   charactert.talents[0].icon,
                   charactert.talents[1].icon,
                   charactert.talents[2].icon,
                   "https://cdn.discordapp.com/emojis/1210395337139683328.png",
-                  "https://media.discordapp.net/attachments/1107978903294853140/1210397607147602001/AFB13433-D899-4DA5-9761-16D69195636C.png?ex=65ea699d&is=65d7f49d&hm=df95ff8fb259fd4854c9e043ac5b9529d29ead1e94fc37cb8df25b07b646fcd1&a",
-              ]
+                  "https://media.discordapp.net/attachments/1107978903294853140/1210964500166082570/233149C0-7EA6-4CC6-A333-C6E3EE916190.png?ex=65ec7993&is=65da0493&hm=e08c7e5d514db42f1614e4291775a417cf46a2d5bfa53a9ce75c73c8d987bf1e&a",]
               responses = await download_images(urls_to_download)
               image_app = Image.open(BytesIO(await ntscuid(charactert.element.value))).resize((1455, 885))
               font = ImageFont.truetype("zh-cn.ttf", 27)
               draw = ImageDraw.Draw(image_app)
-              #char)           
+              #char    
               image_schar0 = Image.open(BytesIO(responses[0]))
-              x_pos = 83 if charactert.costume is not None else -342
-              image_app.paste(image_schar0, (x_pos, 0), mask=image_schar0)
+              x = (image_app.width - image_schar0.width) // 2
+              y = (image_app.height - image_schar0.height) // 2              
+              image_app.paste(image_schar0, (x-25, y), mask=image_schar0)
               image_main = Image.open(BytesIO(responses[6])).convert("RGBA")
               image_app.paste(image_main, (0, 0), mask=image_main)
-              draw.text((325, 4), (f"{charactert.name}  \nBFF.{charactert.friendship_level}  \nlv.{charactert.level}/{charactert.max_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))  #level0
-              draw.text((1128, 812), f"{data.player.nickname} \nUID:{uid}  AR:{data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255)) #player name ,level player
-              # Chèn thông tin vũ khí
+              draw.text((325, 4), (f"{charactert.name}  \nBFF.{charactert.friendship_level}  \nlv.{charactert.level}/{charactert.max_level}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(225, 225, 225))  #level0
+              #player
+              draw.text((1128, 812), f"{data.player.nickname} \nUID:{uid}  AR:{data.player.level}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 255))
+              #Chèn thông tin vũ khí
               image_vk0 = Image.open(BytesIO(responses[1])).convert("RGBA").resize((144, 124))
               image_app.paste(image_vk0, (958, 19), mask=image_vk0)
               draw.text((1121, 16), weapon.name if len(weapon.name) < 23 else weapon.name + "...", font=ImageFont.truetype("zh-cn.ttf", 22), fill=(255, 255, 255)) #name
@@ -164,83 +163,77 @@ async def image_dcuid(charactert):
               #stats
               dmg_bonut = charactert.highest_dmg_bonus_stat
               stat_infos = [
-                  (("HP: ", FightPropType.FIGHT_PROP_MAX_HP), (970, 220-30), (40, 40)),
-                  (("Tấn Công: ", FightPropType.FIGHT_PROP_CUR_ATTACK), (970, 255-30), (40, 40)),
-                  (("Phòng Ngự: ", FightPropType.FIGHT_PROP_CUR_DEFENSE), (970, 295-30), (40, 40)),
-                  (("Tinh Thông Nguyên Tố: ", FightPropType.FIGHT_PROP_ELEMENT_MASTERY), (970, 335-30), (40, 40)),
-                  (("Tỉ Lệ Bạo: ", FightPropType.FIGHT_PROP_CRITICAL), (970, 375-30), (40, 40)),
-                  (("Sát Thương Bạo: ", FightPropType.FIGHT_PROP_CRITICAL_HURT), (970, 415-30), (40, 40)),
-                  (("Hiệu Quả Nạp: ", FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), (970, 455-30), (40, 40)),
-                  (("Trị Liệu: ", FightPropType.FIGHT_PROP_HEAL_ADD), (970, 495-30), (40, 40)),
-                  ((f"{dmg_bonut.name}.", dmg_bonut.type), (970, 535-30), (40, 40)),
-              ]                
-              current_position = (1016, 190)
-              txtx = 0
+                  (("HP", FightPropType.FIGHT_PROP_MAX_HP), (967, 220-30), (40, 40)),
+                  (("Tấn Công", FightPropType.FIGHT_PROP_CUR_ATTACK), (967, 255-30), (40, 40)),
+                  (("Phòng Ngự", FightPropType.FIGHT_PROP_CUR_DEFENSE), (967, 295-30), (40, 40)),
+                  (("Tinh Thông Nguyên Tố", FightPropType.FIGHT_PROP_ELEMENT_MASTERY), (967, 335-30), (40, 40)),
+                  (("Tỉ Lệ Bạo", FightPropType.FIGHT_PROP_CRITICAL), (967, 375-30), (40, 40)),
+                  (("Sát Thương Bạo", FightPropType.FIGHT_PROP_CRITICAL_HURT), (967, 415-30), (40, 40)),
+                  (("Hiệu Quả Nạp", FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), (967, 455-30), (40, 40)),
+                  (("Trị Liệu", FightPropType.FIGHT_PROP_HEAL_ADD), (967, 495-30), (40, 40)),
+                  ((f"{dmg_bonut.name[5:]}", dmg_bonut.type), (967, 535-30), (40, 40)),]                
+              current_position = (1010, 190)
               for o, stat_info in enumerate(stat_infos[:9]):
                 stat_value = charactert.stats[stat_info[0][1]]
-                draw.text(current_position, (f"{stat_info[0][0]}{stat_value.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 25), fill=(255, 255, 255))                         
+                draw.text(current_position, (f"{stat_value.formatted_value} -> {stat_info[0][0]}"), font=ImageFont.truetype("zh-cn.ttf", 25), fill=(255, 255, 255))                         
                 icon_image = Image.open(BytesIO(await licon(stat_value.type.name))).convert("RGBA").resize(stat_info[2])
                 image_app.paste(icon_image, stat_info[1], mask=icon_image)
                 current_position = (current_position[0], current_position[1] + 40)
-                txtx += 1
-              #tdv
+              #TDV
               artifact_counts = {}
-              for artifact in charactert.artifacts[:5]:
-                  artifact_name_set = artifact.set_name
-                  artifact_counts[artifact_name_set] = artifact_counts.get(artifact_name_set, 0) + 1
-              sorted_counts = dict(sorted(artifact_counts.items(), key=lambda item: item[1], reverse=True))
-              y_position, y_offset = 1011, 589
-              for set_name, count in sorted_counts.items():
-                  if count >= 2 and count < 4:
-                      draw.text((1014, y_position), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
-                      y_position += y_offset
-                  elif count >= 4:
-                      draw.text((1011, 599), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
-              y_cv1, y_tdv_levels = 12, 30             
-              x_tdv, x_tdv_icon, x_tdv_level = 177, 27, 40
-              x_tdv_rate, x_tdv_stats = 140, 4
-              y_tdv_stats2 = 30
+              x_tdv, x_tdv_icon, x_tdv_rate, x_tdv_stats = 177, 4, 140, 4
+              y_tdv_stats2, y_cv1 = 40, 9
               count_tdv = 0
               for artifact in charactert.artifacts[:5]:
+                  #main_stat_TDV
                   response = await fetch_image(session, artifact.icon)
                   image_tdv0 = Image.open(BytesIO(response)).resize((165, 165))
+                  image_tdv0 = ImageEnhance.Brightness(image_tdv0).enhance(0.8)
                   image_app.paste(image_tdv0, (3, x_tdv_icon), mask=image_tdv0)               
                   response = await licon(artifact.main_stat.type.value)
                   image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((50, 50))
-                  image_app.paste(image_tdv0, (269, x_tdv_stats), mask=image_tdv0)                              
+                  image_app.paste(image_tdv0, (17, x_tdv_stats+60), mask=image_tdv0)                              
                   draw.text((14, x_tdv_rate), (f"{'★'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))
-                  draw.text((112, x_tdv_stats), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))
+                  draw.text((14, x_tdv_stats+112), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))
                   x_tdv_icon += x_tdv
                   x_tdv_rate += x_tdv
+                  artifact_counts[artifact.set_name] = artifact_counts.get(artifact.set_name, 0) + 1
+                  #sub_stats_TDV
                   crit_dmg, crit_rate = 0, 0
                   for substate in artifact.sub_stats[:4]:
                       response = await licon(substate.type.value)
                       image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((40, 40))
-                      image_app.paste(image_tdv0, (142, x_tdv_stats+36), mask=image_tdv0)                      
+                      image_app.paste(image_tdv0, (142, x_tdv_stats+2), mask=image_tdv0)                      
                       occurrence = await count_occurrences(float(substate.formatted_value.replace('%', '')), substate.type.value)
-                      draw.text((142+42, x_tdv_stats+44), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=((255, 255, 255) if occurrence >= 2 else (170, 170, 170)))
-                      draw.text((142+125, x_tdv_stats+48), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=((255, 255, 255) if occurrence >= 2 else (170, 170, 170)))     
+                      text_fill = (255, 255, 255) if occurrence >= 2 else (170, 170, 170)
+                      draw.text((142+42, x_tdv_stats+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=text_fill)
+                      draw.text((142+125, x_tdv_stats+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=text_fill)     
                       x_tdv_stats += y_tdv_stats2   
                       count_tdv += 1
-                      if count_tdv % 4 == 0: 
-                          x_tdv_level += 177
-                          x_tdv_stats = x_tdv_level - 36                  
-                      crit_rate = substate.value if substate.name == "Tỷ Lệ Bạo Kích" else crit_rate
-                      crit_dmg = substate.value if substate.name == "ST Bạo Kích" else crit_dmg
+                      if count_tdv % 4 == 0:
+                          x_tdv_stats = x_tdv_stats - 160 + 177
+                      #Tdv_CV
+                      crit_rate = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL" else crit_rate
+                      crit_dmg = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL_HURT" else crit_dmg
                   cv0 = crit_rate * 2 + crit_dmg
-                  color = (
-                      (208, 59, 84) if cv0 >= 50
-                      else (203, 208, 59) if 42 <= cv0 <= 49
-                      else (208, 59, 208) if 32 <= cv0 <= 41
-                      else (59, 123, 208) if 18 <= cv0 <= 31
-                      else (210, 221, 236)
-                  )
-                  fills = (0, 0, 0) if color in [(210, 221, 236), (203, 208, 59)] else (255, 255, 255)
-                  draw.rounded_rectangle([19 - 5, y_cv1 - 5, 19 + 68 + 5, y_cv1 + 18 + 5], 10, fill=color)
-                  draw.text((19, y_tdv_levels), f"+{artifact.level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
-                  draw.text((17 + 1, y_cv1 + 1), f"{cv0:.1f}CV", font=ImageFont.truetype("zh-cn.ttf", 17), fill=fills)
-                  y_tdv_levels += 177
+                  color = ((113, 48, 53) if int(cv0) >= 50
+                      else (134, 123, 50) if 42 <= int(cv0) <= 49
+                      else (108, 42, 113) if 32 <= int(cv0) <= 41
+                      else (48, 68, 124) if 18 <= int(cv0) <= 31
+                      else (77, 77, 77))
+                  draw.rounded_rectangle([19 - 5, y_cv1 - 5, 19 + 68 + 5, y_cv1 + 18 + 5], 8, fill=color)
+                  draw.text((19, y_cv1+22), f"+{artifact.level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
+                  draw.text((18 + 1, y_cv1 + 1), f"{cv0:.1f}CV", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
                   y_cv1 += 177
+              #Set_tdv
+              sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
+              y_position = 585
+              for set_name, count in sorted_counts.items():
+                if count >= 2 and count < 4:
+                    draw.text((1011, y_position), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
+                    y_position += 32
+                elif count >= 4:
+                    draw.text((1011, 599), f"x{count} {set_name}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
               #thiên phú
               skill_positions = [(338, 636), (338, 719), (338, 802)]                
               for i in range(3):
@@ -263,10 +256,13 @@ async def image_dcuid(charactert):
               buffer = BytesIO()
               image_app.save(buffer, format='png')
               buffer.seek(0)
-              image_url = base64.b64encode(buffer.getvalue()).decode()
-              file_url = await upload_img(image_url, session)
+              file = discord.File(buffer, filename="showcase.png")
+              channel = inset_message.get("channelt")
+              messaget = await channel.send(file=file)
+              file_url = messaget.attachments[0]
               return file_url
 
+outputz = {}
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
         self.data = global_data.get("data")
@@ -276,27 +272,31 @@ class Select(discord.ui.Select):
             discord.SelectOption(label=char.name, value=f"char{i+1}") for i, char in enumerate(self.data.characters)
         ]
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
-    async def callback(self, Interaction: discord.Interaction):
+    async def callback(self, I: discord.Interaction):
         async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
-            char_index = int(self.values[0][-1]) - 1
-            charactert = self.data.characters[char_index]
-            messagea = inset_message.get("message")
+            char = self.data.characters[int(self.values[0][-1]) - 1]
             now = datetime.datetime.now()
             embed_loading = discord.Embed(title="<a:aloading:1152869299942338591> **Đang tạo thông tin..__Hãy kiên nhẫn__** <a:ganyurollst:1118761352064946258>", color=discord.Color.yellow())
-            await Interaction.response.edit_message(content=None, embed=embed_loading)
+            await I.response.edit_message(content=None, embed=embed_loading)
             embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
             reload_time = now + datetime.timedelta(seconds=self.data.ttl)
-            embed.add_field(name=f"Name.{charactert.name}", value=f"Level.{charactert.level} \nnguyên tố.{charactert.element} C.{len(charactert.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False) 
-            embed.set_thumbnail(url=f"{charactert.icon.front}")
-            embed.set_footer(text="", icon_url=f"{Interaction.user.avatar}")
-            file_url = await image_dcuid(charactert)
+            embed.add_field(name=f"Name.{char.name}", value=f"Level.{char.level} \nnguyên tố.{char.element} C.{len(char.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False) 
+            embed.set_thumbnail(url=f"{char.icon.front}")
+            embed.set_footer(text="", icon_url=f"{I.user.avatar}")
+            if char.name in outputz:
+              file_url = outputz[char.name]
+            else:
+              file_url = await image_dcuid(char)
+              outputz[char.name] = file_url
             embed.set_image(url=file_url)
-            await messagea.edit(content=None, embed=embed)
+            message = inset_message.get("message")
+            await message.edit(content=None, embed=embed)
  
 class SelectView(discord.ui.View):
     def __init__(self, *, timeout=300):
         super().__init__(timeout=timeout)
-        self.add_item(Select())
+        self.select = Select()
+        self.add_item(self.select)
     async def on_timeout(self):
       message = inset_message.get("message")
       options = [
@@ -312,7 +312,7 @@ class SelectView(discord.ui.View):
 async def generate_image(data):
     async with aiohttp.ClientSession() as session:
         uid = global_data.get("uid")
-        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1206074586098176010/F7C59933-6074-48A1-8422-A66E5B12B81F.png?ex=65daaf7d&is=65c83a7d&hm=bf8a3b1baedfa274063937d09302701f079f5691e37a88261013e7e44067f11a&')
+        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1206074586098176010/F7C59933-6074-48A1-8422-A66E5B12B81F.png?ex=65e3e9fd&is=65d174fd&hm=292f17eaab0fb457ca1e98f3821dd7cfd222491f73dbedc63d371c8310a4b78b&a')
         image_appt = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((600, 850))
         draw = ImageDraw.Draw(image_appt)
         player_icon_data = await fetch_image(session, data.player.profile_picture_icon.circle)
@@ -327,15 +327,11 @@ async def generate_image(data):
         draw.text((322, 266), f"{data.player.abyss_floor}-{data.player.abyss_level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
         x, y = 15, 380
         for i, char in enumerate(data.characters[:8]):
-            if char.costume is not None:
-              m = char.costume.icon.circle
-            else:
-              m = char.icon.circle
-            char_icon_data = await fetch_image(session, m)
+            char_icon_data = await fetch_image(session, char.costume.icon.circle if char.costume is not None else char.icon.circle)
             char_icon = Image.open(BytesIO(char_icon_data)).convert("RGBA").resize((80, 80))
             char_icon_datak = await fetch_image(session, char.namecard.full)
             char_imaget = Image.open(BytesIO(char_icon_datak)).convert("RGBA").resize((279, 104))
-            url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1205793445000511488/Khong_Co_Tieu_e137_20240210152124-removebg-preview.png?ex=65d9a9a7&is=65c734a7&hm=2442e609a8b315270789d41b02fc316c4e412cdb1782035ce2736c2b67f2aade&')
+            url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1210886413302763520/Khong_Co_Tieu_e164.png?ex=65ec30da&is=65d9bbda&hm=bbbc2697264af7c9bf80fc56eb7b4db70a17526197d7fbbb226859e5d3229ae9&a')
             char_iconk = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
             enhancer = ImageEnhance.Brightness(char_imaget)
             char_image = enhancer.enhance(0.8)
@@ -373,17 +369,8 @@ async def generate_image(data):
         buffer = BytesIO()
         image_appt.save(buffer, format='png')
         buffer.seek(0)
-        image_url = base64.b64encode(buffer.getvalue()).decode()
-        file_url = await upload_img(image_url, session)
-        return file_url
-
-class buttons(discord.ui.View):
-  def __init__ (self, *, timeout=300):
-    super().__init__(timeout=timeout) 
-
-  @discord.ui.button(label="showcare", style=discord.ButtonStyle.gray)
-  async def my_button(self, Interaction: discord.Interaction, button: discord.ui.button):
-   await Interaction.response.send_message("tesr")
+        file = discord.File(buffer, filename="output.png")
+        return file
 
 class scuids(commands.Cog):
   def __init__ (self, bot):
@@ -416,14 +403,14 @@ class scuids(commands.Cog):
         embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
         await Interaction.response.send_message(embed=embed, ephemeral=True)
         if data.characters is not None and len(data.characters) > 0:
-          file_url= await generate_image(data)
-          message = await Interaction.channel.send(file_url, view=SelectView())
+          file = await generate_image(data)
+          message = await Interaction.channel.send(file=file, view=SelectView())
           inset_message["message"] = message
         else:
           embed1 = discord.Embed(color=0xed0202)
           embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
-          embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới \n\n```Hoặc bạn đang sửa dụng Biến User Hoặc không sửa dụng biến khi Bạn hoặc User không có dữ liệu UID```", inline=False)
-          embed1.set_image(url="https://cdn.discordapp.com/attachments/969461764704059392/1000843651863285810/unknown.png")
+          embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới", inline=False)
+          embed1.set_image(url="https://media.discordapp.net/attachments/1107978903294853140/1210882152842006538/Khong_Co_Tieu_e162_20240224163313.png?ex=65ec2ce2&is=65d9b7e2&hm=d99f4a97b54aad9c632adafbf19de28986fe0f5436b22ca469a9c1c64520457f&a")
           await Interaction.followup.send(embed=embed1, ephemeral=True)
      except Exception as s:
         await channel.send(f"Error: {s}")
