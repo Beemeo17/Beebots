@@ -20,108 +20,124 @@ def save_data(data):
   with open(files, 'w') as file:
       json.dump(data, file, indent=4)
 
-class Redeem(discord.ui.Modal, title="Redeem code Genshin Impact"):
-  code_Gi = discord.ui.TextInput(label="Hãy điền code Genshin vào bên dưới", style=discord.TextStyle.paragraph, required=False)
-  code_Hsr = discord.ui.TextInput(label="Hãy điền code Star Rail vào bên dưới", style=discord.TextStyle.paragraph, required=False)
-  async def on_submit(self, Interaction):
-
-      user_id = str(Interaction.user.id)
-      data = load_data()
-      if user_id in data:
-        cookie = data[user_id]
-
+outputs = {"gane": None}
+class button1(discord.ui.View):
+  def __init__(self):
+    super().__init__()
+    self.add_item(Select())
+  @discord.ui.button(label="Claim Daily Reward", style=discord.ButtonStyle.gray)
+  async def claim_dailys(self, Interaction, button: discord.ui.Button,):
+    user_id = str(Interaction.user.id)
+    data = load_data()
+    if user_id in data:
+      if "cookies" in data[user_id]:
+        cookie = data[user_id]["cookies"]
         cookies = await genshin.complete_cookies(cookie)
         client = genshin.Client(cookies)
-        if self.code_Gi.value != "":
-          try:
-              try:
-                await Interaction.response.edit_message(content=f"**...**")
-              except discord.errors.InteractionResponded:
-                pass
+        games = outputs.get("gane")
+        signed_in, claimed_rewards = await client.get_reward_info(game=games)
+        try:
+            await client.claim_daily_reward(game=games)
+            await Interaction.followup.send("Hoàn tất điểm danh")
+        except genshin.AlreadyClaimed:
+            assert signed_in
+            return await Interaction.followup.send("Đã nhận thưởng trước đó!")
+        except genshin.GenshinException as e:
+            if e.retcode == -10002:
+                await Interaction.followup.send("No genshin account.")
+    else:
+        await Interaction.followup.send("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+    
+  @discord.ui.button(label="On", style=discord.ButtonStyle.gray, disabled=True)
+  async def auto_claim(self, Interaction, button: discord.ui.Button,):
+    print(1)
 
-              await client.redeem_code(self.code_Gi.value, game=genshin.types.Game.GENSHIN)
-              embed=discord.Embed(title=f"giftcode nhập thành công [GENSHIN] ```{self.code_Gi.value}```", colour=0x00f576)  
-              await Interaction.message.edit(embed=embed)
-          except genshin.RedemptionException as e:
-              embed=discord.Embed(title="**GENSHIN** \ngiftcode không tồn tại hoặc đã được sửa dụng", description=f"```{e}```", colour=0xf5003d)
-              await Interaction.message.edit(embed=embed)
-          except genshin.AccountNotFound:
-              embed=discord.Embed(title="Không có tài khoản.", colour=0xf5003d)
-              await Interaction.message.edit(embed=embed)
+class button2(discord.ui.View):
+  def __init__(self):
+    super().__init__()
+    self.add_item(Select())
+  @discord.ui.button(label="Claim Daily Reward", style=discord.ButtonStyle.green, disabled=True)
+  async def claim_dailys1(self, Interaction, button: discord.ui.Button,):
+    print(2)
 
-        elif self.code_Hsr.value != "":
-            try:
-                try:
-                  await Interaction.response.edit_message(content=f"**...**")
-                except discord.errors.InteractionResponded:
-                  pass
-
-                await client.redeem_code(self.code_Hsr.value, game=genshin.types.Game.STARRAIL)
-                embed=discord.Embed(title=f"giftcode nhập thành công [STARRAIL] ```{self.code_Hsr.value}```", colour=0x00f576)  
-                await Interaction.message.edit(embed=embed)
-            except genshin.RedemptionException as e:
-              embed=discord.Embed(title="**STARRAIL** \ngiftcode không tồn tại hoặc đã được sửa dụng", description=f"```{e}```", colour=0xf5003d)
-              await Interaction.message.edit(embed=embed)
-            except genshin.AccountNotFound:
-              embed=discord.Embed(title="Không có tài khoản.", colour=0xf5003d)
-              await Interaction.message.edit(embed=embed)
-      else:
-         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
-
-
+  @discord.ui.button(label="On", style=discord.ButtonStyle.gray, disabled=True)
+  async def auto_claim1(self, Interaction, button: discord.ui.Button,):
+    print(1)
 
 class Select(discord.ui.Select):
-  def __init__ (self):
-    options = []
-    options.append(discord.SelectOption(label="Daily", value="Daily_all", emoji="<a:Cat_Daiza:1065889446697914368>"))
-    super().__init__(placeholder="Các Cộng Cụ", options=options)
-  async def callback(self, Interaction):
-   user_id = str(Interaction.user.id)
-   data = load_data()
-   if user_id in data:
-    cookie = data[user_id]
-
-    cookies = await genshin.complete_cookies(cookie)
-    client = genshin.Client(cookies)
-
-    if self.values[0] == "Daily_all":
-      games= [genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL, genshin.types.Game.HONKAI]
-      embed= discord.Embed()
-      for gamess in games:
-        parts = gamess.split('.')
-        result = parts[-1]
-        try:
-            signed_in, claimed_rewards = await client.get_reward_info(game=gamess)
-            reward = await client.claim_daily_reward(game=gamess)
-
-            if isinstance(reward, genshin.GeetestTriggered):
-                embed.add_field(name=f"**__{result}__** hoàn tất điểm danh.", value="", inline=False)
-            elif isinstance(reward, genshin.AlreadyClaimed):
-                assert signed_in
-            elif isinstance(reward, genshin.GenshinException) and reward.retcode == -10002:
-                embed.add_field(name="không tìm thấy tài khoản.", value="", inline=False)
+  def __init__(self):
+      options = [
+          discord.SelectOption(label="GENSHIN", emoji="<:genshin:1091034774203813908>"),
+          discord.SelectOption(label="STARRAIL", emoji="<:Honkaistarrail:1099536405492924416>"),
+          discord.SelectOption(label="HONKAI", emoji="<:HonkaiImpact3:1100277662523604992>")
+      ]
+      super().__init__(placeholder="Các Cộng Cụ", options=options)
+  
+  async def callback(self, Interaction: discord.Interaction):
+    user_id = str(Interaction.user.id)
+    if self.values[0] == "GENSHIN":
+        game = genshin.types.Game.GENSHIN
+        outputs["gane"] = game
+        data = load_data()
+        if user_id in data:
+          if "cookies" in data[user_id]:
+            cookie = data[user_id]["cookies"]
+            cookies = await genshin.complete_cookies(cookie)
+            client = genshin.Client(cookies)
+            embed = discord.Embed(title=f"BeeBot | Điểm danh hàng ngày Hoyolab(daily)", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.now())
+            embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/W2pNzBQRgu8KOxYEOkp-Wx5GYDzpGVNzEHySUPAGzN4/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1111140087770664960/533d867015c8f7437cf8ae9c76d98b30.png")
+            signed_ins, claimed_rewardss = await client.get_reward_info(game=game)
+            embed.add_field(name="daily_auto_claim: ❌", value="", inline=False)
+            if claimed_rewardss:
+              await Interaction.response.edit_message(embed=embed, view=button2())
             else:
-                assert not signed_in
+              await Interaction.response.edit_message(embed=embed, view=button1())
+        else:
+            await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+    elif self.values[0] == "STARRAIL":
+        game = genshin.types.Game.STARRAIL
+        outputs["game"] = game
+        data = load_data()
+        if user_id in data:
+          if "cookies" in data[user_id]:
+            cookie = data[user_id]["cookies"]
+            cookies = await genshin.complete_cookies(cookie)
+            client = genshin.Client(cookies)
+            embed = discord.Embed(title=f"BeeBot | Điểm danh hàng ngày Hoyolab(daily)", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.now())
+            embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/W2pNzBQRgu8KOxYEOkp-Wx5GYDzpGVNzEHySUPAGzN4/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1111140087770664960/533d867015c8f7437cf8ae9c76d98b30.png")
+            signed_ins, claimed_rewardss = await client.get_reward_info(game=game)
+            embed.add_field(name="daily_auto_claim: ❌", value="", inline=False)
+            if claimed_rewardss:
+              await Interaction.response.edit_message(embed=embed, view=button1())
+            else:
+              await Interaction.response.edit_message(embed=embed, view=button2())
+        else:
+            await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+    elif self.values[0] == "HONKAI":
+        game = genshin.types.Game.HONKAI
+        outputs["game"] = game
+        data = load_data()
+        if user_id in data:
+          if "cookies" in data[user_id]:
+            cookie = data[user_id]["cookies"]
+            cookies = await genshin.complete_cookies(cookie)
+            client = genshin.Client(cookies)
+            embed = discord.Embed(title=f"BeeBot | Điểm danh hàng ngày Hoyolab(daily)", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.now())
+            embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/W2pNzBQRgu8KOxYEOkp-Wx5GYDzpGVNzEHySUPAGzN4/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1111140087770664960/533d867015c8f7437cf8ae9c76d98b30.png")
+            signed_ins, claimed_rewardss = await client.get_reward_info(game=game)
+            embed.add_field(name="daily_auto_claim: ❌", value="", inline=False)
+            if claimed_rewardss:
+              await Interaction.response.edit_message(embed=embed, view=button1())
+            else:
+              await Interaction.response.edit_message(embed=embed, view=button2())
+        else:
+            await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
 
-            rewards = await client.get_monthly_rewards(game=gamess)
-            assert rewards[claimed_rewards].name == reward.name
-        except Exception as e:
-            embed.add_field(name=f"lỗi điểm danh **__{result}__**: {e}", value="", inline=False)
-      await Interaction.channel.send(embed=embed)
-   else:
-         await Interaction.response.send_message('bạn chưa có data hãy dùng ``/login`` để nhập data!')
-
-
+    
 class SelectView(discord.ui.View):
   def __init__ (self, timeout=300):
     super().__init__(timeout=timeout)
     self.add_item(Select())
-
-  @discord.ui.button(label="Redeem", style= discord.ButtonStyle.danger, emoji="<:nthach:1150124385345220780>")
-  async def click1(self, Interaction: discord.Interaction, Button: discord.ui.Button,):
-    await Interaction.response.send_modal(Redeem())
-
-
 
 class Codes(commands.Cog):
   def __init__(self, bot):
@@ -133,11 +149,36 @@ class Codes(commands.Cog):
     print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
     print('='* 50)
 
-  @app_commands.command(name="hoyo", description="bộ công cụ")
+  @app_commands.command(name="daily", description="Nhận thưởng điểm danh hàng ngày")
   async def code(self, Interaction):
-    embed = discord.Embed(title="bộ công cụ", description="Chức năng đang trong quá trình phát triển", colour=0x00f5a3, timestamp=datetime.now())
-    embed.add_field(name='Chọn 1 Select hoặc 1 button để bắt đầu tiến trình.', value='', inline=False)
+    embed = discord.Embed(title=f"{self.bot.user.name} | Điểm danh hàng ngày Hoyolab(daily)", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.now())
+    embed.set_thumbnail(url=self.bot.user.avatar)
     await Interaction.response.send_message(embed=embed, view=SelectView())
+
+  @app_commands.command(name="redeem", description="redeem code")
+  @app_commands.describe(games="Chọn nơi nhập code") 
+  @app_commands.choices(games=[
+    discord.app_commands.Choice(name="GENSHIN", value=genshin.types.Game.GENSHIN),
+    discord.app_commands.Choice(name="STARRAIL", value=genshin.types.Game.STARRAIL),
+  ])
+  async def redeems(self, I: discord.Interaction, code: str, games: discord.app_commands.Choice[str], user: discord.Member = None):
+    user_id = str(I.user.id) if user is None else str(user.id)
+    data = load_data()
+    if user_id in data:
+      if "cookies" in data[user_id]:
+        cookie = data[user_id]["cookies"]
+        cookies = await genshin.complete_cookies(cookie)
+        client = genshin.Client(cookies)
+        try:
+            await client.redeem_code(code, game=games.value)
+            await I.response.send_message(f"giftcode nhập thành công [{games.name}] ```{code}```")  
+        except genshin.RedemptionException as e:
+            await I.response.send_message(f"**{games.name}**```{e}```\ngiftcode không tồn tại hoặc đã được sửa dụng")
+        except genshin.AccountNotFound:
+            await I.response.send_message("Không có tài khoản.")
+      else:
+        await I.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+
 
 
 async def setup(bot):
