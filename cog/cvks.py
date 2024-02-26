@@ -16,21 +16,17 @@ async def daily_reward(client):
       for s, gamess in enumerate(games):
         datasss = await client.get_hoyolab_user()
         channel = channelt.get('channelm')
+        signed_in, claimed_rewards = await client.get_reward_info(game=gamess)
         try:
-          signed_in, claimed_rewards = await client.get_reward_info(game=gamess)
-          reward = await client.claim_daily_reward(game=gamess)
-          if isinstance(reward, genshin.GeetestTriggered):
-              await channel.send(f"{gamess[:-8]} hoàn tất điểm danh | {datasss.nickname}.")
-          elif isinstance(reward, genshin.AlreadyClaimed):
-              await channel.send(f"{gamess[:-8]} đã điểm danh | {datasss.nickname}.")
-          elif isinstance(reward, genshin.GenshinException) and reward.retcode == -10002:
-              await channel.send("Không tìm thấy tài khoản.")
-          else:
-            assert not signed_in
-          rewards = await client.get_monthly_rewards(game=gamess)
-          assert rewards[claimed_rewards].name == reward.name
-        except Exception as e:
-          await channel.send(f"lỗi trong điểm danh {gamess}: {e} | {datasss.nickname}")
+            await client.claim_daily_reward(game=gamess)
+            await channel.send("Hoàn tất điểm danh")
+        except genshin.AlreadyClaimed:
+            assert signed_in
+            return await channel.send("Đã nhận thưởng trước đó!")
+        except genshin.GenshinException as e:
+            if e.retcode == -10002:
+                await channel.send("No genshin account.")
+               
 async def logins(*cookies_data):
       cookies_data = [
         {
