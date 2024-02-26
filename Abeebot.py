@@ -26,7 +26,6 @@ async def load():
       await bot.load_extension(f'cog.{filename[:-3]}')
       
 async def main():
-  await bot.load_extension("Scuids")
   await load()
   await bot.start(os.environ["TOKEN"])
   
