@@ -387,14 +387,14 @@ class scuids(commands.Cog):
      inset_message["channelt"] = channel
      try:
         data = load_data()
-        user_id = str(Interaction.user.id)
+        user_id = str(Interaction.user.id) if user is None else str(user.id)
         if uid is not None:
           uid = uid
-        elif user is not None:
-              uid = data[str(user.id)]["uid"] if str(user.id) in data else 831335714
-        else:
-              uid = data[user_id]["uid"] if str(user_id) in data else 831335714
-
+        else: 
+          if user_id in data:
+             uid = data[user_id]["uid"] if "uid" in data[user_id] else await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+          else:
+             await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
