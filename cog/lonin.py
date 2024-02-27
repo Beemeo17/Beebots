@@ -40,8 +40,12 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
   async def on_submit(self, Interaction):
     user_id = str(Interaction.user.id)
     data = load_data()
-    cookie = f"'cookie_token_v2': '{self.ctk2.value}', 'account_mid_v2': '{self.accmid2.value}', 'account_id_v2': '{self.accid2.value}', 'ltoken_v2': '{self.ltk2.value}', 'ltmid_v2': '{self.accmid2.value}', 'ltmid_v2': '{self.accid2.value}'"
-
+    cookie = {'cookie_token_v2': f'{self.ctk2.value}',
+              'account_mid_v2': f'{self.accmid2.value}',
+              'account_id_v2': f'{self.accid2.value}',
+              'ltoken_v2': f'{self.ltk2.value}',
+              'ltmid_v2': f'{self.accmid2.value}',
+              'ltmid_v2': f'{self.accid2.value}'}
     try:
       if user_id in data:
         data[user_id]["cookies"] = cookie
@@ -56,15 +60,13 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
           f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``',
           color=discord.Color.yellow())
       await Interaction.message.edit(embed=embed)
-      await Interaction.response.send_message("Lưu dữ liệu thành công!",
-                                              ephemeral=True)
+      await Interaction.response.edit_message(content="Lưu dữ liệu thành công!")
     except Exception as e:
-      await Interaction.response.send_message(f"Lỗi: {e}", ephemeral=True)
+      await Interaction.response.edit_message(content=f"Lỗi: {e}")
 
 
 class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài khoản"):
-  tk = discord.ui.TextInput(label="Nhập tài khoảng",
-                            style=discord.TextStyle.paragraph)
+  tk = discord.ui.TextInput(label="Nhập tài khoảng", style=discord.TextStyle.paragraph)
   mk = discord.ui.TextInput(label="Nhập mật khẩu",
                             style=discord.TextStyle.paragraph)
 
@@ -89,10 +91,9 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
           f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``',
           color=discord.Color.yellow())
       await Interaction.message.edit(embed=embed)
-      await Interaction.response.send_message("Lưu dữ liệu thành công!",
-                                              ephemeral=True)
+      await Interaction.response.edit_message(content="Lưu dữ liệu thành công!")
     except Exception as e:
-      await Interaction.response.send_message(f"Lỗi: {e}", ephemeral=True)
+      await Interaction.response.edit_message(content=f"Lỗi: {e}")
 
 
 class uids(discord.ui.Modal, title="Lưu UID"):
@@ -110,11 +111,9 @@ class uids(discord.ui.Modal, title="Lưu UID"):
         else:
           data[user_id] = {"uid": self.uid.value}
         save_data(data)
-        await interaction.response.send_message(
-            f"Lưu UID:{self.uid.value} thành công!", ephemeral=True)
+        await interaction.response.edit_message(content=f"Lưu UID:{self.uid.value} thành công!")
       except Exception as e:
-        await interaction.response.send_message(
-            f"Lỗi: {e} Vui lòng Kiểm tra lại UID!", ephemeral=True)
+        await interaction.response.edit_message(content=f"Lỗi: {e} Vui lòng Kiểm tra lại UID!")
 
 
 class Button1(discord.ui.View):
@@ -183,8 +182,7 @@ class Button2(discord.ui.View):
         name="__Hãy chọn phương thức lấy dữ liệu từ tài khoản của bạn!__",
         value="",
         inline=False)
-    await Interaction.message.edit(embed=embed, view=Button1())
-    await Interaction.response.send_message('.', ephemeral=True)
+    await Interaction.response.edit_message(embed=embed, view=Button1())
 
   @discord.ui.button(label="UID", style=discord.ButtonStyle.green)
   async def uid(
@@ -193,22 +191,6 @@ class Button2(discord.ui.View):
       button: discord.ui.Button,
   ):
     await Interaction.response.send_modal(uids())
-
-
-class Button3(discord.ui.View):
-  def __init__(self):
-    super().__init__()
-  @discord.ui.button(label="TIMEOUT",
-                     style=discord.ButtonStyle.green,
-                     emoji="✖️",
-                     disabled=True)
-  async def timeoutst(
-      self,
-      Interaction,
-      button: discord.ui.Button,
-  ):
-    await Interaction.channel.send('...')
-
 
 class lonin(commands.Cog):
 
@@ -228,13 +210,7 @@ class lonin(commands.Cog):
   async def login(self, Interaction: discord.Interaction):
     data = load_data()
     user_id = str(Interaction.user.id)
-    timeout = 300
-    message3 = await Interaction.response.send_message('•', ephemeral=True)
-    embeds = discord.Embed(
-        title='Timeout!',
-        description=
-        'Timeout bạn có thể sửa dụng lại ``/login`` để tiếp tục login hoặc đổi data',
-        color=discord.Color.red())
+    
     embed = discord.Embed(title="Liên kết data", color=discord.Color.yellow())
     embed.add_field(name="**Thông tin đã kết nối**", value="", inline=False)
     if user_id in data:
@@ -250,19 +226,15 @@ class lonin(commands.Cog):
           f"✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``",
           value="",
           inline=False)
-      message = await Interaction.channel.send(embed=embed, view=Button2())
+      await Interaction.response.send_message(embed=embed, view=Button2())
     except Exception as e:
       embed.add_field(
           name="__Hãy chọn phương thức lấy dữ liệu từ tài khoản của bạn!__",
           value="",
           inline=False)
-      embed.add_field(name="❌ Chưa nhập thông tin tài khoản!",
-                      value="",
-                      inline=False)
-      message = await Interaction.channel.send(embed=embed, view=Button1())
+      embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
+      await Interaction.response.send_message(embed=embed, view=Button1())
 
-    await asyncio.sleep(timeout)
-    await message.edit(embed=embeds, view=Button3())
 
 
 async def setup(bot):
