@@ -120,7 +120,48 @@ async def licon(vlue):
  }
     icus = await fetch_image(session, icon_inp[vlue])
     return icus
-    
+
+async def process_artifact(session, artifact, image_app, draw, artifact_counts, x_tdv_icon, x_tdv_rate, x_tdv_stats, y_tdv_stats2, y_cv1, count_tdv):
+    #main_stat_TDV
+    response = await fetch_image(session, artifact.icon)
+    image_tdv0 = Image.open(BytesIO(response)).resize((165, 165))
+    image_tdv0 = ImageEnhance.Brightness(image_tdv0).enhance(0.8)
+    image_app.paste(image_tdv0, (3, x_tdv_icon), mask=image_tdv0)               
+
+    response = await licon(artifact.main_stat.type.value)
+    image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((50, 50))
+    image_app.paste(image_tdv0, (17, x_tdv_stats+60), mask=image_tdv0)                              
+
+    draw.text((14, x_tdv_rate), (f"{'★'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))
+    draw.text((14, x_tdv_stats+112), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))
+
+    artifact_counts[artifact.set_name] = artifact_counts.get(artifact.set_name, 0) + 1
+    #sub_stats_TDV
+    crit_dmg, crit_rate = 0, 0
+    for substate in artifact.sub_stats[:4]:
+        crit_rate = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL" else crit_rate
+        crit_dmg = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL_HURT" else crit_dmg
+    #Tdv_CV
+    cv0 = crit_rate * 2 + crit_dmg
+    color = ((113, 48, 53) if int(cv0) >= 50
+        else (134, 123, 50) if 42 <= int(cv0) <= 49
+        else (108, 42, 113) if 32 <= int(cv0) <= 41
+        else (48, 68, 124) if 18 <= int(cv0) <= 31
+        else (77, 77, 77))
+    draw.rounded_rectangle([19 - 5, y_cv1 - 5, 19 + 68 + 5, y_cv1 + 18 + 5], 8, fill=color)
+    draw.text((19, y_cv1+22), f"+{artifact.level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
+    draw.text((18 + 1, y_cv1 + 1), f"{cv0:.1f}CV", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+
+async def process_substate(substate, image_app, draw, artifact_counts, x_tdv_stats, y_tdv_stats2, count_tdv):
+    response = await licon(substate.type.value)
+    image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((40, 40))
+    image_app.paste(image_tdv0, (142, x_tdv_stats+2), mask=image_tdv0)                      
+
+    occurrence = await count_occurrences(float(substate.formatted_value.replace('%', '')), substate.type.value)
+    text_fill = (255, 255, 255) if occurrence >= 2 else (170, 170, 170)
+    draw.text((142+42, x_tdv_stats+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=text_fill)
+    draw.text((142+125, x_tdv_stats+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=text_fill)     
+
 async def image_dcuid(charactert):
     async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
         async with aiohttp.ClientSession() as session: 
@@ -179,59 +220,32 @@ async def image_dcuid(charactert):
                 image_app.paste(icon_image, stat_info[1], mask=icon_image)
               #TDV
               artifact_counts = {}
-              x_tdv, x_tdv_icon, x_tdv_rate, x_tdv_stats = 177, 4, 140, 4
+              x_tdv_icon, x_tdv_rate, x_tdv_stats = 4, 140, 4
               y_tdv_stats2, y_cv1 = 40, 9
               count_tdv = 0
+              tasks = []
+              substate_tasks = []
               for artifact in charactert.artifacts[:5]:
-                  #main_stat_TDV
-                  response = await fetch_image(session, artifact.icon)
-                  image_tdv0 = Image.open(BytesIO(response)).resize((165, 165))
-                  image_tdv0 = ImageEnhance.Brightness(image_tdv0).enhance(0.8)
-                  image_app.paste(image_tdv0, (3, x_tdv_icon), mask=image_tdv0)               
-                  response = await licon(artifact.main_stat.type.value)
-                  image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((50, 50))
-                  image_app.paste(image_tdv0, (17, x_tdv_stats+60), mask=image_tdv0)                              
-                  draw.text((14, x_tdv_rate), (f"{'★'*artifact.rarity}"), font=ImageFont.truetype("zh-cn.ttf", 24), fill=(255, 255, 0))
-                  draw.text((14, x_tdv_stats+112), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))
-                  x_tdv_icon += x_tdv
-                  x_tdv_rate += x_tdv
-                  artifact_counts[artifact.set_name] = artifact_counts.get(artifact.set_name, 0) + 1
-                  #sub_stats_TDV
-                  crit_dmg, crit_rate = 0, 0
-                  for substate in artifact.sub_stats[:4]:
-                      response = await licon(substate.type.value)
-                      image_tdv0 = Image.open(BytesIO(response)).convert("RGBA").resize((40, 40))
-                      image_app.paste(image_tdv0, (142, x_tdv_stats+2), mask=image_tdv0)                      
-                      occurrence = await count_occurrences(float(substate.formatted_value.replace('%', '')), substate.type.value)
-                      text_fill = (255, 255, 255) if occurrence >= 2 else (170, 170, 170)
-                      draw.text((142+42, x_tdv_stats+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=text_fill)
-                      draw.text((142+125, x_tdv_stats+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=text_fill)     
-                      x_tdv_stats += y_tdv_stats2   
-                      count_tdv += 1
-                      if count_tdv % 4 == 0:
-                          x_tdv_stats = x_tdv_stats - 160 + 177
-                      #Tdv_CV
-                      crit_rate = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL" else crit_rate
-                      crit_dmg = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL_HURT" else crit_dmg
-                  cv0 = crit_rate * 2 + crit_dmg
-                  color = ((113, 48, 53) if int(cv0) >= 50
-                      else (134, 123, 50) if 42 <= int(cv0) <= 49
-                      else (108, 42, 113) if 32 <= int(cv0) <= 41
-                      else (48, 68, 124) if 18 <= int(cv0) <= 31
-                      else (77, 77, 77))
-                  draw.rounded_rectangle([19 - 5, y_cv1 - 5, 19 + 68 + 5, y_cv1 + 18 + 5], 8, fill=color)
-                  draw.text((19, y_cv1+22), f"+{artifact.level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
-                  draw.text((18 + 1, y_cv1 + 1), f"{cv0:.1f}CV", font=ImageFont.truetype("zh-cn.ttf", 17), fill=(255, 255, 255))
+                  tasks.append(process_artifact(session, artifact, image_app, draw, artifact_counts, x_tdv_icon, x_tdv_rate, x_tdv_stats, y_tdv_stats2, y_cv1, count_tdv))
+                  x_tdv_icon += 177
+                  x_tdv_rate += 177
                   y_cv1 += 177
+                  for substate in artifact.sub_stats[:4]:
+                    substate_tasks.append(process_substate(substate, image_app, draw, artifact_counts, x_tdv_stats, y_tdv_stats2, count_tdv))
+                    x_tdv_stats += 40   
+                    count_tdv += 1
+                    if count_tdv % 4 == 0:
+                        x_tdv_stats = x_tdv_stats - 160 + 177
+              await asyncio.gather(*tasks, *substate_tasks)
               #Set_tdv
               sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
               y_position = 585
               for set_name, count in sorted_counts.items():
-                if count >= 2 and count < 4:
-                    draw.text((1011, y_position), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
-                    y_position += 32
-                elif count >= 4:
-                    draw.text((1011, 599), f"x{count} {set_name}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
+                  if count >= 2 and count < 4:
+                      draw.text((1011, y_position), f"{set_name} x{count}", font=ImageFont.truetype("zh-cn.ttf", 24), fill=(0, 205, 102))
+                      y_position += 32
+                  elif count >= 4:
+                      draw.text((1011, 599), f"x{count} {set_name}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(0, 205, 102))
               #thiên phú
               skill_positions = [(338, 636), (338, 719), (338, 802)]                
               for i in range(3):
