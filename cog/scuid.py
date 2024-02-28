@@ -136,11 +136,13 @@ async def process_artifact(session, artifact, image_app, draw, artifact_counts, 
     draw.text((14, x_tdv_stats+112), (f"{artifact.main_stat.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 28), fill=(255, 255, 250))
 
     artifact_counts[artifact.set_name] = artifact_counts.get(artifact.set_name, 0) + 1
+
     #sub_stats_TDV
     crit_dmg, crit_rate = 0, 0
     for substate in artifact.sub_stats[:4]:
         crit_rate = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL" else crit_rate
         crit_dmg = substate.value if substate.type.value == "FIGHT_PROP_CRITICAL_HURT" else crit_dmg
+
     #Tdv_CV
     cv0 = crit_rate * 2 + crit_dmg
     color = ((113, 48, 53) if int(cv0) >= 50
@@ -237,6 +239,7 @@ async def image_dcuid(charactert):
                     if count_tdv % 4 == 0:
                         x_tdv_stats = x_tdv_stats - 160 + 177
               await asyncio.gather(*tasks, *substate_tasks)
+          
               #Set_tdv
               sorted_counts = dict(sorted(artifact_counts.items(), key=operator.itemgetter(1), reverse=True))
               y_position = 585
