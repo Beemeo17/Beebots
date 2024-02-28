@@ -111,6 +111,7 @@ async def acdaily(image_app, has, claimed_rewards, x, y, i):
       draw_daily.text((1, 94), f"x{has.amount}", font=ImageFont.truetype("zh-cn.ttf", 21), fill=(155, 49, 30))
       image_app.paste(daily_app, (x, y))
 
+
 class Select(discord.ui.Select):
     def __init__(self):
         options = [
@@ -180,6 +181,7 @@ class Select(discord.ui.Select):
             else:
                 await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sử dụng ``/login`` để tiếp tục")
 
+    
 class SelectView(discord.ui.View):
   def __init__ (self, timeout=300):
     super().__init__(timeout=timeout)
@@ -226,6 +228,7 @@ class Codes(commands.Cog):
             await I.response.send_message("Không có tài khoản.")
       else:
         await I.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+
 
 
 async def setup(bot):
