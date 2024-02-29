@@ -46,9 +46,24 @@ async def main_img(isd):
     icus = await fetch_image(session, imgoc[isd])
     return icus
 
-
 outputs = {"gane": None, "channel": None}
-class button1(discord.ui.View):
+
+async def upjs(self, Interaction, bu) -> None:
+  if bu == 0:
+    self.children[bu].disabled = True
+    self.children[bu].style=discord.ButtonStyle.green
+  else:
+    user_id = str(Interaction.user.id)
+    data = load_data()
+    if data[user_id]["daily_auto"]:
+     self.children[bu].label = "Disabled"
+     self.children[bu].style=discord.ButtonStyle.red
+    else:
+      self.children[bu].label = "Enabled"
+      self.children[bu].style=discord.ButtonStyle.green
+  await Interaction.edit_original_response(view=self)
+
+class button(discord.ui.View):
   def __init__(self):
     super().__init__()
     self.add_item(Select())
@@ -71,6 +86,7 @@ class button1(discord.ui.View):
             embed.add_field(name=f"{rewards[claimed_rewards].name} | Số lượng:{rewards[claimed_rewards].amount}", value=f"Đã nhận Day: {claimed_rewards}", inline=False)
             embed.set_thumbnail(url=rewards[claimed_rewards].icon)
             await Interaction.response.edit_message(content="", embed=embed)
+            await upjs(self, Interaction, 0)
         except genshin.AlreadyClaimed:
             assert signed_in
             return await Interaction.response.edit_message(content="Đã nhận thưởng trước đó")
@@ -78,10 +94,21 @@ class button1(discord.ui.View):
             await Interaction.response.edit_message(content=s)
     else:
         await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
-    
-  @discord.ui.button(label="On", style=discord.ButtonStyle.gray, disabled=True)
+  
+  @discord.ui.button(label="Auto_claim", style=discord.ButtonStyle.gray)
   async def auto_claim(self, Interaction, button: discord.ui.Button,):
-    print(1)
+    user_id = str(Interaction.user.id)
+    data = load_data()
+    if user_id in data:
+      if "daily_auto" in data[user_id]:
+       data[user_id]["daily_auto"] = False if data[user_id]["daily_auto"] else True
+      else:
+        data[user_id]["daily_auto"] = True
+      save_data(data)
+      await Interaction.response.edit_message(content="")
+      await upjs(self, Interaction, 1)
+    else:
+        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
 
 class button2(discord.ui.View):
   def __init__(self):
@@ -89,11 +116,23 @@ class button2(discord.ui.View):
     self.add_item(Select())
   @discord.ui.button(label="Claim Daily Reward", style=discord.ButtonStyle.green, disabled=True)
   async def claim_dailys1(self, Interaction, button: discord.ui.Button,):
-    print(2)
-
-  @discord.ui.button(label="On", style=discord.ButtonStyle.gray, disabled=True)
+    pass
+    
+  @discord.ui.button(label="Auto_claim", style=discord.ButtonStyle.gray)
   async def auto_claim1(self, Interaction, button: discord.ui.Button,):
-    print(1)
+    user_id = str(Interaction.user.id)
+    data = load_data()
+    if user_id in data:
+      if "daily_auto" in data[user_id]:
+       data[user_id]["daily_auto"] = False if data[user_id]["daily_auto"] else True
+      else:
+        data[user_id]["daily_auto"] = True
+      save_data(data)
+      await Interaction.response.edit_message(content="")
+      await upjs(self, Interaction, 1)
+    else:
+        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+
 
 async def acdaily(image_app, has, claimed_rewards, x, y, i):
   async with aiohttp.ClientSession() as session: 
@@ -110,7 +149,6 @@ async def acdaily(image_app, has, claimed_rewards, x, y, i):
       draw_daily.text((25, 122), f"Day {i+1}", font=ImageFont.truetype("zh-cn.ttf", 18), fill=(0, 0, 0))
       draw_daily.text((1, 94), f"x{has.amount}", font=ImageFont.truetype("zh-cn.ttf", 21), fill=(155, 49, 30))
       image_app.paste(daily_app, (x, y))
-
 
 class Select(discord.ui.Select):
     def __init__(self):
@@ -173,15 +211,14 @@ class Select(discord.ui.Select):
                 embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/W2pNzBQRgu8KOxYEOkp-Wx5GYDzpGVNzEHySUPAGzN4/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1111140087770664960/533d867015c8f7437cf8ae9c76d98b30.png")
                 embed.add_field(name=f"✅ {rews.nickname}", value="", inline=False)
                 embed.set_image(url=file_url)
-                embed.add_field(name="daily_auto_claim: ❌", value="", inline=False)
+                embed.add_field(name="daily_auto_claim: ✅" if "daily_auto" in data[user_id] and data[user_id]["daily_auto"] else "daily_auto_claim: ❌", value="", inline=False)
                 if signed_ins:
-                    await Interaction.message.edit(embed=embed, view=button2())
+                  await Interaction.message.edit(embed=embed, view=button2())
                 else:
-                    await Interaction.message.edit(embed=embed, view=button1())
+                  await Interaction.message.edit(embed=embed, view=button())
             else:
                 await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sử dụng ``/login`` để tiếp tục")
 
-    
 class SelectView(discord.ui.View):
   def __init__ (self, timeout=300):
     super().__init__(timeout=timeout)
@@ -199,11 +236,16 @@ class Codes(commands.Cog):
 
   @app_commands.command(name="daily", description="Nhận thưởng điểm danh hàng ngày")
   async def code(self, Interaction):
-    channel = self.bot.get_channel(1118977913392476210)
-    outputs["channel"] = channel
-    embed = discord.Embed(title=f"{self.bot.user.name} | Điểm danh hàng ngày Hoyolab", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.datetime.now())
-    embed.set_thumbnail(url=self.bot.user.avatar)
-    await Interaction.response.send_message(embed=embed, view=SelectView())
+    user_id = str(Interaction.user.id)
+    data = load_data()
+    if user_id in data:
+      channel = self.bot.get_channel(1118977913392476210)
+      outputs["channel"] = channel
+      embed = discord.Embed(title=f"{self.bot.user.name} | Điểm danh hàng ngày Hoyolab", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.datetime.now())
+      embed.set_thumbnail(url=self.bot.user.avatar)
+      await Interaction.response.send_message(embed=embed, view=SelectView())
+    else:
+        await Interaction.response.send_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
 
   @app_commands.command(name="redeem", description="redeem code")
   @app_commands.describe(games="Chọn nơi nhập code") 
@@ -228,8 +270,6 @@ class Codes(commands.Cog):
             await I.response.send_message("Không có tài khoản.")
       else:
         await I.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
-
-
 
 async def setup(bot):
   await bot.add_cog(Codes(bot))
