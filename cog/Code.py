@@ -12,7 +12,7 @@ import asyncio
 import calendar
 import pytz
 
-VN_TIMEZONE = pytz.timezone('Asia/Ho_Chi_Minh')
+VN_TIMEZONE = pytz.timezone('Asia/Shanghai')
 
 files = "test.json"
 def load_data():
