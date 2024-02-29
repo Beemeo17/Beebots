@@ -6,45 +6,39 @@ import asyncio
 import os
 import sqlite3
 import genshin
+import json
 
-channelt = {'channelm' :None}
-async def daily_reward(client):
-      games = [
-        genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
-        genshin.types.Game.HONKAI
-      ]
-      for s, gamess in enumerate(games):
-        datasss = await client.get_hoyolab_user()
-        channel = channelt.get('channelm')
-        signed_in, claimed_rewards = await client.get_reward_info(game=gamess)
-        try:
-            await client.claim_daily_reward(game=gamess)
-            await channel.send("Hoàn tất điểm danh")
-        except genshin.AlreadyClaimed:
-            assert signed_in
-            return await channel.send("Đã nhận thưởng trước đó!")
-        except genshin.GenshinException as e:
-            if e.retcode == -10002:
-                await channel.send("No genshin account.")
-               
-async def logins(*cookies_data):
-      cookies_data = [
-        {
-          "ltuid": 139734936,
-          "ltoken": '5qs4vLtAHhNAZ2cvH38alyRVHjRs6Uy9XzgHkjcB'
-        },#beemin
-        {
-          "ltuid": 89595259,
-          "ltoken": 'W26k5CAFSzoR5UHCXMNXBoLdgWahoe2VNIKEIsjb'
-        },#jenn
-      ]
-      clients = []
-      for a, data in enumerate(cookies_data):
-        client = genshin.Client(lang="vi-vn")
-        client.set_cookies(data)
-        clients.append(client)
-      tasks = [daily_reward(client) for client in clients]
-      await asyncio.gather(*tasks)
+files = "test.json"
+def load_data():
+  try:
+      with open(files, 'r') as file:
+          data = json.load(file)
+  except (FileNotFoundError, json.JSONDecodeError):
+      data = {}
+  return data
+
+async def get_cookie(channel):
+    data = load_data()
+    for key, value in data.items():
+        if value.get("daily_auto"):
+          gamep = [
+            genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
+            genshin.types.Game.HONKAI]
+          embed = discord.Embed()
+          for games in gamep[:3]:
+            client = genshin.Client(value.get("cookies"))
+            signed_in, claimed_rewards = await client.get_reward_info(game=games)
+            rews = await client.get_hoyolab_user()
+            try:
+              await client.claim_daily_reward(game=games)
+              embed.add_field(name=f"{games[19:]} | Hoàn thành điểm danh | {rews.nickname}", value="", inline=False)
+            except genshin.AlreadyClaimed:
+                assert signed_in
+                embed.add_field(name=f"{games[19:]} | Đã nhận thưởng trước đó | {rews.nickname}", value="", inline=False)
+            except Exception as s:
+                embed.add_field(name=f"{games[19:]} | {s} | {rews.nickname}", value="", inline=False)
+          await channel.send(embed=embed)
+
 
 class ServerInfo(commands.Cog):
     def __init__(self, bot):
@@ -79,8 +73,9 @@ class ServerInfo(commands.Cog):
             await channel.send("chúc mọi người một ngày mới vui vẻ 🧩**Good Morning**🧩")
         elif  current_time.hour == 22 and current_time.minute == 0:
             await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
-        elif current_time.hour == 23 and current_time.minute == 18:
-            await logins()
+        elif current_time.hour == 23 and current_time.minute == 4:
+            channels = self.bot.get_channel(1156104339291635758)
+            await get_cookie(channels)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -91,8 +86,6 @@ class ServerInfo(commands.Cog):
     @tasks.loop(seconds=10)
     async def update_data(self):
         try:
-            channel = self.bot.get_channel(1118977913392476210)
-            channelt['channelm'] = channel
             tz = pytz.timezone('Asia/Ho_Chi_Minh')
             guild = self.bot.get_guild(550601755709407233)
             channel = self.bot.get_channel(1105730219110825984)
