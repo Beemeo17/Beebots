@@ -11,4 +11,5 @@ pytz
 rsa
 pydantic
 git+https://github.com/seriaati/enka-py
+bs4
 
