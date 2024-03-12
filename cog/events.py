@@ -24,7 +24,6 @@ class events(commands.Cog):
          lclient = genshin.Client()
          te = await lclient.get_genshin_announcements(lang="vi-vn")
          a = int(select.values[0]) + 10
-         print(a)
          embed = discord.Embed(title=te[a].title)
          embed.set_image(url=te[a].banner)
          soup = BeautifulSoup(te[a].content, 'html.parser')
