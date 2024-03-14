@@ -72,13 +72,13 @@ async def count_occurrences(value1, value2):
 
 async def ntscuid(nntsl):
     url_nt = [
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263381962002462/IMG_4166.png?ex=65e9ec9b&is=65d7779b&hm=6e86ac07014a8f612985e79b50cdc50585254bf62a160a4393d01aa33d9068dc&a",
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263382364528650/IMG_4170.png?ex=65e9ec9b&is=65d7779b&hm=7fb29f3027956cef58cabbe66bbf5b2fff1396641ddad0503e56647a306dc927&a",
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263382700331069/IMG_4165.png?ex=65e9ec9c&is=65d7779c&hm=329305b4fc51cd10069c46e691fc0ec4d445d9d9bc538b833226c27bf2af8c83&a",
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263383111245854/IMG_4164.png?ex=65e9ec9c&is=65d7779c&hm=08ade5d58d33ed3c1536eb2c57e72e9fe1b6080909f43ec44add3ee63bc73de2&a",
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263383472078928/IMG_4168.png?ex=65e9ec9c&is=65d7779c&hm=5b334d4be866ef2eff894760e2c56af596a019b312ac16cf45b850110ba339ee&a",
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263383803437166/IMG_4169.png?ex=65e9ec9c&is=65d7779c&hm=e334ea9a40d68aa347f321c0c78a61b64d8ed6131e8d037d3294bb77d49eb3ec&a",
-        "https://media.discordapp.net/attachments/1107978903294853140/1210263384159686686/IMG_4167.png?ex=65e9ec9c&is=65d7779c&hm=f53c9c8e48994daa1334bf0f7c9bd1cafb5217a92cd9c0e9b6cba428d2bfd013&a",
+        "https://iili.io/JWOqnh7.jpg",
+        "https://iili.io/JWOqoQ9.jpg",
+        "https://iili.io/JWOqzBe.jpg",
+        "https://iili.io/JWOqIEu.jpg",
+        "https://iili.io/JWOqTrb.jpg",
+        "https://iili.io/JWOqA2j.jpg",
+        "https://iili.io/JWOqRYx.jpg",
     ]
     urrl_nt = await download_images(url_nt)
     index = {
@@ -176,7 +176,7 @@ async def image_dcuid(charactert):
                   charactert.talents[1].icon,
                   charactert.talents[2].icon,
                   "https://cdn.discordapp.com/emojis/1210395337139683328.png",
-                  "https://media.discordapp.net/attachments/1107978903294853140/1210964500166082570/233149C0-7EA6-4CC6-A333-C6E3EE916190.png?ex=65ec7993&is=65da0493&hm=e08c7e5d514db42f1614e4291775a417cf46a2d5bfa53a9ce75c73c8d987bf1e&a",]
+                  "https://iili.io/JWOqqp2.png",]
               responses = await download_images(urls_to_download)
               image_app = Image.open(BytesIO(await ntscuid(charactert.element.value))).resize((1455, 885))
               font = ImageFont.truetype("zh-cn.ttf", 27)
@@ -256,7 +256,7 @@ async def image_dcuid(charactert):
                   image_app.paste(image_skill, skill_positions[i], mask=image_skill)
                   draw.text((393 if charactert.talents[i].level > 9 else 400, 664 + i * 83), f"{charactert.talents[i].level}", font=font, fill=(255, 255, 255))                                
               #cm
-              Locks = len(charactert.constellations)
+              Locks = charactert.constellations_unlocked
               x_lock = 903
               for _ in range(6 - Locks):
                   image_skill00 = Image.open(BytesIO(responses[5])).convert("RGBA").resize((43, 43))
@@ -327,7 +327,7 @@ class SelectView(discord.ui.View):
 async def generate_image(data):
     async with aiohttp.ClientSession() as session:
         uid = global_data.get("uid")
-        urlgoc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1206074586098176010/F7C59933-6074-48A1-8422-A66E5B12B81F.png?ex=65e3e9fd&is=65d174fd&hm=292f17eaab0fb457ca1e98f3821dd7cfd222491f73dbedc63d371c8310a4b78b&a')
+        urlgoc = await fetch_image(session, 'https://iili.io/JWOqK74.png')
         image_appt = Image.open(BytesIO(urlgoc)).convert("RGBA").resize((600, 850))
         draw = ImageDraw.Draw(image_appt)
         player_icon_data = await fetch_image(session, data.player.profile_picture_icon.circle)
@@ -346,7 +346,7 @@ async def generate_image(data):
             char_icon = Image.open(BytesIO(char_icon_data)).convert("RGBA").resize((80, 80))
             char_icon_datak = await fetch_image(session, char.namecard.full)
             char_imaget = Image.open(BytesIO(char_icon_datak)).convert("RGBA").resize((279, 104))
-            url_goc = await fetch_image(session, 'https://media.discordapp.net/attachments/1107978903294853140/1210886413302763520/Khong_Co_Tieu_e164.png?ex=65ec30da&is=65d9bbda&hm=bbbc2697264af7c9bf80fc56eb7b4db70a17526197d7fbbb226859e5d3229ae9&a')
+            url_goc = await fetch_image(session, 'https://iili.io/JWOqfkl.png')
             char_iconk = Image.open(BytesIO(url_goc)).convert("RGBA").resize((279, 104))
             enhancer = ImageEnhance.Brightness(char_imaget)
             char_image = enhancer.enhance(0.8)
@@ -355,7 +355,7 @@ async def generate_image(data):
             char_image.paste(char_icon, (10, 12), char_icon)
             char_draw.text((101, 4), char.name, font=ImageFont.truetype("zh-cn.ttf", 15), fill=(255, 255, 255))
             char_draw.text((102, 33), f"Lv.{char.level}/{char.max_level}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
-            char_draw.text((180, 34), f"C{len(char.constellations)}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
+            char_draw.text((180, 34), f"C{(char.constellations_unlocked)}", font=ImageFont.truetype("zh-cn.ttf", 14), fill=(255, 255, 255))
             char_draw.text((102, 59), f"Friendship {char.friendship_level}", font=ImageFont.truetype("zh-cn.ttf", 12), fill=(255, 255, 255))
             crit_dmg = 0
             crit_rate = 0
@@ -390,12 +390,6 @@ async def generate_image(data):
 class scuids(commands.Cog):
   def __init__ (self, bot):
     self.bot = bot
-
-  @commands.Cog.listener()
-  async def on_ready(self):
-    filename = os.path.basename(__file__)
-    print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
-    print('='* 50)
     
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
   async def scuid(self, Interaction, uid: int = None , user: discord.Member = None):
@@ -409,9 +403,9 @@ class scuids(commands.Cog):
           uid = uid
         else: 
           if user_id in data:
-             uid = data[user_id]["uid"] if "uid" in data[user_id] else await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+             uid = data[user_id]["uid"] if "uid" in data[user_id] else await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
           else:
-             await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+             await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
         data = await api.fetch_showcase(uid)
         global_data["data"] = data
         global_data["uid"] = uid
@@ -426,7 +420,7 @@ class scuids(commands.Cog):
           embed1 = discord.Embed(color=0xed0202)
           embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
           embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới", inline=False)
-          embed1.set_image(url="https://media.discordapp.net/attachments/1107978903294853140/1210882152842006538/Khong_Co_Tieu_e162_20240224163313.png?ex=65ec2ce2&is=65d9b7e2&hm=d99f4a97b54aad9c632adafbf19de28986fe0f5436b22ca469a9c1c64520457f&a")
+          embed1.set_image(url="https://media.discordapp.net/attachments/1107978903294853140/1210882152842006538/Khong_Co_Tieu_e162_20240224163313.png")
           await Interaction.followup.send(embed=embed1, ephemeral=True)
           
      except Exception as s:
