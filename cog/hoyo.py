@@ -39,7 +39,7 @@ async def download_images(urls):
 async def main_img(isd):
   async with aiohttp.ClientSession() as session: 
     imgoc = {
-      "GENSHIN": "https://media.discordapp.net/attachments/1107978903294853140/1212074878984003634/Khong_Co_Tieu_e166.png?ex=65f083b2&is=65de0eb2&hm=270d1bdef7eb1caa4f9ab7a180f5fcd4091609e3cda980eda049ee1056bfb658&a",
+      "GENSHIN": "https://media.discordapp.net/attachments/1107978903294853140/1212074878984003634/Khong_Co_Tieu_e166.png?ex=6602f8b2&is=65f083b2&hm=96f904d237652e2de852a90e0f8043d8397b4b39298b3a560ede25c9ed0eb771&a",
       "STARRAIL": "https://media.discordapp.net/attachments/1107978903294853140/1212073816906534954/Khong_Co_Tieu_e166.png?ex=65f082b5&is=65de0db5&hm=cfcadc40e113843b842b12518ee0310d74e119938317a343708ee246bd39d0d3&a",
       "HONKAI": "https://media.discordapp.net/attachments/1107978903294853140/1212074966955204698/Khong_Co_Tieu_e166.png?ex=65f083c7&is=65de0ec7&hm=cc1c4f3867745fe6e3a0544313c59171ca669ccc5298913501ac86b9f346010b&a",
     }
@@ -56,12 +56,12 @@ async def upjs(self, Interaction, bu) -> None:
     user_id = str(Interaction.user.id)
     data = load_data()
     if data[user_id]["daily_auto"]:
-     self.children[bu].label = "Disabled"
-     self.children[bu].style=discord.ButtonStyle.red
+     self.auto_claim.label = "Disabled"
+     self.auto_claim.style=discord.ButtonStyle.red
     else:
-      self.children[bu].label = "Enabled"
-      self.children[bu].style=discord.ButtonStyle.green
-  await Interaction.edit_original_response(view=self)
+      self.auto_claim.label = "Enabled"
+      self.auto_claim.style=discord.ButtonStyle.green
+  await Interaction.edit_original_response(view=self.Button())
 
 class button(discord.ui.View):
   def __init__(self):
@@ -136,7 +136,7 @@ class button2(discord.ui.View):
 
 async def acdaily(image_app, has, claimed_rewards, x, y, i):
   async with aiohttp.ClientSession() as session: 
-      dailyt = await fetch_image(session, "https://media.discordapp.net/attachments/1107978903294853140/1212078877799874580/4C10BA33-37C5-4EA6-A901-1712C841D5C8.png?ex=65f0876b&is=65de126b&hm=5ba73f3dd8afd25d25c552d93770db0728dc5d47ead44918401d1bd906310ec5&a")
+      dailyt = await fetch_image(session, "https://media.discordapp.net/attachments/1107978903294853140/1212078877799874580/4C10BA33-37C5-4EA6-A901-1712C841D5C8.png?ex=6602fc6b&is=65f0876b&hm=3cbbe99385fa1fb267759f41f5c9525ca9bd78ab9633886d28cd347a9654bf53&a")
       daily_app = Image.open(BytesIO(dailyt)).resize((114, 151))
       dailyl = Image.open(BytesIO(await fetch_image(session, has.icon))).convert("RGBA").resize((102, 102))
       daily_app.paste(dailyl, (6, 10), mask=dailyl)
@@ -159,7 +159,7 @@ class Select(discord.ui.Select):
         ]
         super().__init__(placeholder="Các Cộng Cụ", options=options)
     
-    async def callback(self, Interaction: discord.Interaction):
+    async def callback(self, Interaction: discord.Interaction,):
       async with aiohttp.ClientSession() as session: 
         user_id = str(Interaction.user.id)
         game_map = {
@@ -206,12 +206,12 @@ class Select(discord.ui.Select):
                 channel = outputs.get("channel")
                 messaget = await channel.send(file=file)
                 file_url = messaget.attachments[0]
-
                 embed = discord.Embed(title=f"{self.values[0]} | Điểm danh hàng ngày Hoyolab", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.datetime.now())
                 embed.set_thumbnail(url="https://images-ext-1.discordapp.net/external/W2pNzBQRgu8KOxYEOkp-Wx5GYDzpGVNzEHySUPAGzN4/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1111140087770664960/533d867015c8f7437cf8ae9c76d98b30.png")
                 embed.add_field(name=f"✅ {rews.nickname}", value="", inline=False)
                 embed.set_image(url=file_url)
                 embed.add_field(name="daily_auto_claim: ✅" if "daily_auto" in data[user_id] and data[user_id]["daily_auto"] else "daily_auto_claim: ❌", value="", inline=False)
+                
                 if signed_ins:
                   await Interaction.message.edit(embed=embed, view=button2())
                 else:
@@ -223,16 +223,13 @@ class SelectView(discord.ui.View):
   def __init__ (self, timeout=300):
     super().__init__(timeout=timeout)
     self.add_item(Select())
+  async def on_timeout(self, I: discord.Interaction):
+    await I.message.delete()
+
 
 class Codes(commands.Cog):
   def __init__(self, bot):
    self.bot = bot
-
-  @commands.Cog.listener()
-  async def on_ready(self):
-    filename = os.path.basename(__file__)
-    print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
-    print('='* 50)
 
   @app_commands.command(name="daily", description="Nhận thưởng điểm danh hàng ngày")
   async def code(self, Interaction):
