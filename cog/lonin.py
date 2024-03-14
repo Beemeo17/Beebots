@@ -118,8 +118,14 @@ class uids(discord.ui.Modal, title="Lưu UID"):
 
 class Button1(discord.ui.View):
 
-  def __init__(self):
-    super().__init__()
+  def __init__(self, timeout=5):
+    super().__init__(timeout=timeout)
+
+  async def on_timeout(self, Interaction: discord.Interaction):
+    self.cookiel.disabled = True
+    self.tklogin.disabled = True
+    self.uid.disabled = True
+    await Interaction.edit_original_response(view=self)
 
   @discord.ui.button(label="cookie",
                      style=discord.ButtonStyle.green,
@@ -152,8 +158,14 @@ class Button1(discord.ui.View):
 
 class Button2(discord.ui.View):
 
-  def __init__(self):
-    super().__init__()
+  def __init__(self, timeout=5):
+    super().__init__(timeout=timeout)
+
+  async def on_timeout(self, Interaction: discord.Interaction):
+    self.cookiel.disabled = True
+    self.channges.disabled = True
+    self.uid.disabled = True
+    await Interaction.edit_original_response(view=self)
 
   @discord.ui.button(label="Đã liên kết",
                      style=discord.ButtonStyle.green,
@@ -193,17 +205,8 @@ class Button2(discord.ui.View):
     await Interaction.response.send_modal(uids())
 
 class lonin(commands.Cog):
-
   def __init__(self, bot):
     self.bot = bot
-
-  @commands.Cog.listener()
-  async def on_ready(self):
-    filename = os.path.basename(__file__)
-    print(
-        f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ"
-    )
-    print('=' * 50)
 
   @app_commands.command(name="login",
                         description="nhập thông tin liên kết data")
