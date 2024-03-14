@@ -73,7 +73,6 @@ class Cog_main(commands.Cog):
             await self.check_invite_and_add_role(message)
             await self.process_spam_detection(message)
   
-  
   async def process_leveling(self, message):
       if message.author.bot == self.bot.user:
           return
@@ -232,7 +231,7 @@ class Cog_main(commands.Cog):
           await channel.send("chúc mọi người một ngày mới vui vẻ 🧩**Good Morning**🧩")
       elif  current_time.hour == 22 and current_time.minute == 0:
           await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
-      elif current_time.hour == 16 and current_time.minute == 20:
+      elif current_time.hour == 17 and current_time.minute == 0:
           channels = self.bot.get_channel(1156104339291635758)
           await get_cookie(channels)
 
@@ -252,8 +251,8 @@ class Cog_main(commands.Cog):
           embed.add_field(name=f"> Thành Viên: {total_members - bot_count}", value="", inline=False)
           embed.add_field(name=f"> Số Lượng Bot: {bot_count}", value="", inline=False)
           embed.add_field(name=f"> Boost: {boosts}", value="", inline=False)
-          self.c.execute("SELECT name, level, exp FROM users ORDER BY level DESC, exp DESC LIMIT 3")
-          results = self.c.fetchall()
+          self.cursor.execute("SELECT name, level, exp FROM users ORDER BY level DESC, exp DESC LIMIT 3")
+          results = self.cursor.fetchall()
           embed.add_field(name="**Bảng Xếp Hạng**", value="", inline=False)
           embed.set_thumbnail(url="https://example.com/leaderboard_icon.png")
           for index, (name, level, exp) in enumerate(results):
