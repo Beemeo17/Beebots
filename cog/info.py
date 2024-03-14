@@ -17,14 +17,7 @@ class InfoCog(commands.Cog):
         self.c.execute('''CREATE TABLE IF NOT EXISTS users
                          (id INTEGER PRIMARY KEY, name TEXT, exp INTEGER, level INTEGER, explevel INTEGER)'''
                       )
-      
-    @commands.Cog.listener()
-    async def on_ready(self):
-      filename = os.path.basename(__file__)
-      print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
-      print('='* 50)
 
-  
     @app_commands.command(name="info", description="avatar và thông tin")
     async def stats(self, Interaction, member: discord.Member):
             mentioned_user = member
@@ -66,6 +59,5 @@ class InfoCog(commands.Cog):
 
             await Interaction.channel.send(embed=embed)
    
-
 async def setup(bot):
    await bot.add_cog(InfoCog(bot))
