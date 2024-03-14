@@ -14,7 +14,7 @@ class events(commands.Cog):
         self.bot = bot
         self.lclient = genshin.Client()
     
-    @app_commands.command(name="event")
+    @app_commands.command(name="event", description="Tổng hợp event genshin")
     async def te(self, Interaction: discord.Interaction):
         events = await self.lclient.get_genshin_announcements(lang="vi-vn")
         select = Select(placeholder="All event", options = [
