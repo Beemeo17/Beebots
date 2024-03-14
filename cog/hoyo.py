@@ -93,7 +93,7 @@ class button(discord.ui.View):
         except Exception as s:
             await Interaction.response.edit_message(content=s)
     else:
-        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
   
   @discord.ui.button(label="Auto_claim", style=discord.ButtonStyle.gray)
   async def auto_claim(self, Interaction, button: discord.ui.Button,):
@@ -108,7 +108,7 @@ class button(discord.ui.View):
       await Interaction.response.edit_message(content="")
       await upjs(self, Interaction, 1)
     else:
-        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
 
 class button2(discord.ui.View):
   def __init__(self):
@@ -131,7 +131,7 @@ class button2(discord.ui.View):
       await Interaction.response.edit_message(content="")
       await upjs(self, Interaction, 1)
     else:
-        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+        await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
 
 
 async def acdaily(image_app, has, claimed_rewards, x, y, i):
@@ -217,7 +217,7 @@ class Select(discord.ui.Select):
                 else:
                   await Interaction.message.edit(embed=embed, view=button())
             else:
-                await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sử dụng ``/login`` để tiếp tục")
+                await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sử dụng </login:1198488196087025755> để tiếp tục")
 
 class SelectView(discord.ui.View):
   def __init__ (self, timeout=300):
@@ -242,7 +242,7 @@ class Codes(commands.Cog):
       embed.set_thumbnail(url=self.bot.user.avatar)
       await Interaction.response.send_message(embed=embed, view=SelectView())
     else:
-        await Interaction.response.send_message(content="Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+        await Interaction.response.send_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
 
   @app_commands.command(name="redeem", description="redeem code")
   @app_commands.describe(games="Chọn nơi nhập code") 
@@ -266,7 +266,7 @@ class Codes(commands.Cog):
         except genshin.AccountNotFound:
             await I.response.send_message("Không có tài khoản.")
       else:
-        await I.response.send_message("Bạn chưa đăng kí hãy sửa dụng ``/login`` để tiếp tục")
+        await I.response.send_message("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
 
 async def setup(bot):
   await bot.add_cog(Codes(bot))
