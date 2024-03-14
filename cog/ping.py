@@ -7,13 +7,6 @@ import os
 class PingCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    @commands.Cog.listener()
-    async def on_ready(self):
-      filename = os.path.basename(__file__)
-      print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
-      print('='* 50)
-
   
     @app_commands.command(name="ping",description="Trả về thời gian ping của bot",)
     async def ping(self, Interaction: commands.Context, p: str = None):
