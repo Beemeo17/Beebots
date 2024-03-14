@@ -12,4 +12,4 @@ rsa
 pydantic
 git+https://github.com/seriaati/enka-py
 bs4
-
+psutil
