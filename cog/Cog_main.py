@@ -7,6 +7,14 @@ import os
 import sqlite3
 import genshin
 import json
+from io import BytesIO
+import random
+import psutil
+
+ts = 0
+tm = 0
+th = 0
+td = 0
 
 files = "test.json"
 def load_data():
@@ -56,10 +64,10 @@ class Cog_main(commands.Cog):
       self.update_data.start()
       self.send_greetings.start()
       self.update_presence.start()
+      self.up_cour.start()
   def cog_unload(self):
       self.update_presence.cancel()
   
-
   @commands.Cog.listener() #message
   async def on_message(self, message):
     if message.author.bot:
@@ -219,10 +227,37 @@ class Cog_main(commands.Cog):
       game = discord.Game(name="❄️HIVE Teyvat❄️")
       await self.bot.change_presence(activity=game)
 
-  @update_presence.before_loop
+  @update_presence.before_loop #stats
   async def before_update_presence(self):
       await self.bot.wait_until_ready()
 
+  @tasks.loop(seconds=20)
+  async def up_cour(self):
+    global ts, tm, th, td
+    ts += 2
+    if ts == 60:
+      ts = 0
+      tm += 1
+      if tm == 60:
+        tm = 0
+        th += 1
+        if th == 24:
+          th = 0
+          td += 1
+
+  @up_cour.before_loop
+  async def before_uptime(self):
+    await self.bot.wait_until_ready()
+
+  @commands.command()
+  async def stats(self, ctx):
+    global ts, tm, th, td
+    embed = discord.Embed(title="bot stats")
+    embed.add_field(name=f"<a:blobdj:1153569751201759232> {td}d:{th}h:{tm}m:{ts}s", value="", inline=False)
+    embed.add_field(name=f"<:emoji_45:1217819246978138153> CPU: {psutil.cpu_percent()}%", value="", inline=True)
+    embed.add_field(name=f"<:emoji_44:1217819116325568692> RAM: {psutil.virtual_memory()[2]}%", value="", inline=True)
+    await ctx.send(embed=embed)
+    
   @tasks.loop(seconds=60) #on time
   async def send_greetings(self):
       current_time = datetime.now(self.tz).time()
