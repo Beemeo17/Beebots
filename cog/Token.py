@@ -24,12 +24,7 @@ class Button(discord.ui.View):
 class token(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
-
-  @commands.Cog.listener()
-  async def on_ready(self):
-    filename = os.path.basename(__file__)
-    print(f"[OK] {self.bot.user.name}#{self.bot.user.discriminator} - {filename} sᴜᴄᴄᴇssғᴜʟʟʏ")
-    print('='* 50)
+    super().__init__()
 
   @app_commands.command(name="ticket", description="Tạo Ticket")
   async def token(self, Interaction):
