@@ -234,7 +234,7 @@ class Cog_main(commands.Cog):
   @tasks.loop(seconds=20)
   async def up_cour(self):
     global ts, tm, th, td
-    ts += 2
+    ts += 20
     if ts == 60:
       ts = 0
       tm += 1
