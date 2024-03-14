@@ -4,21 +4,21 @@ from discord import app_commands
 import genshin
 from discord.ui import Select, View
 from bs4 import BeautifulSoup
-import datetime
-import pytz
+import os
 import asyncio
 import re
+
 
 class events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.lclient = genshin.Client()
-
+    
     @app_commands.command(name="event")
     async def te(self, Interaction: discord.Interaction):
         events = await self.lclient.get_genshin_announcements(lang="vi-vn")
         select = Select(placeholder="All event", options = [
-            discord.SelectOption(label=event.subtitle, value=f"{i+1}") for i, event in enumerate(events[11:])
+            discord.SelectOption(label=event.subtitle, value=f"{i+1}", emoji="<a:prettyflower5:1217045500742602823>") for i, event in enumerate(events[11:])
         ])
         async def my_callback(Interaction):
          lclient = genshin.Client()
