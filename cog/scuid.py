@@ -317,9 +317,9 @@ class SelectView(discord.ui.View):
       options = [
           discord.SelectOption(label="Tùy chọn 1", value="option1"),
       ]
-      select = discord.ui.Select(placeholder="Timeout!!", options=options, disabled=True)
+      select = discord.ui.Select(placeholder="Timeout!!", emoji="❌", options=options, disabled=True)
       embed = discord.Embed(color=discord.Color.red())
-      embed.add_field(name="Timeout!", value="Nếu bạn muốn xem lại, hãy sử dụng lệnh ``/scuid``")
+      embed.add_field(name="Timeout!", value="Nếu bạn muốn xem lại, hãy sử dụng lệnh ``</scuid:1197704265150496860>``")
       views = discord.ui.View()
       views.add_item(select)
       await message.edit(embed=embed, view=views)
