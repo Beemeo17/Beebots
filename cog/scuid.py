@@ -72,13 +72,13 @@ async def count_occurrences(value1, value2):
 
 async def ntscuid(nntsl):
     url_nt = [
-        "https://iili.io/JWOqnh7.jpg",
-        "https://iili.io/JWOqoQ9.jpg",
-        "https://iili.io/JWOqzBe.jpg",
-        "https://iili.io/JWOqIEu.jpg",
-        "https://iili.io/JWOqTrb.jpg",
-        "https://iili.io/JWOqA2j.jpg",
-        "https://iili.io/JWOqRYx.jpg",
+        "https://iili.io/JXnJyF9.jpg",
+        "https://iili.io/JXndJyb.jpg",
+        "https://iili.io/JXnd2uj.jpg",
+        "https://iili.io/JXnd3wx.jpg",
+        "https://iili.io/JXndqMB.jpg",
+        "https://iili.io/JXndB6P.jpg",
+        "https://iili.io/JXndnF1.jpg",
     ]
     urrl_nt = await download_images(url_nt)
     index = {
@@ -176,7 +176,7 @@ async def image_dcuid(charactert):
                   charactert.talents[1].icon,
                   charactert.talents[2].icon,
                   "https://cdn.discordapp.com/emojis/1210395337139683328.png",
-                  "https://iili.io/JWOqqp2.png",]
+                  "https://iili.io/JXnJDn2.png",]
               responses = await download_images(urls_to_download)
               image_app = Image.open(BytesIO(await ntscuid(charactert.element.value))).resize((1455, 885))
               font = ImageFont.truetype("zh-cn.ttf", 27)
