@@ -2,9 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import genshin
-from discord.ui import Select, View
 from bs4 import BeautifulSoup
-import os
 import asyncio
 import re
 
@@ -33,17 +31,27 @@ class skip(discord.ui.Modal, title="page skip"):
     page = discord.ui.TextInput(label="Trang skip tới", style=discord.TextStyle.paragraph)
 
     async def on_submit(self, I: discord.Interaction):
-        await event(I, int(self.page.value) + 10)
-        pages_instance = pages()
-        await pages_instance.up_button(I, int(self.page.value))
+        if self.page.value.isdigit():
+            await event(I, int(self.page.value) + 10)
+            await pages().up_button(I, int(self.page.value))
+        elif isinstance(self.page.value, str):
+            await I.response.send_message("❌Vui lòng nhập đúng Trang muốn chuyển tới!❌", ephemeral=True)
 
 class pages(discord.ui.View):
-  def __init__(self, timeout=180):
+  def __init__(self, timeout=300):
     super().__init__(timeout=timeout)
     global counts, cougoc
     self.counts = 11
     self.cougoc = 12
 
+  async def Tout(self, I):
+      self.min_next.disabled = True
+      self.next_trai.disabled = True
+      self.skips.disabled = True
+      self.next_phai.disabled = True
+      self.max_next.disabled = True
+      await I.edit_original_response(view=self)
+    
   async def up_bu(self, I, bu):
     lclient = genshin.Client()
     te = await lclient.get_genshin_announcements(lang="vi-vn")
@@ -153,6 +161,8 @@ class events(commands.Cog):
           printed_items.append(item.text)
         await Interaction.response.send_message(embed=embed, view=pages())
         await pages().up_bu(Interaction, 1)
+        await asyncio.sleep(300)
+        await pages().Tout(Interaction)
 
 
 async def setup(bot):
