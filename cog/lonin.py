@@ -1,3 +1,4 @@
+
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -8,7 +9,6 @@ import asyncio
 import enka
 
 files = "test.json"
-
 
 def load_data():
   try:
@@ -23,9 +23,7 @@ def save_data(data):
   with open(files, 'w') as file:
     json.dump(data, file, indent=4)
 
-
 Client = genshin.Client()
-
 
 class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
   ctk2 = discord.ui.TextInput(label="cookie_token_v2",
@@ -115,17 +113,15 @@ class uids(discord.ui.Modal, title="Lưu UID"):
       except Exception as e:
         await interaction.response.edit_message(content=f"Lỗi: {e} Vui lòng Kiểm tra lại UID!")
 
-
 class Button1(discord.ui.View):
-
-  def __init__(self, timeout=5):
+  def __init__(self, timeout=300):
     super().__init__(timeout=timeout)
 
-  async def on_timeout(self, Interaction: discord.Interaction):
+  async def Tout1(self, I):
     self.cookiel.disabled = True
     self.tklogin.disabled = True
     self.uid.disabled = True
-    await Interaction.edit_original_response(view=self)
+    await I.edit_original_response(view=self)
 
   @discord.ui.button(label="cookie",
                      style=discord.ButtonStyle.green,
@@ -158,14 +154,16 @@ class Button1(discord.ui.View):
 
 class Button2(discord.ui.View):
 
-  def __init__(self, timeout=5):
+  def __init__(self, timeout=300):
     super().__init__(timeout=timeout)
 
-  async def on_timeout(self, Interaction: discord.Interaction):
+  async def Tout2(self, I):
     self.cookiel.disabled = True
+    self.cookiel.label = "Timeout!!"
+    self.cookiel.emoji = "❌"
     self.channges.disabled = True
     self.uid.disabled = True
-    await Interaction.edit_original_response(view=self)
+    await I.edit_original_response(view=self)
 
   @discord.ui.button(label="Đã liên kết",
                      style=discord.ButtonStyle.green,
@@ -213,7 +211,6 @@ class lonin(commands.Cog):
   async def login(self, Interaction: discord.Interaction):
     data = load_data()
     user_id = str(Interaction.user.id)
-    
     embed = discord.Embed(title="Liên kết data", color=discord.Color.yellow())
     embed.add_field(name="**Thông tin đã kết nối**", value="", inline=False)
     if user_id in data:
@@ -237,6 +234,8 @@ class lonin(commands.Cog):
           inline=False)
       embed.add_field(name="❌ Chưa nhập thông tin tài khoản!", value="", inline=False)
       await Interaction.response.send_message(embed=embed, view=Button1())
+    await asyncio.sleep(300)
+    await Button2().Tout2(Interaction)
 
 
 
