@@ -153,11 +153,11 @@ class button(discord.ui.View):
         await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
 
   options = [
-            discord.SelectOption(label="GENSHIN", value="11", emoji="<:genshin:1091034774203813908>"),
-            discord.SelectOption(label="STARRAIL", value="22", emoji="<:Honkaistarrail:1099536405492924416>"),
-            discord.SelectOption(label="HONKAI", value="33", emoji="<:HonkaiImpact3:1100277662523604992>")
+            discord.SelectOption(label="GENSHIN", emoji="<:genshin:1091034774203813908>"),
+            discord.SelectOption(label="STARRAIL", emoji="<:Honkaistarrail:1099536405492924416>"),
+            discord.SelectOption(label="HONKAI", emoji="<:HonkaiImpact3:1100277662523604992>")
         ]
-  @discord.ui.select(placeholder="All Game", options=options, row=1)
+  @discord.ui.select(placeholder="All Game", options=options)
   async def daily_callback(self, Interaction, select: discord.ui.Select,):
     async with aiohttp.ClientSession() as session: 
         user_id = str(Interaction.user.id)
