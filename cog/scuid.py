@@ -277,9 +277,9 @@ async def image_dcuid(charactert):
               file_url = messaget.attachments[0]
               return file_url
 
-outputz = {}
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
+        self.outputz = {}
         self.data = global_data.get("data")
         self.channel = inset_message.get('channelt')
         super().__init__(*args, **kwargs)
@@ -295,14 +295,14 @@ class Select(discord.ui.Select):
             await I.response.edit_message(content=None, embed=embed_loading)
             embed = discord.Embed(color=discord.Color.dark_theme(), timestamp=datetime.datetime.now())
             reload_time = now + datetime.timedelta(seconds=self.data.ttl)
-            embed.add_field(name=f"Name.{char.name}", value=f"Level.{char.level} \nnguyên tố.{char.element} C.{len(char.constellations)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False) 
+            embed.add_field(name=f"Name.{char.name}", value=f"Level.{char.level} \nnguyên tố.{char.element} C.{(char.constellations_unlocked)} \nLàm mới: <t:{int(reload_time.timestamp())}:R>", inline=False) 
             embed.set_thumbnail(url=f"{char.icon.front}")
             embed.set_footer(text="", icon_url=f"{I.user.avatar}")
-            if char.name in outputz:
-              file_url = outputz[char.name]
+            if char.name in self.outputz:
+              file_url = self.outputz[char.name]
             else:
               file_url = await image_dcuid(char)
-              outputz[char.name] = file_url
+              self.outputz[char.name] = file_url
             embed.set_image(url=file_url)
             message = inset_message.get("message")
             await message.edit(content=None, embed=embed)
@@ -317,9 +317,9 @@ class SelectView(discord.ui.View):
       options = [
           discord.SelectOption(label="Tùy chọn 1", value="option1"),
       ]
-      select = discord.ui.Select(placeholder="Timeout!!", emoji="❌", options=options, disabled=True)
+      select = discord.ui.Select(placeholder="❌ Timeout sửa dụng lại lệnh để tiếp tục!", options=options, disabled=True)
       embed = discord.Embed(color=discord.Color.red())
-      embed.add_field(name="Timeout!", value="Nếu bạn muốn xem lại, hãy sử dụng lệnh ``</scuid:1197704265150496860>``")
+      embed.add_field(name="❌ Timeout!", value="Nếu bạn muốn xem lại, hãy sử dụng lệnh </scuid:1197704265150496860>")
       views = discord.ui.View()
       views.add_item(select)
       await message.edit(embed=embed, view=views)
