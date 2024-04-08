@@ -70,7 +70,7 @@ class button(discord.ui.View):
 
   async def Tout(self, I):
     self.daily_callback.disabled = True
-    self.daily_callback.placeholder = "❌ Timeout!!"
+    self.daily_callback.placeholder = "❌ Timeout sửa dụng lại lệnh để tiếp tục!"
     self.claim_dailys.disabled = True
     self.auto_claim.disabled = True
     await I.edit_original_response(view=self)
@@ -81,9 +81,14 @@ class button(discord.ui.View):
     self.claim_dailys.style = discord.ButtonStyle.gray
     await I.edit_original_response(view=self)
   
-  async def up_button(self, I, sin):
+  async def up_button(self, I, sin, client):
     user_id = str(I.user.id)
     data = load_data()
+    try:
+       await client._get_uid(game=outputs.get("gane"))
+    except genshin.errors.AccountNotFound as e:
+       self.claim_dailys.disabled = True
+       self.claim_dailys.label = "AccountNotFound"
     if sin:
       self.claim_dailys.disabled = True
       self.claim_dailys.style = discord.ButtonStyle.green
@@ -148,9 +153,9 @@ class button(discord.ui.View):
         await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
 
   options = [
-            discord.SelectOption(label="GENSHIN", emoji="<:genshin:1091034774203813908>"),
-            discord.SelectOption(label="STARRAIL", emoji="<:Honkaistarrail:1099536405492924416>"),
-            discord.SelectOption(label="HONKAI", emoji="<:HonkaiImpact3:1100277662523604992>")
+            discord.SelectOption(label="GENSHIN", value="11", emoji="<:genshin:1091034774203813908>"),
+            discord.SelectOption(label="STARRAIL", value="22", emoji="<:Honkaistarrail:1099536405492924416>"),
+            discord.SelectOption(label="HONKAI", value="33", emoji="<:HonkaiImpact3:1100277662523604992>")
         ]
   @discord.ui.select(placeholder="All Game", options=options, row=1)
   async def daily_callback(self, Interaction, select: discord.ui.Select,):
@@ -173,7 +178,7 @@ class button(discord.ui.View):
                 client = genshin.Client(cookies)
                 rews = await client.get_hoyolab_user()
                 signed_ins, claimed_rewards = await client.get_reward_info(game=game)
-
+                
                 rewards = await client.get_monthly_rewards(game=game)
                 now = datetime.datetime.now(VN_TIMEZONE)
                 assert len(rewards) == calendar.monthrange(now.year, now.month)[1]
@@ -207,7 +212,7 @@ class button(discord.ui.View):
                 embed.add_field(name="daily_auto_claim: ✅" if "daily_auto" in data[user_id] and data[user_id]["daily_auto"] else "daily_auto_claim: ❌", value="", inline=False)
                 await Interaction.message.edit(embed=embed)
                 await self.on_select(Interaction)
-                await self.up_button(Interaction, signed_ins)
+                await self.up_button(Interaction, signed_ins, client)
             else:
                 await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sử dụng </login:1198488196087025755> để tiếp tục")
 
