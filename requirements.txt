@@ -6,7 +6,7 @@ flask
 Pillow
 urllib3
 requests
-genshin
+git+https://github.com/thesadru/genshin.py
 pytz
 rsa
 pydantic
