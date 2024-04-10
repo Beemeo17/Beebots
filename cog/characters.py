@@ -102,7 +102,7 @@ class all_characters(commands.Cog):
 
             client = genshin.Client(cookie)
             uid = await client._get_uid(game=genshin.types.Game.GENSHIN)
-            characters = await client.get_genshin_characters(uid, lang="vi-vn")
+            characters = await client.get_genshin_characters(uid)
             char_index = await client.get_genshin_user(uid)
             player = await client.get_genshin_diary(uid)
             char_goc = Image.new('RGBA', (1210, (160 * ((char_index.stats.characters) // 9) + 420)), color = (255, 255, 255, 0))
