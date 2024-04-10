@@ -1,4 +1,3 @@
-
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -52,11 +51,9 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
       save_data(data)
       Clientt = genshin.Client(cookie)
       rews = await Clientt.get_hoyolab_user()
-
-      embed = discord.Embed(
-          title=
-          f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``',
-          color=discord.Color.yellow())
+      uid = await Clientt._get_uid(game=genshin.types.Game.GENSHIN)
+      embed = discord.Embed(title=f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``', color=discord.Color.yellow())
+      embed.add_field(name=f"UID {uid}", value="", inline=False)
       await Interaction.message.edit(embed=embed)
       await Interaction.response.edit_message(content="Lưu dữ liệu thành công!")
     except Exception as e:
@@ -73,9 +70,7 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
     data = load_data()
 
     try:
-      cookie = await Client.login_with_password(self.tk.value,
-                                                self.mk.value,
-                                                port=0)
+      cookie = await Client.login_with_password(self.tk.value, self.mk.value, port=0)
       if user_id in data:
         data[user_id]["cookies"] = cookie
       else:
@@ -83,11 +78,9 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
       save_data(data)
       Clientt = genshin.Client(cookie)
       rews = await Clientt.get_hoyolab_user()
-
-      embed = discord.Embed(
-          title=
-          f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``',
-          color=discord.Color.yellow())
+      uid = await Clientt._get_uid(game=genshin.types.Game.GENSHIN)
+      embed = discord.Embed(title=f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``', color=discord.Color.yellow())
+      embed.add_field(name=f"UID {uid}", value="", inline=False)
       await Interaction.message.edit(embed=embed)
       await Interaction.response.edit_message(content="Lưu dữ liệu thành công!")
     except Exception as e:
@@ -95,10 +88,8 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
 
 
 class uids(discord.ui.Modal, title="Lưu UID"):
-  uid = discord.ui.TextInput(label="Nhập UID",
-                             style=discord.TextStyle.paragraph)
-
-  async def on_submit(self, interaction: discord.Interaction):
+  uid = discord.ui.TextInput(label="Nhập UID", style=discord.TextStyle.paragraph)
+  async def on_submit(self, interaction):
     async with enka.EnkaAPI() as api:
       user_id = str(interaction.user.id)
       data = load_data()
