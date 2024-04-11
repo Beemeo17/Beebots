@@ -99,16 +99,21 @@ class all_characters(commands.Cog):
             embeds = discord.Embed()
             embeds.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
             await Interaction.response.send_message(embed=embeds, ephemeral=True)
-
+            data = load_data()
+            cookie = data["480986687712002058"]["cookies"]
             client = genshin.Client(cookie)
             uid = await client._get_uid(game=genshin.types.Game.GENSHIN)
             characters = await client.get_genshin_characters(uid)
             char_index = await client.get_genshin_user(uid)
             player = await client.get_genshin_diary(uid)
-            char_goc = Image.new('RGBA', (1210, (160 * ((char_index.stats.characters) // 9) + 420)), color = (255, 255, 255, 0))
+            char_goc = Image.new('RGBA', (1340, (160 * ((char_index.stats.characters) // 9) + 260)), color = (255, 255, 255, 0))
             char_draw = ImageDraw.Draw(char_goc)
-            char_draw.rounded_rectangle([45 - 5, 12 - 5, 45 + 110 + 5, 12 + 64 + 5], 8, fill=(140,140,140))
-            char_draw.text((49, 15), f"{player.nickname}\n{player.uid}\n{player.server}", font=ImageFont.truetype("zh-cn.ttf", 16), fill=(0, 0, 0))
+            char_draw.rounded_rectangle([45 - 5, 12 - 5, 45 + 1296 + 5, 12 + 64 + 5], 8, fill=(170,170,170))
+
+            texts = f"{player.nickname}      {player.uid}      {player.server}"
+            text_boxs = char_draw.textbbox((0, 0), texts, font=ImageFont.truetype("zh-cn.ttf", 36))
+            char_draw.text((((45 + 1296) - text_boxs[2]) // 2, 22), texts, font=ImageFont.truetype("zh-cn.ttf", 36), fill=(0, 0, 0))
+            
             xs, ys, t= 49, 100, 0
             chars = []
             nts = {}
@@ -118,26 +123,26 @@ class all_characters(commands.Cog):
                 sk_char_draw = ImageDraw.Draw(sk_char_goc)
                 chars.append(sk_chars(sk_char_goc, sk_char_draw, char, xs, ys, t, char_goc))
                 xs += 125
-                if (t+1) % 9 == 0:
+                if (t+1) % 10 == 0:
                     ys += 160
                     xs = 49
                 t += 1
-
                 nts[char.element] = nts.get(char.element, 0) + 1
                 nts[f"{char.rarity}★"] = nts.get(f"{char.rarity}★", 0) + 1
 
             sorted_counts = dict(sorted(nts.items(), key=operator.itemgetter(1), reverse=True))
             fields = [(element, count) for element, count in sorted_counts.items()]
-            xss, t = 62, 0
-            yss = (160 * ((char_index.stats.characters) // 9) + 280)
+            xss, t = 98, 0
+            yss = (160 * ((char_index.stats.characters) // 9) + 115)
             for field in fields:
+                char_draw.rounded_rectangle([(xss -47) - 5, (yss) - 5, (xss -47) + 190 + 5, (yss) + 40 + 5], 8, fill=(100,100,100))
                 char_draw.text((xss, yss), f"{field[1]} {field[0]}", font=ImageFont.truetype("zh-cn.ttf", 30), fill=(255, 255, 255))
                 all_char_nt = Image.open(BytesIO(await char_nt(field[0]))).convert("RGBA").resize((35, 35))
                 char_goc.paste(all_char_nt, (xss- 45, yss+2), mask=all_char_nt)
-                xss += 200
-                if (t+1) % 6 ==0:
-                    xss = 62
-                    yss += 60
+                xss += 230
+                if (t+1) % 5 ==0:
+                    xss = 98
+                    yss += 80
                 t += 1
             await asyncio.gather(*chars)
             buffer = BytesIO()
