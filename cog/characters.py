@@ -100,7 +100,7 @@ class all_characters(commands.Cog):
             embeds.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
             await Interaction.response.send_message(embed=embeds, ephemeral=True)
             data = load_data()
-            cookie = data["480986687712002058"]["cookies"]
+            cookie = data[user_id]["cookies"]
             client = genshin.Client(cookie)
             uid = await client._get_uid(game=genshin.types.Game.GENSHIN)
             characters = await client.get_genshin_characters(uid)
