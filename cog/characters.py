@@ -106,7 +106,7 @@ class all_characters(commands.Cog):
             characters = await client.get_genshin_characters(uid)
             char_index = await client.get_genshin_user(uid)
             player = await client.get_genshin_diary(uid)
-            char_goc = Image.new('RGBA', (1340, (160 * ((char_index.stats.characters) // 9) + 260)), color = (255, 255, 255, 0))
+            char_goc = Image.new('RGBA', (1340, (160 * ((1 + (char_index.stats.characters) // 10)) + 260)), color = (255, 255, 255, 0))
             char_draw = ImageDraw.Draw(char_goc)
             char_draw.rounded_rectangle([45 - 5, 12 - 5, 45 + 1296 + 5, 12 + 64 + 5], 8, fill=(170,170,170))
 
@@ -133,9 +133,9 @@ class all_characters(commands.Cog):
             sorted_counts = dict(sorted(nts.items(), key=operator.itemgetter(1), reverse=True))
             fields = [(element, count) for element, count in sorted_counts.items()]
             xss, t = 98, 0
-            yss = (160 * ((char_index.stats.characters) // 9) + 115)
+            yss = (160 * ((1 + (char_index.stats.characters) // 10)) + 115)
             for field in fields:
-                char_draw.rounded_rectangle([(xss -47) - 5, (yss) - 5, (xss -47) + 190 + 5, (yss) + 40 + 5], 8, fill=(100,100,100))
+                char_draw.rounded_rectangle([(xss -47) - 5, (yss) - 5, (xss -47) + 200 + 5, (yss) + 40 + 5], 8, fill=(100,100,100))
                 char_draw.text((xss, yss), f"{field[1]} {field[0]}", font=ImageFont.truetype("zh-cn.ttf", 30), fill=(255, 255, 255))
                 all_char_nt = Image.open(BytesIO(await char_nt(field[0]))).convert("RGBA").resize((35, 35))
                 char_goc.paste(all_char_nt, (xss- 45, yss+2), mask=all_char_nt)
