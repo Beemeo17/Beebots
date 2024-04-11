@@ -4,7 +4,6 @@ from discord import app_commands
 import json
 import genshin
 import asyncio
-import pytz
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 import aiohttp
@@ -87,7 +86,7 @@ class all_characters(commands.Cog):
     def __init__ (self, bot):
         self.bot = bot
 
-    @app_commands.command(name="characters", description="Hiển thị tất cả characters sửa hữu")
+    @app_commands.command(name="characters", description="Hiển thị tất cả characters sở hữu")
     async def all_characters(self, Interaction, member: discord.Member = None):
         async with aiohttp.ClientSession() as session: 
             try:
@@ -110,7 +109,7 @@ class all_characters(commands.Cog):
             char_draw = ImageDraw.Draw(char_goc)
             char_draw.rounded_rectangle([45 - 5, 12 - 5, 45 + 1296 + 5, 12 + 64 + 5], 8, fill=(170,170,170))
 
-            texts = f"{player.nickname}      {player.uid}      {player.server}"
+            texts = f"Lv.{char_index.info.level}    {player.nickname}    UID:{player.uid}"
             text_boxs = char_draw.textbbox((0, 0), texts, font=ImageFont.truetype("zh-cn.ttf", 36))
             char_draw.text((((45 + 1296) - text_boxs[2]) // 2, 22), texts, font=ImageFont.truetype("zh-cn.ttf", 36), fill=(0, 0, 0))
             
