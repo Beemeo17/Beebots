@@ -8,7 +8,7 @@ import aiohttp
 import datetime
 import enka
 import asyncio
-from enka.enums import FightPropType, Language
+from enka.gi import Language
 import operator
 import json
 import base64
@@ -163,9 +163,10 @@ async def process_substate(substate, image_app, draw, artifact_counts, x_tdv_sta
     text_fill = (255, 255, 255) if occurrence >= 2 else (170, 170, 170)
     draw.text((142+42, x_tdv_stats+10), (f"+{substate.formatted_value}"), font=ImageFont.truetype("zh-cn.ttf", 19), fill=text_fill)
     draw.text((142+125, x_tdv_stats+14), (f"{'*'*occurrence}"), font=ImageFont.truetype("zh-cn.ttf", 21), fill=text_fill)     
-
+ 
 async def image_dcuid(charactert):
-    async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
+    async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
+        await api.update_assets()
         async with aiohttp.ClientSession() as session: 
               uid = global_data.get("uid")
               data = global_data.get("data")
@@ -206,14 +207,14 @@ async def image_dcuid(charactert):
               #stats
               dmg_bonut = charactert.highest_dmg_bonus_stat
               stat_infos = [
-                  (("HP", FightPropType.FIGHT_PROP_MAX_HP), (967, 220-30), (40, 40)),
-                  (("Tấn Công", FightPropType.FIGHT_PROP_CUR_ATTACK), (967, 255-30), (40, 40)),
-                  (("Phòng Ngự", FightPropType.FIGHT_PROP_CUR_DEFENSE), (967, 295-30), (40, 40)),
-                  (("Tinh Thông Nguyên Tố", FightPropType.FIGHT_PROP_ELEMENT_MASTERY), (967, 335-30), (40, 40)),
-                  (("Tỉ Lệ Bạo", FightPropType.FIGHT_PROP_CRITICAL), (967, 375-30), (40, 40)),
-                  (("Sát Thương Bạo", FightPropType.FIGHT_PROP_CRITICAL_HURT), (967, 415-30), (40, 40)),
-                  (("Hiệu Quả Nạp", FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), (967, 455-30), (40, 40)),
-                  (("Trị Liệu", FightPropType.FIGHT_PROP_HEAL_ADD), (967, 495-30), (40, 40)),
+                  (("HP", enka.gi.FightPropType.FIGHT_PROP_MAX_HP), (967, 220-30), (40, 40)),
+                  (("Tấn Công", enka.gi.FightPropType.FIGHT_PROP_CUR_ATTACK), (967, 255-30), (40, 40)),
+                  (("Phòng Ngự", enka.gi.FightPropType.FIGHT_PROP_CUR_DEFENSE), (967, 295-30), (40, 40)),
+                  (("Tinh Thông Nguyên Tố", enka.gi.FightPropType.FIGHT_PROP_ELEMENT_MASTERY), (967, 335-30), (40, 40)),
+                  (("Tỉ Lệ Bạo", enka.gi.FightPropType.FIGHT_PROP_CRITICAL), (967, 375-30), (40, 40)),
+                  (("Sát Thương Bạo", enka.gi.FightPropType.FIGHT_PROP_CRITICAL_HURT), (967, 415-30), (40, 40)),
+                  (("Hiệu Quả Nạp", enka.gi.FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), (967, 455-30), (40, 40)),
+                  (("Trị Liệu", enka.gi.FightPropType.FIGHT_PROP_HEAL_ADD), (967, 495-30), (40, 40)),
                   ((f"{dmg_bonut.name[5:]}", dmg_bonut.type), (967, 535-30), (40, 40)),]                
               for stat_info in stat_infos[:9]:
                 stat_value = charactert.stats[stat_info[0][1]]
@@ -288,7 +289,8 @@ class Select(discord.ui.Select):
         ]
         super().__init__(placeholder="showcare", max_values=1, min_values=1, options=options)
     async def callback(self, I: discord.Interaction):
-        async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
+        async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
+            await api.update_assets()
             char = self.data.characters[int(self.values[0][-1]) - 1]
             now = datetime.datetime.now()
             embed_loading = discord.Embed(title="<a:aloading:1152869299942338591> **Đang tạo thông tin..__Hãy kiên nhẫn__** <a:ganyurollst:1118761352064946258>", color=discord.Color.yellow())
@@ -393,7 +395,8 @@ class scuids(commands.Cog):
     
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
   async def scuid(self, Interaction, uid: int = None , user: discord.Member = None):
-    async with enka.EnkaAPI(lang=Language.VIETNAMESE) as api:
+    async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
+     await api.update_assets()
      channel = self.bot.get_channel(1118977913392476210)
      inset_message["channelt"] = channel
      try:
