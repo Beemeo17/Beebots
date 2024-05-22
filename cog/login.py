@@ -90,7 +90,8 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
 class uids(discord.ui.Modal, title="Lưu UID"):
   uid = discord.ui.TextInput(label="Nhập UID", style=discord.TextStyle.paragraph)
   async def on_submit(self, interaction):
-    async with enka.EnkaAPI() as api:
+    async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
+      await api.update_assets()
       user_id = str(interaction.user.id)
       data = load_data()
       try:
