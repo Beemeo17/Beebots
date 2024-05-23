@@ -61,7 +61,7 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
 
 
 class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài khoản"):
-  tk = discord.ui.TextInput(label="Nhập tài khoảng", style=discord.TextStyle.paragraph)
+  tk = discord.ui.TextInput(label="Nhập tài khoản", style=discord.TextStyle.paragraph)
   mk = discord.ui.TextInput(label="Nhập mật khẩu",
                             style=discord.TextStyle.paragraph)
 
