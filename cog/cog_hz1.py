@@ -11,11 +11,6 @@ from io import BytesIO
 import random
 import psutil
 
-ts = 0
-tm = 0
-th = 0
-td = 0
-
 files = "test.json"
 def load_data():
   try:
@@ -33,17 +28,6 @@ class COG_HZ1(commands.Cog):
       self.tz = pytz.timezone('Asia/Ho_Chi_Minh')
       self.update_data.start()
       self.send_greetings.start()
-  
-  @commands.Cog.listener() #message
-  async def on_message(self, message):
-    if message.author.bot:
-            return
-    if message.content.startswith('b!'):
-      return
-      
-    elif message.guild and message.guild.id == 550601755709407233:
-        if message.channel.id != 1102490528613937212:
-            await self.process_leveling(message)
     
   @tasks.loop(seconds=60) #on time
   async def send_greetings(self):
