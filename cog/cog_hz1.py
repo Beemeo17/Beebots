@@ -42,7 +42,6 @@ class COG_HZ1(commands.Cog):
       self.tz = pytz.timezone('Asia/Ho_Chi_Minh')
       self.update_data.start()
       self.send_greetings.start()
-      self.update_presence.start()
       self.up_cour.start()
   def cog_unload(self):
       self.update_presence.cancel()
@@ -57,13 +56,6 @@ class COG_HZ1(commands.Cog):
     elif message.guild and message.guild.id == 550601755709407233:
         if message.channel.id != 1102490528613937212:
             await self.process_leveling(message)
-
-  @tasks.loop(seconds=60) #view gem
-  async def update_presence(self):
-      global start_time
-      start_time = datetime.now()
-      game = discord.Game(name="Hz1 Team")
-      await self.bot.change_presence(activity=game)
 
   @update_presence.before_loop #stats
   async def before_update_presence(self):
