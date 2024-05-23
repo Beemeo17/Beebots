@@ -6,7 +6,7 @@ import asyncio
 intents = discord.Intents.all()
 intents.members = True
 intents.message_content = True
-bot = commands.Bot(command_prefix='?', intents=intents, help_command=None)
+bot = commands.Bot(command_prefix='+', intents=intents, help_command=None)
 
 # bot on
 @bot.event
