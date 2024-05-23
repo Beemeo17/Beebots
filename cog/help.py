@@ -13,7 +13,7 @@ class help(commands.Cog):
     command = await self.bot.tree.fetch_commands()
     for cmd in command:
       embed.add_field(name=f"</{cmd.name}:{cmd.id}> des: ``{cmd.description}``", value="", inline=False)
-    embed.set_footer(text="prefix: ``+``")
+    embed.set_footer(text="prefix: ``?``")
     await I.response.send_message(embed=embed)
 
 async def setup(bot):
