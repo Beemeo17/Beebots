@@ -21,6 +21,13 @@ async def on_ready():
   except Exception as e:
     print(e)
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        return
+    else:
+        raise error
+
 import keep_alive
 keep_alive.keep_alive()
 
