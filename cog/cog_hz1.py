@@ -44,11 +44,6 @@ class COG_HZ1(commands.Cog):
     elif message.guild and message.guild.id == 550601755709407233:
         if message.channel.id != 1102490528613937212:
             await self.process_leveling(message)
-
-
-  @up_cour.before_loop
-  async def before_uptime(self):
-    await self.bot.wait_until_ready()
     
   @tasks.loop(seconds=60) #on time
   async def send_greetings(self):
