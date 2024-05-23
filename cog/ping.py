@@ -18,8 +18,10 @@ class PingCog(commands.Cog):
             user_ping = round((end_time - start_time) * 1000)
             await Interaction.channel.send(f"Ping của bạn: {user_ping}ms | Ping của bot: {bot_ping}ms")
         else:
-            role_id = 1087675803170525254
-            if role_id in [role.id for role in Interaction.user.roles]:
+            """role_id = 1087675803170525254
+            if role_id in [role.id for role in Interaction.user.roles]:"""
+            
+            if Interaction.user.id == 480986687712002058:
                 channel = Interaction.channel
                 await channel.send(p)
 
