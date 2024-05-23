@@ -30,21 +30,9 @@ class COG_HZ1(commands.Cog):
   def __init__(self, bot):
       self.bot = bot
       self.spam_records = {}
-      self.conns = sqlite3.connect('templates/users.db')
-      self.cursor = self.conns.cursor()
-      # Create table
-      self.cursor.execute('''CREATE TABLE IF NOT EXISTS users
-                   (id INTEGER PRIMARY KEY, name TEXT, exp INTEGER, level INTEGER, explevel INTEGER)'''
-                )
-      self.cursor.execute('''CREATE TABLE IF NOT EXISTS voice_channels
-                            (channel_id INTEGER PRIMARY KEY, owner_id INTEGER, parent_id INTEGER)''')
-      self.conns.commit()
       self.tz = pytz.timezone('Asia/Ho_Chi_Minh')
       self.update_data.start()
       self.send_greetings.start()
-      self.up_cour.start()
-  def cog_unload(self):
-      self.update_presence.cancel()
   
   @commands.Cog.listener() #message
   async def on_message(self, message):
@@ -57,23 +45,6 @@ class COG_HZ1(commands.Cog):
         if message.channel.id != 1102490528613937212:
             await self.process_leveling(message)
 
-  @update_presence.before_loop #stats
-  async def before_update_presence(self):
-      await self.bot.wait_until_ready()
-
-  @tasks.loop(seconds=20)
-  async def up_cour(self):
-    global ts, tm, th, td
-    ts += 20
-    if ts == 60:
-      ts = 0
-      tm += 1
-      if tm == 60:
-        tm = 0
-        th += 1
-        if th == 24:
-          th = 0
-          td += 1
 
   @up_cour.before_loop
   async def before_uptime(self):
