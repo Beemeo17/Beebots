@@ -25,29 +25,8 @@ def load_data():
       data = {}
   return data
 
-async def get_cookie(channel):
-    data = load_data()
-    for key, value in data.items():
-        if value.get("daily_auto"):
-          gamep = [
-            genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
-            genshin.types.Game.HONKAI]
-          embed = discord.Embed()
-          for games in gamep[:3]:
-            client = genshin.Client(value.get("cookies"))
-            signed_in, claimed_rewards = await client.get_reward_info(game=games)
-            rews = await client.get_hoyolab_user()
-            try:
-              await client.claim_daily_reward(game=games)
-              embed.add_field(name=f"{games[19:]} | Hoàn thành điểm danh | {rews.nickname}", value="", inline=False)
-            except genshin.AlreadyClaimed:
-                assert signed_in
-                embed.add_field(name=f"{games[19:]} | Đã nhận thưởng trước đó | {rews.nickname}", value="", inline=False)
-            except Exception as s:
-                embed.add_field(name=f"{games[19:]} | {s} | {rews.nickname}", value="", inline=False)
-          await channel.send(embed=embed)
 
-class Cog_hz1(commands.Cog):
+class COG_HZ1(commands.Cog):
   def __init__(self, bot):
       self.bot = bot
       self.spam_records = {}
@@ -78,148 +57,6 @@ class Cog_hz1(commands.Cog):
     elif message.guild and message.guild.id == 550601755709407233:
         if message.channel.id != 1102490528613937212:
             await self.process_leveling(message)
-            await self.check_invite_and_add_role(message)
-            await self.process_spam_detection(message)
-  
-    """
-    async def process_leveling(self, message):
-      if message.author.bot == self.bot.user:
-          return
-      self.cursor.execute("SELECT exp, level FROM users WHERE id=?", (message.author.id, ))
-      result = self.cursor.fetchone()
-  
-      if result is None:
-          self.cursor.execute("INSERT INTO users (id, name, exp, level) VALUES (?, ?, ?, ?)",
-                    (message.author.id, message.author.name, 1, 1))
-          self.conns.commit()
-      else:
-          exp, level = result
-          explevel = result
-          exp += 1
-          new_level = int(exp // ((level * 2) + level)) + 1
-          nextlevel = (int(exp // (((level + 1) * 2) + (new_level))) + 1)
-          explevel = int(((level + 1) * 2) + (level + 1)) * (nextlevel + 1)
-          if new_level > level:
-              exp = exp - exp
-              self.cursor.execute("UPDATE users SET level=?, exp=?, explevel=? WHERE id=?",
-                        (new_level, exp, explevel, message.author.id))
-              self.conns.commit()
-  
-              channel = self.bot.get_channel(int(1092392066417430538))
-              await channel.send(
-                  f"> chúc mừng {message.author.mention} đã lên level {new_level}! hãy tiếp tục tương tác và tận hưởng niềm vui trong guild thôi nào"
-              )
-              # Change user nickname
-          self.cursor.execute("UPDATE users SET exp=? WHERE id=?", (exp, message.author.id))
-          self.conns.commit()
-  
-      # add role từ level
-      try:
-          level = result[1]
-          guild = message.guild
-          if level >= 5:
-              role = discord.utils.get(guild.roles, id=1091749838749696095)
-              await message.author.add_roles(role)
-          if level >= 10:
-              role = discord.utils.get(guild.roles, id=1091752849635016724)
-              await message.author.add_roles(role)
-          if level >= 20:
-              role = discord.utils.get(guild.roles, id=1091752767510548692)
-              await message.author.add_roles(role)
-          if level >= 30:
-              role = discord.utils.get(guild.roles, id=1091753182583083188)
-              await message.author.add_roles(role)
-          if level >= 40:
-              role = discord.utils.get(guild.roles, id=1091752917905719316)
-              await message.author.add_roles(role)
-          if level >= 50:
-              role = discord.utils.get(guild.roles, id=1091752954970775613)
-              await message.author.add_roles(role)
-          if level >= 60:
-              role = discord.utils.get(guild.roles, id=1091753084016939080)
-              await message.author.add_roles(role)
-          if level >= 70:
-              role = discord.utils.get(guild.roles, id=1091753014567641238)
-              await message.author.add_roles(role)
-      except Exception as a:
-          return a
-  
-  async def process_spam_detection(self, message):
-      if message.guild and message.guild.id == 550601755709407233:
-          guild = self.bot.get_guild(550601755709407233)
-          member = guild.get_member(message.author.id)
-          if message.channel.id == 1102490528613937212 or message.channel.id == 1116014367058706493:
-              return
-          if message.author.bot:
-              return
-  
-          author_id = message.author.id
-          self.spam_records.setdefault(author_id, {"count1": 0, "spam_role_mentioned": False})
-          spam_info = self.spam_records[author_id]
-          # 1
-          if len(message.content) <= 6:
-              spam_info["count1"] += 1
-  
-              if spam_info["count1"] >= 13 and not spam_info["spam_role_mentioned"]:
-                  try:
-                      role = discord.utils.get(message.guild.roles, id=1091731148025110609)
-                      await message.author.add_roles(role)
-                      await message.channel.send(f"{message.author.mention} đang spam, bạn đã bị mute")
-                      spam_info["spam_role_mentioned"] = True
-  
-                      await asyncio.sleep(180)
-                      await message.author.remove_roles(role)
-                      await message.channel.send(f"{message.author.mention} đã được mở hạn chế!")
-                      self.spam_records.pop(author_id)
-                  except Exception as sp1:
-                      print("id spam", sp1)
-                      return sp1
-          # 2
-          spam_info.setdefault("count2", 0)
-          spam_info.setdefault("spam_mentioned", False)
-  
-          async for m in message.channel.history(limit=13, before=message):
-              if m.author == message.author and m.content == message.content:
-                  spam_info["count2"] += 1
-  
-          if spam_info["count2"] >= 13 and not spam_info["spam_mentioned"]:
-              try:
-                  role = discord.utils.get(message.guild.roles, id=1091731148025110609)
-                  await message.author.add_roles(role)
-                  await message.channel.send(f"{message.author.mention} đang spam, bạn đã bị mute")
-                  spam_info["spam_mentioned"] = True
-  
-                  await asyncio.sleep(180)
-                  await message.author.remove_roles(role)
-                  await message.channel.send(f"{message.author.mention} đã được mở hạn chế!")
-                  self.spam_records.pop(author_id)
-              except Exception as sp2:
-                  print("id spam", sp2)
-                  return sp2
-  
-          await asyncio.sleep(30)
-          if author_id in self.spam_records:
-              self.spam_records.pop(author_id)"""
-  
-  async def check_invite_and_add_role(self, message):
-      invite_link = await self.check_invite_link(message.content)
-      if invite_link:
-          if any(role.id == 1087675803170525254 for role in message.author.roles):
-              return
-          await message.delete()
-          channel_inv = self.bot.get_channel(1108049138685329448)
-          await channel_inv.send(f"{message.author.mention} đã gửi một liên kết mời máy chủ tại {message.channel.mention} và đã bị xóa.")
-          await self.add_role_to_user(message.author)
-  
-  async def check_invite_link(self, content):
-      if "discord.gg" in content:
-          return True
-      return False
-  
-  async def add_role_to_user(self, user):
-      guild = user.guild
-      role = discord.utils.get(guild.roles, id=1091731148025110609)
-      await user.add_roles(role)
 
   @tasks.loop(seconds=60) #view gem
   async def update_presence(self):
@@ -249,15 +86,6 @@ class Cog_hz1(commands.Cog):
   @up_cour.before_loop
   async def before_uptime(self):
     await self.bot.wait_until_ready()
-
-  @commands.command()
-  async def stats(self, ctx):
-    global ts, tm, th, td
-    embed = discord.Embed(title="bot stats")
-    embed.add_field(name=f"<a:blobdj:1153569751201759232> {td}d:{th}h:{tm}m:{ts}s", value="", inline=False)
-    embed.add_field(name=f"<:emoji_45:1217819246978138153> CPU: {psutil.cpu_percent()}%", value="", inline=True)
-    embed.add_field(name=f"<:emoji_44:1217819116325568692> RAM: {psutil.virtual_memory()[2]}%", value="", inline=True)
-    await ctx.send(embed=embed)
     
   @tasks.loop(seconds=60) #on time
   async def send_greetings(self):
@@ -265,9 +93,6 @@ class Cog_hz1(commands.Cog):
       channel = self.bot.get_channel(1241472122275106897)
       if  current_time.hour == 22 and current_time.minute == 0:
           await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
-      elif current_time.hour == 23 and current_time.minute == 4:
-          channels = self.bot.get_channel(1156104339291635758)
-          await get_cookie(channels)
 
   @tasks.loop(seconds=10) #top info
   async def update_data(self):
@@ -285,14 +110,6 @@ class Cog_hz1(commands.Cog):
           embed.add_field(name=f"> Thành Viên: {total_members - bot_count}", value="", inline=False)
           embed.add_field(name=f"> Số Lượng Bot: {bot_count}", value="", inline=False)
           embed.add_field(name=f"> Boost: {boosts}", value="", inline=False)
-          self.cursor.execute("SELECT name, level, exp FROM users ORDER BY level DESC, exp DESC LIMIT 3")
-          results = self.cursor.fetchall()
-          """          
-          embed.add_field(name="**Bảng Xếp Hạng**", value="", inline=False)
-          embed.set_thumbnail(url="https://example.com/leaderboard_icon.png")
-          for index, (name, level, exp) in enumerate(results):
-              message_count = exp - 1
-              embed.add_field(name=f"> #{index+1} - {name}", value=f"> Level: **{level}**   EXP: **{message_count}**", inline=False)"""
           current_time = datetime.now(tz).strftime('%H:%M:%S - %d/%m/%Y')
           embed.set_footer(text=f"UPDATE: {current_time}")
           message = await channel.fetch_message(1242764555713777724)
@@ -327,36 +144,6 @@ class Cog_hz1(commands.Cog):
 
                       self.cursor.execute('DELETE FROM voice_channels WHERE channel_id = ?', (child_channel_id,))
                       self.conns.commit()
-  
-  @commands.command() #id tree commands
-  async def IDs(self, ctx, name):
-    commands = await self.bot.tree.fetch_commands()
-    for cmd in commands:
-      if cmd.name == name:
-        await ctx.send(f"</{name}:{cmd.id}> --> `{cmd.description}`")
-
-  """
-  @commands.Cog.listener() #add role emoji
-  async def on_raw_reaction_add(self, payload):
-      message_id = payload.message_id
-      if message_id == 1102870362443743242:
-          guild_id = payload.guild_id
-          guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
-          if payload.emoji.name == 'coop_beebot':
-              role = guild.get_role(1102868806348574730)
-              member = guild.get_member(payload.user_id)
-              await member.add_roles(role)
-
-  @commands.Cog.listener() #xoa role emoji
-  async def on_raw_reaction_remove(self, payload):
-      message_id = payload.message_id
-      if message_id == 1102870362443743242:
-          guild_id = payload.guild_id
-          guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
-          if payload.emoji.name == 'coop_beebot':
-              role = guild.get_role(1102868806348574730)
-              member = guild.get_member(payload.user_id)
-              await member.remove_roles(role)"""
 
   @commands.Cog.listener() #loi chao
   async def on_member_join(self, user):
@@ -416,4 +203,4 @@ class Cog_hz1(commands.Cog):
 
   
 async def setup(bot):
-   await bot.add_cog(Cog_hz1(bot))
+   await bot.add_cog(COG_HZ1(bot))
