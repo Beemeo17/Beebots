@@ -14,3 +14,6 @@ git+https://github.com/seriaati/enka-py
 bs4
 psutil
 qrcode
+yt_dlp
+spotipy
+pytube
