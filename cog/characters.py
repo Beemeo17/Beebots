@@ -50,9 +50,9 @@ async def char_nt(nts):
 async def char_rate(rate):
     async with aiohttp.ClientSession() as session:
         if rate == 5:
-            ratety = "https://cdn.discordapp.com/attachments/1107978903294853140/1227303277092278424/Day_12_2.png?ex=6627ea3f&is=6615753f&hm=3210e9f2d610a0eee1f7630886fb6f51a1e66f484e7358d6f511e9ebd4519287&"
+            ratety = "https://iili.io/d9W3okF.webp"
         if rate == 4:
-            ratety = "https://media.discordapp.net/attachments/1107978903294853140/1227303276865650789/Day_12_1.png?ex=6627ea3f&is=6615753f&hm=f23a88a92f1244307525f82345ea6975e1ab544b0514b118fafdeba33be44f81&=&format=webp&quality=lossless&width=102&height=135"
+            ratety = "https://iili.io/d9W32Xj.webp"
         return ratety
 
 async def sk_chars(sk_char_goc, sk_char_draw, char, xs, ys, t, char_goc):
@@ -161,4 +161,4 @@ class all_characters(commands.Cog):
             
 
 async def setup(bot):
-    await bot.add_cog(all_characters(bot))
+   await bot.add_cog(all_characters(bot))

@@ -394,40 +394,45 @@ class scuids(commands.Cog):
     self.bot = bot
     
   @app_commands.command(name="scuid", description="check dữ liệu uid genshin")
-  async def scuid(self, Interaction, uid: int = None , user: discord.Member = None):
+  async def scuid(self, interaction, uid: int = None , user: discord.Member = None):
+    embed = discord.Embed(title="vui lòng đợi thông tin được sử lý", color=discord.Color.dark_gold())
+    await interaction.response.send_message(embed=embed, ephemeral=True)
     async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
-     await api.update_assets()
-     channel = self.bot.get_channel(1118977913392476210)
-     inset_message["channelt"] = channel
-     try:
+        await api.update_assets()
+        channel = self.bot.get_channel(1118977913392476210)
+        inset_message["channelt"] = channel
+        
         data = load_data()
-        user_id = str(Interaction.user.id) if user is None else str(user.id)
-        if uid is not None:
-          uid = uid
-        else: 
-          if user_id in data:
-             uid = data[user_id]["uid"] if "uid" in data[user_id] else await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
-          else:
-             await Interaction.response.send_message("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
-        data = await api.fetch_showcase(uid)
-        global_data["data"] = data
-        global_data["uid"] = uid
-        embed = discord.Embed()
-        embed.add_field(name="vui lòng đợi thông tin được sử lý", value="", inline=False)
-        await Interaction.response.send_message(embed=embed, ephemeral=True)
-        if data.characters is not None and len(data.characters) > 0:
-          file = await generate_image(data)
-          message = await Interaction.channel.send(file=file, view=SelectView())
-          inset_message["message"] = message
-        else:
-          embed1 = discord.Embed(color=0xed0202)
-          embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
-          embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới", inline=False)
-          embed1.set_image(url="https://media.discordapp.net/attachments/1107978903294853140/1210882152842006538/Khong_Co_Tieu_e162_20240224163313.png")
-          await Interaction.followup.send(embed=embed1, ephemeral=True)
-          
-     except Exception as s:
-        await channel.send(f"Error: {s}")
+        user_id = str(interaction.user.id) if user is None else str(user.id)
+        try:
+            if uid is not None:
+                uid = uid
+            else: 
+                if user_id in data:
+                    if "uid" in data[user_id]:
+                        uid = data[user_id]["uid"] 
+                    else:
+                        await interaction.channel.send("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
+                        return
+                else:
+                    await interaction.channel.send("Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
+                    return
+            data = await api.fetch_showcase(uid)
+            global_data["data"] = data
+            global_data["uid"] = uid
+            if data.characters is not None and len(data.characters) > 0:
+                file = await generate_image(data)
+                message = await interaction.channel.send(file=file, view=SelectView())
+                inset_message["message"] = message
+            else:
+                embed1 = discord.Embed(color=0xed0202)
+                embed1.add_field(name="lỗi", value="Không tìm thấy dữ liệu cho người dùng này.", inline=False)
+                embed1.add_field(name="Chuyện gì đã xảy ra?", value="Vấn đề thường gặp nhất với lỗi này đó là tài khoản bạn đang tìm kiếm chưa công khai Hồ sơ. Để sửa lỗi này, hãy bật tùy chọn ``Hiển thị chi tiết nhân vật`` trong giao diện Hồ sơ Genshin của bạn. Hãy tham khảo hình ảnh bên dưới", inline=False)
+                embed1.set_image(url="https://media.discordapp.net/attachments/1107978903294853140/1210882152842006538/Khong_Co_Tieu_e162_20240224163313.png")
+                await interaction.followup.send(embed=embed1, ephemeral=True)
+        except Exception as e:
+            await interaction.response.edit_message(content=f"Lỗi: {e} Vui lòng thử lại!")
+            return
 
 async def setup(bot):
   await bot.add_cog(scuids(bot))

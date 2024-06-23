@@ -28,7 +28,7 @@ async def event(I, input):
      await I.response.edit_message(embed=embed)
 
 class skip(discord.ui.Modal, title="page skip"):
-    page = discord.ui.TextInput(label="Trang skip tới", style=discord.TextStyle.paragraph)
+    page = discord.ui.TextInput(label="Trang skip tới")
 
     async def on_submit(self, I: discord.Interaction):
         if self.page.value.isdigit():

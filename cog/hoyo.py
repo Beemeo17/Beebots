@@ -75,15 +75,15 @@ class button(discord.ui.View):
     self.auto_claim.disabled = True
     await I.edit_original_response(view=self)
 
-  async def on_select(self, I):
-    self.claim_dailys.disabled = False
-    self.auto_claim.disabled = False
-    self.claim_dailys.style = discord.ButtonStyle.gray
-    await I.edit_original_response(view=self)
+  async def on_but(self, I):
+     self.claim_dailys.disabled = False
+     self.claim_dailys.style = discord.ButtonStyle.gray
+     await I.edit_original_response(view=self)
   
   async def up_button(self, I, sin, client):
     user_id = str(I.user.id)
     data = load_data()
+    #on claim_daily
     try:
        await client._get_uid(game=outputs.get("gane"))
     except genshin.errors.AccountNotFound as e:
@@ -92,6 +92,19 @@ class button(discord.ui.View):
     if sin:
       self.claim_dailys.disabled = True
       self.claim_dailys.style = discord.ButtonStyle.green
+    #on daily
+    if "daily_auto" in data[user_id]:
+      if data[user_id]["daily_auto"]:
+       self.auto_claim.label = "Disabled"
+       self.auto_claim.style=discord.ButtonStyle.red
+      else:
+        self.auto_claim.label = "Enabled"
+        self.auto_claim.style=discord.ButtonStyle.green
+    await I.edit_original_response(view=self)
+
+  async def daily_autos(self, I):
+    user_id = str(I.user.id)
+    data = load_data()
     if "daily_auto" in data[user_id]:
       if data[user_id]["daily_auto"]:
        self.auto_claim.label = "Disabled"
@@ -131,7 +144,7 @@ class button(discord.ui.View):
     else:
         await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sửa dụng </login:1198488196087025755> để tiếp tục")
   
-  @discord.ui.button(label="Auto_claim", style=discord.ButtonStyle.gray, disabled=True)
+  @discord.ui.button(label="Auto_claim", style=discord.ButtonStyle.gray)
   async def auto_claim(self, Interaction, button: discord.ui.Button,):
     user_id = str(Interaction.user.id)
     data = load_data()
@@ -210,8 +223,11 @@ class button(discord.ui.View):
                 embed.add_field(name=f"✅ {rews.nickname}", value="", inline=False)
                 embed.set_image(url=file_url)
                 embed.add_field(name="daily_auto_claim: ✅" if "daily_auto" in data[user_id] and data[user_id]["daily_auto"] else "daily_auto_claim: ❌", value="", inline=False)
+                
                 await Interaction.message.edit(embed=embed)
-                await self.on_select(Interaction)
+                
+                await self.on_but(Interaction)
+
                 await self.up_button(Interaction, signed_ins, client)
             else:
                 await Interaction.response.edit_message(content="Bạn chưa đăng kí hãy sử dụng </login:1198488196087025755> để tiếp tục")
@@ -230,6 +246,7 @@ class Codes(commands.Cog):
       embed = discord.Embed(title=f"{self.bot.user.name} | Điểm danh hàng ngày Hoyolab", description="Nhận thưởng hàng ngày. hãy chọn 1 lựa chọn bên dưới để bắt đầu nhận thưởng!", colour=0x00f5a3, timestamp=datetime.datetime.now())
       embed.set_thumbnail(url=self.bot.user.avatar)
       await Interaction.response.send_message(embed=embed, view=button())
+      await button().daily_autos(Interaction)
       await asyncio.sleep(300)
       await button().Tout(Interaction)
     else:

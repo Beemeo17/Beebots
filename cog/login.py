@@ -25,14 +25,10 @@ def save_data(data):
 Client = genshin.Client()
 
 class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
-  ctk2 = discord.ui.TextInput(label="cookie_token_v2",
-                              style=discord.TextStyle.paragraph)
-  accmid2 = discord.ui.TextInput(label="account_mid_v2",
-                                 style=discord.TextStyle.paragraph)
-  accid2 = discord.ui.TextInput(label="account_id_v2",
-                                style=discord.TextStyle.paragraph)
-  ltk2 = discord.ui.TextInput(label="ltoken_v2",
-                              style=discord.TextStyle.paragraph)
+  ctk2 = discord.ui.TextInput(label="cookie_token_v2", placeholder="v2_CAQSDGM5b3FhcTNzM2d1OCCXy7qzBiiV_Jeu...")
+  accmid2 = discord.ui.TextInput(label="account_mid_v2", placeholder="1vte51...")
+  accid2 = discord.ui.TextInput(label="account_id_v2", placeholder="2906...")
+  ltk2 = discord.ui.TextInput(label="ltoken_v2", placeholder="v2_CAISDGM5b3FhcTNzM2d1OCCwzfKuBijp...")
 
   async def on_submit(self, Interaction):
     user_id = str(Interaction.user.id)
@@ -49,27 +45,34 @@ class cklogin(discord.ui.Modal, title="nhập dữ liệu cookie"):
       else:
         data[user_id] = {"cookies": cookie}
       save_data(data)
+
+      embed2 = discord.Embed(title=f"Đang kiểm tra Thông tin!", color=discord.Color.gold())
+      await Interaction.response.edit_message(content="", embed=embed2)
+
       Clientt = genshin.Client(cookie)
       rews = await Clientt.get_hoyolab_user()
       uid = await Clientt._get_uid(game=genshin.types.Game.GENSHIN)
       embed = discord.Embed(title=f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``', color=discord.Color.yellow())
-      embed.add_field(name=f"UID {uid}", value="", inline=False)
+      
       await Interaction.message.edit(embed=embed)
-      await Interaction.response.edit_message(content="Lưu dữ liệu thành công!")
+      
     except Exception as e:
-      await Interaction.response.edit_message(content=f"Lỗi: {e}")
+      sss = discord.Embed(title=f"lỗi dữ liệu!! \n__{e}__")
+      await Interaction.message.edit(content="", embed=sss)
 
 
 class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài khoản"):
-  tk = discord.ui.TextInput(label="Nhập tài khoản", style=discord.TextStyle.paragraph)
-  mk = discord.ui.TextInput(label="Nhập mật khẩu",
-                            style=discord.TextStyle.paragraph)
+  tk = discord.ui.TextInput(label="Nhập tài khoản", placeholder="taikhoan@gmail.com or username")
+  mk = discord.ui.TextInput(label="Nhập mật khẩu", placeholder="matkhau321#")
 
   async def on_submit(self, Interaction):
     user_id = str(Interaction.user.id)
     data = load_data()
 
     try:
+      embed2 = discord.Embed(title=f"Đang kiểm tra Thông tin!", color=discord.Color.gold())
+      await Interaction.response.edit_message(content="", embed=embed2)
+
       cookie = await Client.login_with_password(self.tk.value, self.mk.value, port=0)
       if user_id in data:
         data[user_id]["cookies"] = cookie
@@ -80,30 +83,39 @@ class tklogin(discord.ui.Modal, title="nhập dữ liệu thẳng bằng tài kh
       rews = await Clientt.get_hoyolab_user()
       uid = await Clientt._get_uid(game=genshin.types.Game.GENSHIN)
       embed = discord.Embed(title=f'✅ Đã kết nối thành công với tài khoản! \nName: ``{rews.nickname}``', color=discord.Color.yellow())
-      embed.add_field(name=f"UID {uid}", value="", inline=False)
+      
       await Interaction.message.edit(embed=embed)
-      await Interaction.response.edit_message(content="Lưu dữ liệu thành công!")
+
     except Exception as e:
-      await Interaction.response.edit_message(content=f"Lỗi: {e}")
+      sss = discord.Embed(title=f"lỗi dữ liệu!! \n__{e}__")
+      await Interaction.message.edit(content="", embed=sss)
 
 
 class uids(discord.ui.Modal, title="Lưu UID"):
-  uid = discord.ui.TextInput(label="Nhập UID", style=discord.TextStyle.paragraph)
+  uid = discord.ui.TextInput(label="Nhập UID", style=discord.TextStyle.short, min_length="8", max_length="10")
   async def on_submit(self, interaction):
     async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
       await api.update_assets()
       user_id = str(interaction.user.id)
       data = load_data()
       try:
-        await api.fetch_showcase(self.uid.value)
+        embed2 = discord.Embed(title=f"Đang kiểm tra UID:{self.uid.value}", color=discord.Color.gold())
+        await interaction.response.edit_message(content="", embed=embed2)
+
         if user_id in data:
           data[user_id]["uid"] = self.uid.value
         else:
           data[user_id] = {"uid": self.uid.value}
         save_data(data)
-        await interaction.response.edit_message(content=f"Lưu UID:{self.uid.value} thành công!")
+
+        await api.fetch_showcase(self.uid.value)
+        embed = discord.Embed(title=f"Lưu UID:{self.uid.value} thành công!", color=discord.Color.dark_green())
+        await interaction.message.edit(content="", embed=embed)
       except Exception as e:
-        await interaction.response.edit_message(content=f"Lỗi: {e} Vui lòng Kiểm tra lại UID!")
+        embed1 = discord.Embed(title=f"Lỗi bất thường!! \n__{e}__", color=discord.Color.brand_red())
+        await interaction.message.edit(content="", embed=embed1)
+
+
 
 class Button1(discord.ui.View):
   def __init__(self, timeout=300):

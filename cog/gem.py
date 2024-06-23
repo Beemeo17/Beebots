@@ -30,9 +30,9 @@ async def fetch_image(session, url):
 async def cre(xp, yp):
     async with aiohttp.ClientSession() as session:
         urls = [
-            "https://media.discordapp.net/attachments/1107978903294853140/1209149933635117137/3AF1A67D-FA57-4D1B-AD8E-63B68CF53894.png?ex=65e5dfa1&is=65d36aa1&hm=845659fb12f4d8d3e864d0bfa23d58ff846bc1c6c92b8d9a190c779701b15457&a",
-            "https://media.discordapp.net/attachments/1107978903294853140/1209147724398727208/image0.jpg?ex=65e5dd92&is=65d36892&hm=f69226f3f85370ae12af6bd8479aec9cf3a70d7d40d16fc5fb902421e5bb2769&a",
-            "https://media.discordapp.net/attachments/1107978903294853140/1209147827662487593/image0.jpg?ex=65e5ddaa&is=65d368aa&hm=ba84af0c3e747128d33725edd250c30a3b961f6b2988c4a770641cfb2a992503&a"
+            "https://media.discordapp.net/attachments/1107978903294853140/1209149933635117137/3AF1A67D-FA57-4D1B-AD8E-63B68CF53894.png?ex=6665c121&is=66646fa1&hm=10ef91447de44cc20fdfc7136bc77dc3093768a0b0b0c3b014b2e620561efd91&=&format=webp&quality=lossless",
+            "https://cdn.discordapp.com/emojis/1121643238277779557.webp?size=96&quality=lossless",
+            "https://cdn.discordapp.com/emojis/1118969739918708756.webp?size=96&quality=lossless"
         ]
         images = await asyncio.gather(*[fetch_image(session, url) for url in urls])
         imgapp = Image.open(BytesIO(images[0])).convert("RGBA").resize((100, 100))
@@ -91,6 +91,7 @@ class gem(commands.Cog):
 
  @commands.command()
  async def te(self, ctx):
+  return await ctx.send("Tạm dừng hoạt động!")
   x = 2.5
   y = 2.5
   channel = self.bot.get_channel(1118977913392476210)

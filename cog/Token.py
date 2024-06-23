@@ -4,8 +4,8 @@ from discord.ext import commands
 import os
 
 class Button(discord.ui.View):
-  def __init__(self):
-    super().__init__()
+  def __init__(self, timeout=None):
+    super().__init__(timeout=timeout)
 
   @discord.ui.button(label="TICKET", style= discord.ButtonStyle.green)
   async def click(self, Interaction: discord.Interaction, button: discord.ui.Button,):

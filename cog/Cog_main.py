@@ -105,8 +105,8 @@ class Cog_main(commands.Cog):
               self.conns.commit()
   
               channel = self.bot.get_channel(int(1092392066417430538))
-              await channel.send(
-                  f"> chúc mừng {message.author.mention} đã lên level {new_level}! hãy tiếp tục tương tác và tận hưởng niềm vui trong guild thôi nào"
+              await message.channel.send(
+                  f"> chúc mừng {message.author.mention} đã lên level {new_level}! hãy tiếp tục tương tác để lên nhưng cấp cao hơn nào:3"
               )
               # Change user nickname
           self.cursor.execute("UPDATE users SET exp=? WHERE id=?", (exp, message.author.id))
@@ -203,11 +203,11 @@ class Cog_main(commands.Cog):
   async def check_invite_and_add_role(self, message):
       invite_link = await self.check_invite_link(message.content)
       if invite_link:
-          if any(role.id == 1087675803170525254 for role in message.author.roles):
+          if message.author.guild_permissions.manage_guild or message.author.id == message.guild.owner_id:
               return
           await message.delete()
           channel_inv = self.bot.get_channel(1108049138685329448)
-          await channel_inv.send(f"{message.author.mention} đã gửi một liên kết mời máy chủ tại {message.channel.mention} và đã bị xóa.")
+          await message.channel.send(f"{message.author.mention} đã gửi một liên kết mời máy chủ tại {message.channel.mention} và đã bị xóa.")
           await self.add_role_to_user(message.author)
   
   async def check_invite_link(self, content):
@@ -216,15 +216,21 @@ class Cog_main(commands.Cog):
       return False
   
   async def add_role_to_user(self, user):
-      guild = user.guild
-      role = discord.utils.get(guild.roles, id=1091731148025110609)
-      await user.add_roles(role)
+    guild = user.guild
+    MuteRole = discord.utils.get(guild.roles, name='Muted')
+    if not MuteRole:
+        MuteRole = await guild.create_role(name="Muted")
+        for channel in guild.channels:
+            await channel.set_permissions(MuteRole, speak=False, send_messages=False, read_message_history=False, read_messages=True)
+    reason = "Gửi link **__invite__** \n Chúng tôi sẽ xem xét và xử lý bạn!"
+    await user.add_roles(MuteRole, reason=reason)
+    await user.send(f"Bạn đã bị muted trong server **{guild.name}** | Reason: **{reason}**")
 
   @tasks.loop(seconds=60) #view gem
   async def update_presence(self):
       global start_time
       start_time = datetime.now()
-      game = discord.Game(name="❄️HIVE Teyvat❄️")
+      game = discord.Game(name=f"🌸{self.bot.user.name} in comming here🌸")
       await self.bot.change_presence(activity=game)
 
   @update_presence.before_loop #stats
@@ -249,7 +255,7 @@ class Cog_main(commands.Cog):
   async def before_uptime(self):
     await self.bot.wait_until_ready()
 
-  @commands.command()
+  @commands.command(help="stats bot")
   async def stats(self, ctx):
     global ts, tm, th, td
     embed = discord.Embed(title="bot stats")
@@ -302,38 +308,129 @@ class Cog_main(commands.Cog):
   
   @commands.Cog.listener() #voie
   async def on_voice_state_update(self, member, before, after):
-      if before.channel != after.channel:
-          if after.channel and after.channel.id == 1107965775219789854:
-              guild = member.guild
-              category = after.channel.category
+    if before.channel != after.channel:
+        if after.channel and after.channel.id == 1107965775219789854:
+            guild = member.guild
+            category = after.channel.category
 
-              new_channel = await guild.create_voice_channel(name=f"┕🍀{member.name}🍀┛", category=category)
+            new_channel = await guild.create_voice_channel(name=f"┕🍀{member.name}🍀┛", category=category, user_limit=10)
 
-              self.cursor.execute('INSERT INTO voice_channels (channel_id, owner_id, parent_id) VALUES (?, ?, ?)', (new_channel.id, member.id, category.id))
-              self.conns.commit()
+            self.cursor.execute('INSERT INTO voice_channels (channel_id, owner_id, parent_id) VALUES (?, ?, ?)', (new_channel.id, member.id, category.id))
+            self.conns.commit()
 
-              await member.move_to(new_channel)
+            await member.move_to(new_channel)
 
-      if before.channel:
-          root_channel = before.channel.category
-          self.cursor.execute('SELECT * FROM voice_channels WHERE parent_id = ?', (root_channel.id,))
-          rows = self.cursor.fetchall()
-          if rows:
-              for row in rows:
-                  child_channel_id = row[0]
-                  child_channel = self.bot.get_channel(child_channel_id)
-                  if child_channel and len(child_channel.members) == 0:
-                      await child_channel.delete()
 
-                      self.cursor.execute('DELETE FROM voice_channels WHERE channel_id = ?', (child_channel_id,))
-                      self.conns.commit()
-  
-  @commands.command() #id tree commands
-  async def IDs(self, ctx, name):
-    commands = await self.bot.tree.fetch_commands()
-    for cmd in commands:
-      if cmd.name == name:
-        await ctx.send(f"</{name}:{cmd.id}> --> `{cmd.description}`")
+            embed = discord.Embed(
+                title="Quản lý channel Voice",
+                description=f"Voice channel của {member.mention} đã được tạo.",
+                color=discord.Color.blue()
+            )
+            
+            # Tạo các button
+            class mobdul(discord.ui.Modal, title="Sửa giới hạn người có thể tham gia"):
+                member = discord.ui.TextInput(label="limit_member")
+                async def on_submit(self, interaction):
+                    try:
+                        new_limit = int(self.member.value)
+                        await interaction.channel.edit(user_limit=new_limit)
+                        await interaction.response.send_message(f"Giới hạn người dùng được chỉnh thành {new_limit}.")
+                    except (ValueError, TimeoutError):
+                        await interaction.response.send_message("lỗi đầu vào hoặc timeout.")
+
+            class VoiceChannelView(discord.ui.View):
+                def __init__(self, bot, channel, owner_id, timeout=None):
+                    super().__init__(timeout=timeout)
+                    self.bot = bot
+                    self.channel = channel
+                    self.owner_id = owner_id
+
+                @discord.ui.button(label="User limit", style=discord.ButtonStyle.primary)
+                async def adjust_user_limit(self, interaction: discord.Interaction, button: discord.ui.Button):
+                    if interaction.user.id != self.owner_id:
+                        await interaction.response.send_message("Bạn không phải chủ voice.", ephemeral=True)
+                        return
+
+                    await interaction.response.send_modal(mobdul())
+
+
+                @discord.ui.button(label="quyền kênh", style=discord.ButtonStyle.secondary)
+                async def adjust_privacy(self, interaction: discord.Interaction, button: discord.ui.Button):
+                    if interaction.user.id != self.owner_id:
+                        await interaction.response.send_message("Bạn không phải chủ voice.", ephemeral=True)
+                        return
+
+                    overwrites = self.channel.overwrites
+                    if member.guild.default_role in overwrites and overwrites[member.guild.default_role].connect is False:
+                        overwrites[member.guild.default_role] = discord.PermissionOverwrite(connect=True)
+                        await self.channel.edit(overwrites=overwrites)
+                        await interaction.response.send_message("Channel is now public.")
+                    else:
+                        overwrites[member.guild.default_role] = discord.PermissionOverwrite(connect=False)
+                        await self.channel.edit(overwrites=overwrites)
+                        await interaction.response.send_message("Channel is now private.")
+
+
+                @discord.ui.button(label="", emoji="🛗", style=discord.ButtonStyle.success)
+                async def allow_user(self, interaction: discord.Interaction, button: discord.ui.Button):
+                    if interaction.user.id != self.owner_id:
+                        await interaction.response.send_message("Bạn không phải chủ voice.", ephemeral=True)
+                        return
+
+                    await interaction.response.send_message("Vui lòng mention người dùng bạn muốn cấp quyền truy cập voice!")
+
+                    def check(m):
+                        return m.author == interaction.user and m.channel == interaction.channel
+
+                    try:
+                        msg = await self.bot.wait_for('message', check=check, timeout=30)
+                        allowed_user = msg.mentions[0]
+                        overwrites = self.channel.overwrites
+                        overwrites[allowed_user] = discord.PermissionOverwrite(connect=True)
+                        await self.channel.edit(overwrites=overwrites)
+                        await interaction.followup.send(f"{allowed_user.mention} đã có thể tuy cập voice này.")
+                    except (IndexError, TimeoutError):
+                        await interaction.followup.send("Lỗi hoặc timeout.")
+
+                @discord.ui.button(label="", emoji="🚷", style=discord.ButtonStyle.danger)
+                async def disconnect_user(self, interaction: discord.Interaction, button: discord.ui.Button):
+                    if interaction.user.id != self.owner_id:
+                        await interaction.response.send_message("Bạn không phải chủ voice.", ephemeral=True)
+                        return
+
+                    await interaction.response.send_message("Vui lòng mention người dùng bạn muốn đuổi khỏi voice!")
+
+                    def check(m):
+                        return m.author == interaction.user and m.channel == interaction.channel
+
+                    try:
+                        msg = await self.bot.wait_for('message', check=check, timeout=30)
+                        user_to_disconnect = msg.mentions[0]
+                        member = interaction.guild.get_member(user_to_disconnect.id)
+                        if member and member.voice and member.voice.channel == self.channel:
+                            await member.move_to(None)
+                            await interaction.followup.send(f"{user_to_disconnect.mention} đã bị đuổi khỏi voice này.")
+                        else:
+                            await interaction.followup.send("Người dùng mention không có trong voice này!")
+                    except (IndexError, TimeoutError):
+                        await interaction.followup.send("Lỗi hoặc timeout.")
+
+            view = VoiceChannelView(self.bot, new_channel, member.id)
+            await new_channel.send(embed=embed, view=view)
+
+    if before.channel:
+        root_channel = before.channel.category
+        self.cursor.execute('SELECT * FROM voice_channels WHERE parent_id = ?', (root_channel.id,))
+        rows = self.cursor.fetchall()
+        if rows:
+            for row in rows:
+                child_channel_id = row[0]
+                child_channel = self.bot.get_channel(child_channel_id)
+                if child_channel and len(child_channel.members) == 0:
+                    await child_channel.delete()
+
+                    self.cursor.execute('DELETE FROM voice_channels WHERE channel_id = ?', (child_channel_id,))
+                    self.conns.commit()
 
   @commands.Cog.listener() #add role emoji
   async def on_raw_reaction_add(self, payload):
