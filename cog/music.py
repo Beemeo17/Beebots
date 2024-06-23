@@ -45,18 +45,19 @@ class MusicCog(commands.Cog):
         global loop_song
         if loop_song and self.current_song[ctx.guild.id]:
             loop = asyncio.get_event_loop()
-            data = await asyncio.to_thread(self.ytdl.extract_info, self.current_song[ctx.guild.id], download=False)
-            song = data['url']
+            stream = YouTube(self.current_song[ctx.guild.id]).streams.filter(progressive=True, file_extension='mp4').first()
+
+            song = stream.url
             player = discord.FFmpegOpusAudio(song, **self.ffmpeg_options(self.current_volume, self.current_speed))
             self.voice_clients[ctx.guild.id].play(player, after=lambda e: asyncio.run_coroutine_threadsafe(self.play_next(ctx), self.bot.loop))
         elif self.queue[ctx.guild.id]:
             next_url = self.queue[ctx.guild.id].pop(0)
-
             self.current_song[ctx.guild.id] = next_url
 
             loop = asyncio.get_event_loop()
-            data = await asyncio.to_thread(self.ytdl.extract_info, next_url, download=False)
-            song = data['url']
+            stream = YouTube(next_url).streams.filter(progressive=True, file_extension='mp4').first()
+
+            song = stream.url
             player = discord.FFmpegOpusAudio(song, **self.ffmpeg_options(self.current_volume, self.current_speed))
             self.voice_clients[ctx.guild.id].play(player, after=lambda e: asyncio.run_coroutine_threadsafe(self.play_next(ctx), self.bot.loop))
 
@@ -131,34 +132,58 @@ class MusicCog(commands.Cog):
                         return album['name'], album['artists'][0]['name'], album['external_urls']['spotify'], album['id']
                     else:
                         return None
+
+                if "spotify.com/playlist" in url:
+                    playlist = self.sp.playlist(url)
+                    if playlist:
+                        return playlist['name'], playlist['external_urls']['spotify'], playlist['id']
+                    else:
+                        return None
+
                 results = self.sp.search(q=url, type='album', limit=1)
                 if results['albums']['items']:
                     album = results['albums']['items'][0]
                     return album['name'], album['artists'][0]['name'], album['external_urls']['spotify'], album['id']
                 else:
                     return None
-            
+
             def get_all_tracks_in_album(album_id):
                 tracks = self.sp.album_tracks(album_id)['items']
                 return [(track['name'], track['artists'][0]['name'], track['external_urls']['spotify']) for track in tracks]
 
+            def get_all_tracks_in_playlist(playlist_id):
+                tracks = self.sp.playlist_tracks(playlist_id)['items']
+                return [(track['track']['name'], track['track']['artists'][0]['name'], track['track']['external_urls']['spotify']) for track in tracks]
+
             async def fetch_spotify_info(url):
-                album_name, artist_name, spotify_url, album_id = song(url)
-                return album_name, album_id
+                return song(url)
 
             async def fetch_youtube_url(query):
                 return await self.spo_to_yt(query)
 
             async def handle_spotify_url(I, url):
-                album_name, album_id = await fetch_spotify_info(url)
-                _url = await fetch_youtube_url(album_name)
-                self.queue[I.guild.id].append(_url)
+                result = await fetch_spotify_info(url)
+                if "spotify.com/track" in url:
+                    track_name, artist_name, _, _ = result
+                    _url = await fetch_youtube_url(f"{track_name} {artist_name}")
+                    self.queue[I.guild.id].append(_url)
+                if "spotify.com/album" in url:
+                    album_name, _, _, album_id = result
+                    _url = await fetch_youtube_url(album_name)
+                    self.queue[I.guild.id].append(_url)
 
-                if "spotify.com/track" not in url and "spotify.com/playlist" not in url:
                     tracks_info = get_all_tracks_in_album(album_id)
                     if tracks_info:
                         async with aiohttp.ClientSession() as session:
-                            tasks = [self.fetch_yt_url(session, f"{album_name} {track_name}") for track_name, _, _ in tracks_info]
+                            tasks = [self.fetch_yt_url(session, f"{track_name} {artist_name}") for track_name, artist_name, _ in tracks_info]
+                            yt_urls = await asyncio.gather(*tasks)
+                            self.queue[I.guild.id].extend(yt_urls)
+                if "spotify.com/playlist" in url:
+                    playlist_name, _, playlist_id = result
+                    tracks_info = get_all_tracks_in_playlist(playlist_id)
+                    if tracks_info:
+                        async with aiohttp.ClientSession() as session:
+                            tasks = [self.fetch_yt_url(session, f"{track_name} {artist_name}") for track_name, artist_name, _ in tracks_info]
                             yt_urls = await asyncio.gather(*tasks)
                             self.queue[I.guild.id].extend(yt_urls)
 
@@ -166,6 +191,8 @@ class MusicCog(commands.Cog):
                 await handle_spotify_url(I, url)
             elif "youtu.be" in url or "youtube.com" in url:
                 return
+
+
 
     async def remove_list_parameter(self, url):
         list_index = url.find('&list=')
@@ -197,8 +224,7 @@ class MusicCog(commands.Cog):
         search = await self.remove_list_parameter(searchs)
         if Interaction.guild.id not in self.queue:
             self.queue[Interaction.guild.id] = []
-        if "playlist" in search:
-            return await Interaction.response.send_message("❌ Hiện tại không hỗ trợ playlist!")
+
         if Interaction.user.voice:
             try:
                 voice_client = await Interaction.user.voice.channel.connect()
@@ -216,6 +242,18 @@ class MusicCog(commands.Cog):
                 if album:
                     embed = discord.Embed()
                     embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{album['name']}\n{album['external_urls']['spotify']}", value="", inline=False)
+                    await Interaction.channel.send(embed=embed)
+            elif "spotify.com/track" in search:
+                track = self.sp.track(search)
+                if track:
+                    embed = discord.Embed()
+                    embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{track['name']} - {track['artists'][0]['name']}\n{track['external_urls']['spotify']}", value="", inline=False)
+                    await Interaction.channel.send(embed=embed)
+            elif "spotify.com/playlist" in search:
+                playlist = self.sp.playlist(search)
+                if playlist:
+                    embed = discord.Embed()
+                    embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{playlist['name']}\n{playlist['external_urls']['spotify']}", value="", inline=False)
                     await Interaction.channel.send(embed=embed)
             else:
                 if self.queue[Interaction.guild.id]:
