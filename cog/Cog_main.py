@@ -230,7 +230,7 @@ class Cog_main(commands.Cog):
   async def update_presence(self):
       global start_time
       start_time = datetime.now()
-      game = discord.Game(name=f"🌸{self.bot.user.name} in comming here🌸")
+      game = discord.Game(name="❄️HIVE Teyvat❄️")
       await self.bot.change_presence(activity=game)
 
   @update_presence.before_loop #stats
