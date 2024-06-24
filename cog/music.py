@@ -45,9 +45,10 @@ class MusicCog(commands.Cog):
         global loop_song
         if loop_song and self.current_song[ctx.guild.id]:
             loop = asyncio.get_event_loop()
-            stream = YouTube(self.current_song[ctx.guild.id]).streams.filter(progressive=True, file_extension='mp4').first()
-
-            song = stream.url
+            
+            data = await asyncio.to_thread(self.ytdl.extract_info, next_url, download=False)
+            song = data['url']
+            
             player = discord.FFmpegOpusAudio(song, **self.ffmpeg_options(self.current_volume, self.current_speed))
             self.voice_clients[ctx.guild.id].play(player, after=lambda e: asyncio.run_coroutine_threadsafe(self.play_next(ctx), self.bot.loop))
         elif self.queue[ctx.guild.id]:
@@ -55,9 +56,10 @@ class MusicCog(commands.Cog):
             self.current_song[ctx.guild.id] = next_url
 
             loop = asyncio.get_event_loop()
-            stream = YouTube(next_url).streams.filter(progressive=True, file_extension='mp4').first()
+            
+            data = await asyncio.to_thread(self.ytdl.extract_info, next_url, download=False)
+            song = data['url']
 
-            song = stream.url
             player = discord.FFmpegOpusAudio(song, **self.ffmpeg_options(self.current_volume, self.current_speed))
             self.voice_clients[ctx.guild.id].play(player, after=lambda e: asyncio.run_coroutine_threadsafe(self.play_next(ctx), self.bot.loop))
 
