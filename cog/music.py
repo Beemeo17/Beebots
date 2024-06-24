@@ -46,7 +46,7 @@ class MusicCog(commands.Cog):
         if loop_song and self.current_song[ctx.guild.id]:
             loop = asyncio.get_event_loop()
             
-            data = await asyncio.to_thread(self.ytdl.extract_info, next_url, download=False)
+            data = await asyncio.to_thread(self.ytdl.extract_info, self.current_song[ctx.guild.id], download=False)
             song = data['url']
             
             player = discord.FFmpegOpusAudio(song, **self.ffmpeg_options(self.current_volume, self.current_speed))
