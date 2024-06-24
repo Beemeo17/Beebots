@@ -115,37 +115,38 @@ class MusicCog(commands.Cog):
         if "http" not in url:
             url_ = await self.spo_to_yt(url)
             self.queue[I.guild.id].append(url_)
+            return url_
         else:
             if "youtu.be" in url or "youtube.com" in url:
                 self.queue[I.guild.id].append(url)
-                return
+                return url
 
             def song(url):
                 if "spotify.com/track" in url:
                     track = self.sp.track(url)
                     if track:
-                        return track['name'], track['artists'][0]['name'], track['external_urls']['spotify'], track['id']
+                        return track['name'], track['artists'][0]['name'], track['external_urls']['spotify'], track['id'], track['album']['images'][0]['url']
                     else:
                         return None
 
                 if "spotify.com/album" in url:
                     album = self.sp.album(url)
                     if album:
-                        return album['name'], album['artists'][0]['name'], album['external_urls']['spotify'], album['id']
+                        return album['name'], album['artists'][0]['name'], album['external_urls']['spotify'], album['id'], album['images'][0]['url']
                     else:
                         return None
 
                 if "spotify.com/playlist" in url:
                     playlist = self.sp.playlist(url)
                     if playlist:
-                        return playlist['name'], playlist['external_urls']['spotify'], playlist['id']
+                        return playlist['name'], playlist['external_urls']['spotify'], playlist['id'], playlist['images'][0]['url']
                     else:
                         return None
 
                 results = self.sp.search(q=url, type='album', limit=1)
                 if results['albums']['items']:
                     album = results['albums']['items'][0]
-                    return album['name'], album['artists'][0]['name'], album['external_urls']['spotify'], album['id']
+                    return album['name'], album['artists'][0]['name'], album['external_urls']['spotify'], album['id'], album['images'][0]['url']
                 else:
                     return None
 
@@ -166,11 +167,11 @@ class MusicCog(commands.Cog):
             async def handle_spotify_url(I, url):
                 result = await fetch_spotify_info(url)
                 if "spotify.com/track" in url:
-                    track_name, artist_name, _, _ = result
+                    track_name, artist_name, _, _, cover_image = result
                     _url = await fetch_youtube_url(f"{track_name} {artist_name}")
                     self.queue[I.guild.id].append(_url)
-                if "spotify.com/album" in url:
-                    album_name, _, _, album_id = result
+                elif "spotify.com/album" in url:
+                    album_name, _, _, album_id, cover_image = result
                     _url = await fetch_youtube_url(album_name)
                     self.queue[I.guild.id].append(_url)
 
@@ -180,8 +181,8 @@ class MusicCog(commands.Cog):
                             tasks = [self.fetch_yt_url(session, f"{track_name} {artist_name}") for track_name, artist_name, _ in tracks_info]
                             yt_urls = await asyncio.gather(*tasks)
                             self.queue[I.guild.id].extend(yt_urls)
-                if "spotify.com/playlist" in url:
-                    playlist_name, _, playlist_id = result
+                elif "spotify.com/playlist" in url:
+                    playlist_name, _, playlist_id, cover_image = result
                     tracks_info = get_all_tracks_in_playlist(playlist_id)
                     if tracks_info:
                         async with aiohttp.ClientSession() as session:
@@ -193,8 +194,6 @@ class MusicCog(commands.Cog):
                 await handle_spotify_url(I, url)
             elif "youtu.be" in url or "youtube.com" in url:
                 return
-
-
 
     async def remove_list_parameter(self, url):
         list_index = url.find('&list=')
@@ -235,39 +234,46 @@ class MusicCog(commands.Cog):
                 print(e)
         else:
             return await Interaction.response.send_message("❌ Bạn không ở trong một voice nào cả!!")
+        
         await Interaction.response.send_message("Đang tải nội dung!")
-        await self.music(Interaction ,search)
+        OutSong = await self.music(Interaction, search)
         try:
             url = self.queue[Interaction.guild.id][0]
             if "spotify.com/album" in search:
                 album = self.sp.album(search)
                 if album:
+                    cover_image = album['images'][0]['url']
                     embed = discord.Embed()
                     embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{album['name']}\n{album['external_urls']['spotify']}", value="", inline=False)
+                    embed.set_thumbnail(url=cover_image)
                     await Interaction.channel.send(embed=embed)
             elif "spotify.com/track" in search:
                 track = self.sp.track(search)
                 if track:
+                    cover_image = track['album']['images'][0]['url']
                     embed = discord.Embed()
                     embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{track['name']} - {track['artists'][0]['name']}\n{track['external_urls']['spotify']}", value="", inline=False)
+                    embed.set_thumbnail(url=cover_image)
                     await Interaction.channel.send(embed=embed)
             elif "spotify.com/playlist" in search:
                 playlist = self.sp.playlist(search)
                 if playlist:
+                    cover_image = playlist['images'][0]['url']
                     embed = discord.Embed()
                     embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{playlist['name']}\n{playlist['external_urls']['spotify']}", value="", inline=False)
+                    embed.set_thumbnail(url=cover_image)
                     await Interaction.channel.send(embed=embed)
             else:
                 if self.queue[Interaction.guild.id]:
                     embed = discord.Embed()
-                    embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{YouTube(url).title}\n{url}", value="", inline=False)
+                    embed.add_field(name=f"**Đã thêm vào hàng chờ**\n{YouTube(OutSong).title}\n{OutSong}", value="", inline=False)
+                    embed.set_thumbnail(url=YouTube(OutSong).thumbnail_url)
                     await Interaction.channel.send(embed=embed)
 
             if not Interaction.guild.voice_client.is_playing():
                 await self.play_next(Interaction)
-
         except Exception as e:
-            pass
+            print(e)
 
     @app_commands.command(name='stop', description="Dùng nhạc đang phát")
     async def stop(self, Interaction):
