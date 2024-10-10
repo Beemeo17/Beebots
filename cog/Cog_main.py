@@ -303,7 +303,7 @@ class Cog_main(commands.Cog):
       elif  current_time.hour == 22 and current_time.minute == 0:
           await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
       elif current_time.hour == 23 and current_time.minute == 7:
-            channels = self.bot.get_channel(1156104339291635758)
+            channels = self.bot.get_channel(1118977913392476210)
             await get_cookie(channels)
             channelr = self.bot.get_channel(1100282433963831366)
             await daily_on(self, channelr, channels)
