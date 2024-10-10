@@ -25,13 +25,43 @@ def load_data():
       data = {}
   return data
 
+async def daily_on(self, channel, channel2):
+        cookie_message = await channel.fetch_message(1293633954942812253)
+        cookie_data = json.loads(cookie_message.content.strip())
+        client = genshin.Client()
+        client.set_cookies({
+            "cookie_token_v2": cookie_data["cookie_token_v2"],
+            "account_mid_v2": cookie_data["account_mid_v2"],
+            "account_id_v2": cookie_data["account_id_v2"],
+            "ltoken_v2": cookie_data["ltoken_v2"],
+            "ltmid_v2": cookie_data["ltmid_v2"],
+            "ltuid_v2": cookie_data["ltuid_v2"],
+        })
+        gamep = [
+            genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
+            genshin.types.Game.HONKAI,]
+        embed = discord.Embed()
+        for games in gamep[:3]:
+            signed_in, claimed_rewards = await client.get_reward_info(game=games)
+            rews = await client.get_hoyolab_user()
+            try:
+                await client.claim_daily_reward(game=games)
+                embed.add_field(name=f"{games[19:]} | Hoàn thành điểm danh | {rews.nickname}", value="", inline=False)
+            except genshin.AlreadyClaimed:
+                assert signed_in
+                embed.add_field(name=f"{games[19:]} | Đã nhận thưởng trước đó | {rews.nickname}", value="", inline=False)
+            except Exception as s:
+                embed.add_field(name=f"{games[19:]} | {s} | {rews.nickname}", value="", inline=False)
+            await channel2.send(embed=embed)
+
+
 async def get_cookie(channel):
     data = load_data()
     for key, value in data.items():
         if value.get("daily_auto"):
           gamep = [
             genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
-            genshin.types.Game.HONKAI]
+            genshin.types.Game.HONKAI,]
           embed = discord.Embed()
           for games in gamep[:3]:
             client = genshin.Client(value.get("cookies"))
@@ -272,9 +302,11 @@ class Cog_main(commands.Cog):
           await channel.send("chúc mọi người một ngày mới vui vẻ 🧩**Good Morning**🧩")
       elif  current_time.hour == 22 and current_time.minute == 0:
           await channel.send("chúc mọi người ngủ ngon 💤**Good Night**💤")
-      elif current_time.hour == 23 and current_time.minute == 4:
-          channels = self.bot.get_channel(1156104339291635758)
-          await get_cookie(channels)
+      elif current_time.hour == 9 and current_time.minute == 20:
+            channels = self.bot.get_channel(1156104339291635758)
+            await get_cookie(channels)
+            channelr = self.bot.get_channel(1100282433963831366)
+            await daily_on(self, channelr, channels)
 
   @tasks.loop(seconds=10) #top info
   async def update_data(self):
