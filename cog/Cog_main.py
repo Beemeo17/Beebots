@@ -10,6 +10,18 @@ import json
 from io import BytesIO
 import random
 import psutil
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
+import aiohttp
+
+
+async def fetch_image(session, url):
+    async with session.get(url) as response:
+        return await response.read()
+
+async def download_images(urls):
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_image(session, url) for url in urls]
+        return await asyncio.gather(*tasks)
 
 ts = 0
 tm = 0
@@ -37,45 +49,70 @@ async def daily_on(self, channel, channel2):
             "ltmid_v2": cookie_data["ltmid_v2"],
             "ltuid_v2": cookie_data["ltuid_v2"],
         })
-        gamep = [
-            genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
-            genshin.types.Game.HONKAI,]
-        embed = discord.Embed()
-        for games in gamep[:3]:
-            signed_in, claimed_rewards = await client.get_reward_info(game=games)
-            rews = await client.get_hoyolab_user()
-            try:
-                await client.claim_daily_reward(game=games)
-                embed.add_field(name=f"{games[19:]} | Hoàn thành điểm danh | {rews.nickname}", value="", inline=False)
-            except genshin.AlreadyClaimed:
-                assert signed_in
-                embed.add_field(name=f"{games[19:]} | Đã nhận thưởng trước đó | {rews.nickname}", value="", inline=False)
-            except Exception as s:
-                embed.add_field(name=f"{games[19:]} | {s} | {rews.nickname}", value="", inline=False)
-            await channel2.send(embed=embed)
+        output = await daylys(client)
+        await channel2.send(file=output)
 
 
 async def get_cookie(channel):
     data = load_data()
     for key, value in data.items():
         if value.get("daily_auto"):
-          gamep = [
-            genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL,
-            genshin.types.Game.HONKAI,]
-          embed = discord.Embed()
-          for games in gamep[:3]:
             client = genshin.Client(value.get("cookies"))
-            signed_in, claimed_rewards = await client.get_reward_info(game=games)
-            rews = await client.get_hoyolab_user()
-            try:
-              await client.claim_daily_reward(game=games)
-              embed.add_field(name=f"{games[19:]} | Hoàn thành điểm danh | {rews.nickname}", value="", inline=False)
-            except genshin.AlreadyClaimed:
-                assert signed_in
-                embed.add_field(name=f"{games[19:]} | Đã nhận thưởng trước đó | {rews.nickname}", value="", inline=False)
-            except Exception as s:
-                embed.add_field(name=f"{games[19:]} | {s} | {rews.nickname}", value="", inline=False)
-          await channel.send(embed=embed)
+            output = await daylys(client)
+            await channel.send(file=output)
+
+
+async def forgame(client, image_app, draw ,x ,y, games, session):
+    signed_in, claimed_rewards = await client.get_reward_info(game=games)
+    rewards = await client.get_monthly_rewards(game=games)
+    draw.text((x, y), (f"Day: {claimed_rewards}"), font=ImageFont.truetype("zh-cn.ttf", 31), fill=(255, 255, 255))
+
+    Imaget = await fetch_image(session, rewards[claimed_rewards].icon)
+    icon_image = Image.open(BytesIO(Imaget)).convert("RGBA").resize((187, 187))
+    image_app.paste(icon_image, (x-73, y+130), mask=icon_image)
+
+    draw.text((x-22, y+321), f"{rewards[claimed_rewards].amount}", font=ImageFont.truetype("zh-cn.ttf", 26), fill=(255, 255, 255)),
+    try:
+        await client.claim_daily_reward(game=games)
+        
+        Image2 = await fetch_image(session, "https://cdn.discordapp.com/emojis/1212093003943116920.webp?size=128&quality=lossless")
+        icon_image = Image.open(BytesIO(Image2)).convert("RGBA").resize((187, 187))
+        image_app.paste(icon_image, (x-73, y+130), mask=icon_image)
+    except Exception as e:
+        Image3 = await fetch_image(session, "https://cdn.discordapp.com/emojis/1210395337139683328.webp?size=128&quality=lossless")
+        icon_image = Image.open(BytesIO(Image3)).convert("RGBA").resize((187, 187))
+        image_app.paste(icon_image, (x-73, y+130), mask=icon_image)
+
+
+async def daylys(client):
+    async with aiohttp.ClientSession() as session:
+        url_goc = await fetch_image(session, "https://iili.io/2HBsdGa.jpg")
+        image_app = Image.open(BytesIO(url_goc)).resize((696, 1060))
+        draw = ImageDraw.Draw(image_app)
+
+        rwe = await client.get_hoyolab_user()
+        text_boxs = draw.textbbox((0, 0), rwe.nickname, font=ImageFont.truetype("zh-cn.ttf", 36))
+        draw.text((((54 + 660) - text_boxs[2]) // 2, 94), f"{rwe.nickname}" ,font=ImageFont.truetype("zh-cn.ttf", 31), fill=(0,0,0))
+        
+        games = [genshin.types.Game.GENSHIN, genshin.types.Game.STARRAIL, genshin.types.Game.HONKAI]
+        x = 157
+        y = 211
+        co = 1
+        tasks = []
+        for i in games[:3]:
+            tasks.append(forgame(client, image_app, draw ,x ,y, i, session))
+            x += 345
+            if co%2 == 0:
+                x = 157
+                y = 663
+            co += 1
+        await asyncio.gather(*tasks)
+        buffer = BytesIO()
+        image_app.save(buffer, format='png')
+        buffer.seek(0)
+        file = discord.File(buffer, filename="showcase.png")
+        return file
+
 
 class Cog_main(commands.Cog):
   def __init__(self, bot):
