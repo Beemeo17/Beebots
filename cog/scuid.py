@@ -36,10 +36,9 @@ async def fetch_image(session, url):
     async with session.get(url) as response:
         return await response.read()
 
-async def download_images(urls):
-    async with aiohttp.ClientSession() as session:
-        tasks = [fetch_image(session, url) for url in urls]
-        return await asyncio.gather(*tasks)
+async def download_images(session, urls):
+    tasks = [fetch_image(session, url) for url in urls]
+    return await asyncio.gather(*tasks)
 
 async def upload_img(url: str, session: aiohttp.ClientSession) -> str:
     payload = {
@@ -71,6 +70,7 @@ async def count_occurrences(value1, value2):
         count += 1
 
 async def ntscuid(nntsl):
+  async with aiohttp.ClientSession() as session: 
     url_nt = [
         "https://iili.io/JXnJyF9.jpg",
         "https://iili.io/JXndJyb.jpg",
@@ -80,7 +80,7 @@ async def ntscuid(nntsl):
         "https://iili.io/JXndB6P.jpg",
         "https://iili.io/JXndnF1.jpg",
     ]
-    urrl_nt = await download_images(url_nt)
+    urrl_nt = await download_images(session, url_nt)
     index = {
         "Wind": 0,
         "Rock": 1,
@@ -170,28 +170,34 @@ async def image_dcuid(charactert):
         async with aiohttp.ClientSession() as session: 
               uid = global_data.get("uid")
               data = global_data.get("data")
-              weapon = charactert.weapon     
-              urls_to_download = [charactert.costume.icon.gacha if charactert.costume is not None else charactert.icon.gacha,
+              weapon = charactert.weapon
+
+              urls_to_download = [
+                  charactert.costume.icon.gacha if charactert.costume is not None else charactert.icon.gacha,
                   charactert.weapon.icon,            
                   charactert.talents[0].icon,
                   charactert.talents[1].icon,
                   charactert.talents[2].icon,
                   "https://cdn.discordapp.com/emojis/1210395337139683328.png",
-                  "https://iili.io/JXnJDn2.png",]
-              responses = await download_images(urls_to_download)
+                  "https://iili.io/JXnJDn2.png",
+              ]
+              
+              responses = await download_images(session, urls_to_download)
+              
               image_app = Image.open(BytesIO(await ntscuid(charactert.element.value))).resize((1455, 885))
               font = ImageFont.truetype("zh-cn.ttf", 27)
               draw = ImageDraw.Draw(image_app)
-              #char
+              #char icon
               image_schar0 = Image.open(BytesIO(responses[0]))
               char_icon = [
-                (image_schar0, (((image_app.width - image_schar0.width) // 2)-25, (image_app.height - image_schar0.height) // 2)),
-                (Image.open(BytesIO(responses[6])).convert("RGBA"), (0, 0)),
-                (Image.open(BytesIO(responses[1])).convert("RGBA").resize((144, 124)), (958, 19)),
-                (Image.open(BytesIO(await licon(weapon.stats[1].type.value))).convert("RGBA").resize((44, 41)), (1290, 57)),
+                  (image_schar0, (((image_app.width - image_schar0.width) // 2)-25, (image_app.height - image_schar0.height) // 2)),
+                  (Image.open(BytesIO(responses[6])).convert("RGBA"), (0, 0)),
+                  (Image.open(BytesIO(responses[1])).convert("RGBA").resize((144, 124)), (958, 19)),
+                  (Image.open(BytesIO(await licon(weapon.stats[1].type.value))).convert("RGBA").resize((44, 41)), (1290, 57)),
               ]
-              for char_ios in char_icon[:4]:
-                image_app.paste(char_ios[0], char_ios[1], mask=char_ios[0])
+              
+              for img, position in char_icon:
+                  image_app.paste(img, position, mask=img)
               char_info = [
                 (f"{charactert.name}  \nBFF.{charactert.friendship_level}  \nlv.{charactert.level}/{charactert.max_level}", ImageFont.truetype("zh-cn.ttf", 24), (325, 4), (255, 255, 255)),
                 (f"{data.player.nickname} \nUID:{uid}  AR:{data.player.level}", ImageFont.truetype("zh-cn.ttf", 24), (1128, 812), (255, 255, 255)),
@@ -202,7 +208,7 @@ async def image_dcuid(charactert):
                 ((f"{round(weapon.stats[0].value)}"), ImageFont.truetype("zh-cn.ttf", 27), (1190, 60), (255, 255, 255)),
                 ((f"{weapon.stats[1].formatted_value}"), ImageFont.truetype("zh-cn.ttf", 27), (1350, 60), (255, 255, 255)),
               ]
-              for char_ip in char_info[:8]:
+              for char_ip in char_info[:12]:
                 draw.text(char_ip[2], char_ip[0], font=char_ip[1], fill=char_ip[3])
               #stats
               dmg_bonut = charactert.highest_dmg_bonus_stat
@@ -216,7 +222,7 @@ async def image_dcuid(charactert):
                   (("Hiệu Quả Nạp", enka.gi.FightPropType.FIGHT_PROP_CHARGE_EFFICIENCY), (967, 455-30), (40, 40)),
                   (("Trị Liệu", enka.gi.FightPropType.FIGHT_PROP_HEAL_ADD), (967, 495-30), (40, 40)),
                   ((f"{dmg_bonut.name[5:]}", dmg_bonut.type), (967, 535-30), (40, 40)),]                
-              for stat_info in stat_infos[:9]:
+              for stat_info in stat_infos[:13]:
                 stat_value = charactert.stats[stat_info[0][1]]
                 draw.text((stat_info[1][0] + 43, stat_info[1][1] + 3), (f"{stat_value.formatted_value} -> {stat_info[0][0]}"), font=ImageFont.truetype("zh-cn.ttf", 25), fill=(255, 255, 255))                         
                 icon_image = Image.open(BytesIO(await licon(stat_value.type.name))).convert("RGBA").resize(stat_info[2])
@@ -228,6 +234,7 @@ async def image_dcuid(charactert):
               count_tdv = 0
               tasks = []
               substate_tasks = []
+              tasks = []
               for artifact in charactert.artifacts[:5]:
                   tasks.append(process_artifact(session, artifact, image_app, draw, artifact_counts, x_tdv_icon, x_tdv_rate, x_tdv_stats, y_tdv_stats2, y_cv1, count_tdv))
                   x_tdv_icon += 177
@@ -275,8 +282,7 @@ async def image_dcuid(charactert):
               file = discord.File(buffer, filename="showcase.png")
               channel = inset_message.get("channelt")
               messaget = await channel.send(file=file)
-              file_url = messaget.attachments[0]
-              return file_url
+              return messaget.attachments[0]
 
 class Select(discord.ui.Select):
     def __init__(self, *args, **kwargs):
@@ -291,7 +297,7 @@ class Select(discord.ui.Select):
     async def callback(self, I: discord.Interaction):
         async with enka.GenshinClient(enka.gi.Language.VIETNAMESE) as api:
             await api.update_assets()
-            char = self.data.characters[int(self.values[0][-1]) - 1]
+            char = self.data.characters[int(''.join(filter(str.isdigit, self.values[0]))) - 1]
             now = datetime.datetime.now()
             embed_loading = discord.Embed(title="<a:aloading:1152869299942338591> **Đang tạo thông tin..__Hãy kiên nhẫn__** <a:ganyurollst:1118761352064946258>", color=discord.Color.yellow())
             await I.response.edit_message(content=None, embed=embed_loading)
@@ -343,7 +349,7 @@ async def generate_image(data):
         draw.text((138, 266), f"{data.player.achievements}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
         draw.text((322, 266), f"{data.player.abyss_floor}-{data.player.abyss_level}", font=ImageFont.truetype("zh-cn.ttf", 23), fill=(255, 255, 255))
         x, y = 15, 380
-        for i, char in enumerate(data.characters[:8]):
+        for i, char in enumerate(data.characters[:12]):
             char_icon_data = await fetch_image(session, char.costume.icon.circle if char.costume is not None else char.icon.circle)
             char_icon = Image.open(BytesIO(char_icon_data)).convert("RGBA").resize((80, 80))
             char_icon_datak = await fetch_image(session, char.namecard.full)
